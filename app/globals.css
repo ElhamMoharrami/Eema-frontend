@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background: #f6f2e9;
+  color: #1f1b16;
+}
+
+::selection {
+  background: rgba(154, 106, 47, 0.22);
+  color: #1f1b16;
+}
+
+@layer base {
+  body {
+    font-feature-settings: "ss01", "kern", "liga";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.005em;
+    color: #1f1b16;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+}
+
+@layer components {
+  /* Small-caps editorial label */
+  .label {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #8a8170;
+  }
+  .label-ink {
+    color: #1f1b16;
+  }
+  .label-ochre {
+    color: #9a6a2f;
+  }
+
+  /* Hairline rule */
+  .rule {
+    height: 1px;
+    background: #d9d1be;
+    width: 100%;
+    display: block;
+  }
+
+  /* Plain editorial button */
+  .btn {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.78rem 1.4rem;
+    border: 1px solid #1f1b16;
+    background: transparent;
+    color: #1f1b16;
+    transition: background 200ms ease, color 200ms ease;
+    cursor: pointer;
+  }
+  .btn:hover {
+    background: #1f1b16;
+    color: #f6f2e9;
+  }
+  .btn-ochre {
+    border-color: #9a6a2f;
+    color: #9a6a2f;
+  }
+  .btn-ochre:hover {
+    background: #9a6a2f;
+    color: #f6f2e9;
+  }
+  .btn[disabled] {
+    opacity: 0.5;
+    cursor: wait;
+  }
+
+  /* Brief input — fountain-pen feel */
+  .brief-input {
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.4vw, 2.2rem);
+    line-height: 1.25;
+    font-weight: 300;
+    background: transparent;
+    border: none;
+    outline: none;
+    width: 100%;
+    color: #1f1b16;
+    resize: none;
+    padding: 0.4rem 0;
+  }
+  .brief-input::placeholder {
+    color: #b6ad97;
+    font-style: italic;
+  }
+
+  /* Chip — clickable example or filter pill */
+  .chip {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    padding: 0.4rem 0.9rem;
+    border: 1px solid #d9d1be;
+    background: transparent;
+    color: #1f1b16;
+    cursor: pointer;
+    transition: border-color 180ms ease, background 180ms ease;
+  }
+  .chip:hover {
+    border-color: #1f1b16;
+    background: rgba(31, 27, 22, 0.04);
+  }
+  .chip-static {
+    cursor: default;
+  }
+  .chip-static:hover {
+    border-color: #d9d1be;
+    background: transparent;
+  }
+
+  /* Gallery mat (passe-partout) around a print */
+  .mat {
+    background: #efe9dc;
+    padding: 1.25rem;
+    border: 1px solid #d9d1be;
+    position: relative;
+  }
+  .mat .crop {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: #b6ad97;
+  }
+  .mat .crop.tl { top: 8px; left: 8px; border-top: 1px solid; border-left: 1px solid; }
+  .mat .crop.tr { top: 8px; right: 8px; border-top: 1px solid; border-right: 1px solid; }
+  .mat .crop.bl { bottom: 8px; left: 8px; border-bottom: 1px solid; border-left: 1px solid; }
+  .mat .crop.br { bottom: 8px; right: 8px; border-bottom: 1px solid; border-right: 1px solid; }
+
+  .available-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #9a6a2f;
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+  .available-mark::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    background: #9a6a2f;
+    border-radius: 9999px;
+    display: inline-block;
+  }
+}
+
+/* Calm settle-in animations */
+@keyframes settle {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.settle {
+  animation: settle 1.2s cubic-bezier(.2,.6,.2,1) both;
+}
+.settle-slow {
+  animation: settle 1.5s cubic-bezier(.2,.6,.2,1) both;
+}
+.stagger > * {
+  animation: settle 0.9s cubic-bezier(.2,.6,.2,1) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 120ms; }
+.stagger > *:nth-child(3) { animation-delay: 240ms; }
+.stagger > *:nth-child(4) { animation-delay: 360ms; }
+.stagger > *:nth-child(5) { animation-delay: 480ms; }
+.stagger > *:nth-child(6) { animation-delay: 600ms; }
+.stagger > *:nth-child(7) { animation-delay: 720ms; }
+.stagger > *:nth-child(8) { animation-delay: 840ms; }

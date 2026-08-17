@@ -1,36 +1,49 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Eema frontend
 
-## Getting Started
+Next.js presentation layer for the Eema venue marketplace. Spring Boot is the
+authoritative API for users, venues, matching, bookings, pricing, checkout, and
+Mollie payment verification.
 
-First, run the development server:
+## Local development
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The frontend runs at <http://localhost:3000>. The default Spring API base URL is
+<http://localhost:8080/api>.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Exposure | Purpose |
+| --- | --- | --- |
+| `NEXT_PUBLIC_API_BASE_URL` | Browser | Spring Boot API base URL |
+| `CALA_API_KEY` | Server only | Optional company-verification BFF credential |
 
-## Learn More
+Never place Mollie, Gemini, JWT-signing, or other backend secrets in frontend
+environment variables. Cala verification is informational UX metadata only; it
+does not authorize users, bookings, or payments.
 
-To learn more about Next.js, take a look at the following resources:
+## Boundaries
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `lib/api/` contains all Spring communication.
+- `types/` mirrors Spring request/response DTOs and enums.
+- `lib/auth/token.ts` isolates the temporary browser-token storage decision.
+- `app/api/verify-booker` remains a narrow BFF solely to protect the Cala secret.
+- Spring and its Mollie webhook are authoritative for booking and payment state.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Current authentication tradeoff
 
-## Deploy on Vercel
+The MVP stores access and refresh tokens in browser `localStorage`, isolated behind
+`lib/auth/token.ts`. This is intentionally replaceable, but a successful XSS attack
+could read those tokens. A future production hardening phase should evaluate an
+HttpOnly-cookie/BFF session design alongside CSP and broader XSS controls.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Backend TODOs
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Add `GET /api/bookings/{id}` with role-aware authorization.
+- Expose booking confirmation/cancellation endpoints before adding those controls.
+- Expose venue update/delete endpoints before adding owner editing controls.
+- Correct the upload controller's duplicated `/api` path before upload integration.
