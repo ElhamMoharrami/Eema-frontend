@@ -5,10 +5,13 @@ import Link from "next/link";
 import AuthPanel from "@/components/auth/AuthPanel";
 import { useAuth } from "@/components/auth/AuthProvider";
 import AppHeader from "@/components/layout/AppHeader";
+import BookingActions from "@/components/booking/BookingActions";
+import RefundDetails from "@/components/booking/RefundDetails";
+import PaymentStateNotice from "@/components/booking/PaymentStateNotice";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { ApiError } from "@/lib/api/client";
 import { apiErrorMessage } from "@/lib/api/error-message";
-import { getBookingFromCurrentUserList } from "@/lib/api/bookings";
+import { getBooking } from "@/lib/api/bookings";
 import { getVenues } from "@/lib/api/venues";
 import { getBookingNavigation } from "@/lib/auth/booking-navigation";
 import { formatDate, formatEur, formatTimestamp } from "@/lib/format";
@@ -43,13 +46,7 @@ export default function BookedPage() {
   const loadBooking = async (id: string) => {
     setState("loading");
     try {
-      // Temporary workaround until Spring exposes GET /bookings/{id}.
-      const found = await getBookingFromCurrentUserList(id);
-      if (!found) {
-        setBooking(null);
-        setState("not-found");
-        return;
-      }
+      const found = await getBooking(id);
       setBooking(found);
       try {
         const venues = await getVenues();
@@ -62,6 +59,11 @@ export default function BookedPage() {
       if (reason instanceof ApiError && reason.status === 401) {
         setBooking(null);
         setState("auth");
+        return;
+      }
+      if (reason instanceof ApiError && reason.status === 404) {
+        setBooking(null);
+        setState("not-found");
         return;
       }
       setError(apiErrorMessage(reason));
@@ -89,12 +91,15 @@ function BookingView({ booking, venueName, onRecheck }: { booking: Booking; venu
     PAID: { heading: "Payment received.", message: "Payment received. The booking is awaiting confirmation where applicable." },
     CONFIRMED: { heading: "Your booking is confirmed.", message: "The venue owner has confirmed this booking." },
     CANCELLED: { heading: "This booking has been cancelled.", message: "The authoritative booking record is marked as cancelled." },
-    REFUNDED: { heading: "This booking has been refunded.", message: "The authoritative booking record is marked as refunded." },
+    REFUNDED: booking.refundStatus === "REFUNDED"
+      ? { heading: "This booking has been refunded.", message: "Eema has recorded the authoritative refund as completed." }
+      : { heading: "Refund information is available.", message: "See the authoritative refund state below for the latest details." },
   };
   const copy = content[booking.status];
   return <>
     <div className="flex flex-wrap items-center justify-between gap-4"><div className="label label-ink">Authoritative Eema status</div><StatusBadge kind="booking" status={booking.status} /></div>
     <h2 className="mt-5 font-display text-4xl leading-[1.05]">{copy.heading}</h2><p className="mt-4 text-[1.02rem] leading-relaxed text-ink/85">{copy.message}</p>
+    <PaymentStateNotice booking={booking} />
     <div className="mt-8 grid gap-5 border-t border-rule pt-6 sm:grid-cols-2">
       <Detail label="Venue" value={venueName ?? booking.venueId} />
       <Detail label="Shoot date" value={formatDate(booking.shootDate)} />
@@ -106,6 +111,8 @@ function BookingView({ booking, venueName, onRecheck }: { booking: Booking; venu
       <Detail label="Booking reference" value={booking.id} mono />
     </div>
     <div className="mt-8 grid gap-6 border-t border-rule pt-6 sm:grid-cols-2"><Contact label="Scout contact" contact={booking.scoutContact} /><Contact label="Owner contact" contact={booking.ownerContact} /></div>
+    <RefundDetails booking={booking} />
+    <BookingActions booking={booking} onChanged={onRecheck} />
     <div className="mt-8 flex flex-wrap gap-3">{booking.status === "PENDING" && <button onClick={onRecheck} className="btn">Check again</button>}<Link href="/scout/bookings" className="btn inline-block">My bookings</Link><Link href="/" className="btn inline-block">Marketplace</Link></div>
   </>;
 }

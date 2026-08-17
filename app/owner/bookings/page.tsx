@@ -37,5 +37,5 @@ function OwnerBookings() {
   if (state === "loading") return <LoadingState label="Loading venue bookings…" />;
   if (state === "error") return <ErrorState message={error} onRetry={() => void load()} />;
   if (bookings.length === 0) return <EmptyState title="No venue bookings" message="Bookings for your venues will appear here." />;
-  return <div className="grid gap-6">{bookings.map((booking) => <BookingCard key={booking.id} booking={booking} venueName={venueNames[booking.venueId] ?? `Venue ${booking.venueId}`} financialView="owner" />)}</div>;
+  return <div className="grid gap-6">{bookings.map((booking) => <BookingCard key={booking.id} booking={booking} venueName={venueNames[booking.venueId] ?? `Venue ${booking.venueId}`} financialView="owner" onChanged={load} />)}</div>;
 }

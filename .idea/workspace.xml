@@ -5,48 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/eslint.config.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/next.config.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/postcss.config.mjs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/file.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/globe.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/next.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/vercel.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/window.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/login/page.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(auth)/register/page.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(owner)/onboarding/page.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(scout)/page.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/(scout)/venue/[id]/page.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/booked/page.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/favicon.ico" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app/not-found.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/auth/AuthGuard.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/Footer.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/layout/Header.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/Badge.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/Button.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/Card.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/Input.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/ui/Spinner.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/venue/VenueCard.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/venue/VenueGrid.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/context/AuthContext.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useAuth.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useVenues.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api-client.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/api-types.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/auth.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib/utils.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/middleware.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/booked/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/booked/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/owner/bookings/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/bookings/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/scout/bookings/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/scout/bookings/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/booking/BookingCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/booking/BookingCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/api/bookings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/bookings.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/booking.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/booking.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/checkout.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/checkout.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -201,7 +167,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1783708626959</updated>
-      <workItem from="1786976417748" duration="3750000" />
+      <workItem from="1786976417748" duration="5721000" />
     </task>
     <servers />
   </component>

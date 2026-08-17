@@ -7,8 +7,11 @@ export const createBooking = (request: CreateBookingRequest) =>
 export const getBookings = () =>
   apiRequest<Booking[]>("/bookings", { auth: "required" });
 
-// Temporary client-side lookup until Spring exposes GET /bookings/{id}.
-export async function getBookingFromCurrentUserList(id: string): Promise<Booking | undefined> {
-  const bookings = await getBookings();
-  return bookings.find((booking) => booking.id === id);
-}
+export const getBooking = (id: string) =>
+  apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}`, { auth: "required" });
+
+export const confirmBooking = (id: string) =>
+  apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}/confirm`, { method: "POST", auth: "required" });
+
+export const cancelBooking = (id: string) =>
+  apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}/cancel`, { method: "POST", auth: "required" });

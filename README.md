@@ -43,7 +43,10 @@ HttpOnly-cookie/BFF session design alongside CSP and broader XSS controls.
 
 ## Backend TODOs
 
-- Add `GET /api/bookings/{id}` with role-aware authorization.
-- Expose booking confirmation/cancellation endpoints before adding those controls.
 - Expose venue update/delete endpoints before adding owner editing controls.
 - Correct the upload controller's duplicated `/api` path before upload integration.
+
+## Future admin UI
+
+- Spring exposes an ADMIN-only `POST /api/bookings/{id}/refund` endpoint. Refund
+  controls are intentionally absent from the scout and owner interfaces.

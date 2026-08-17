@@ -44,5 +44,5 @@ function ScoutBookings() {
   if (state === "loading") return <LoadingState label="Loading your bookings…" />;
   if (state === "error") return <ErrorState message={error} onRetry={() => void load()} />;
   if (bookings.length === 0) return <EmptyState title="No bookings yet" message="Bookings you create from the marketplace will appear here." />;
-  return <div className="grid gap-6">{bookings.map((booking) => <BookingCard key={booking.id} booking={booking} venueName={venueNames[booking.venueId] ?? `Venue ${booking.venueId}`} />)}</div>;
+  return <div className="grid gap-6">{bookings.map((booking) => <BookingCard key={booking.id} booking={booking} venueName={venueNames[booking.venueId] ?? `Venue ${booking.venueId}`} onChanged={load} />)}</div>;
 }
