@@ -51,7 +51,7 @@ export default function BookerVerification({
   if (stage === "ask") {
     return (
       <div className="settle">
-        <div className="label label-ink">Who's booking?</div>
+        <div className="label label-ink">Who&apos;s booking?</div>
         <p className="mt-2 text-xs leading-relaxed text-taupe">
           We can verify the company via <span className="label-ochre">Cala</span> to help
           owners understand who is booking. This check is informational only.
@@ -188,7 +188,7 @@ function UnverifiedLine({
         </button>
       </div>
       <p className="mt-3 text-[0.95rem] leading-relaxed text-ink/85">
-        Couldn't verify <span className="font-display text-lg">{company}</span>{" "}
+        Couldn&apos;t verify <span className="font-display text-lg">{company}</span>{" "}
         automatically — flagged for manual review.
       </p>
       <span className="rule mt-4" aria-hidden />

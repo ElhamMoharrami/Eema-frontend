@@ -4,15 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="">
+    <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="EEMA-8 Updated the frontend for the additive hardened BookingDto fields">
+      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/booked/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/booked/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/owner/bookings/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/bookings/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/scout/bookings/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/scout/bookings/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/booking/BookingCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/booking/BookingCard.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/api/bookings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/bookings.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/booking.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/booking.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/checkout.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/checkout.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/checkout/BookerVerification.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/checkout/BookerVerification.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,23 +30,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0265060402737738" />
-      <entry key="MS500" value="2.754001858264985" />
-      <entry key="S2" value="7.019610875659791" />
-      <entry key="S5" value="9.107716778321434" />
-      <entry key="S10" value="9.99398462685778" />
-      <entry key="S30" value="10.650360133642488" />
-      <entry key="S60" value="10.840073628282394" />
-      <entry key="M2" value="11.311536601146168" />
-      <entry key="M5" value="14.117603886189753" />
-      <entry key="M10" value="17.378855564335996" />
-      <entry key="M15" value="19.211148122817498" />
-      <entry key="M30" value="22.927549482153537" />
-      <entry key="H1" value="30.1981932313627" />
-      <entry key="H2" value="41.49702749845562" />
-      <entry key="H4" value="52.64495078963256" />
-      <entry key="D1" value="83.58185861361999" />
-      <entry key="W1" value="126.60632450143018" />
+      <entry key="MS100" value="1.0000000000017208" />
+      <entry key="MS500" value="1.004437614315573" />
+      <entry key="S2" value="1.2580996338708106" />
+      <entry key="S5" value="1.5817212858044631" />
+      <entry key="S10" value="1.7627065528789319" />
+      <entry key="S30" value="1.9136625539210192" />
+      <entry key="S60" value="1.955856973569278" />
+      <entry key="M2" value="1.9776793817859093" />
+      <entry key="M5" value="1.9910112470724552" />
+      <entry key="M10" value="1.995689245057241" />
+      <entry key="M15" value="2.0065827006421326" />
+      <entry key="M30" value="2.510701949472746" />
+      <entry key="H1" value="6.51286115801017" />
+      <entry key="H2" value="18.042738386095444" />
+      <entry key="H4" value="34.73332151633961" />
+      <entry key="D1" value="79.21787087020947" />
+      <entry key="W1" value="127.18201942326279" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -58,34 +57,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="3.3514693415452273E-180" />
-      <entry key="M10" value="2.589001924026163E-90" />
-      <entry key="M15" value="2.3755537340506763E-60" />
-      <entry key="M30" value="2.179703388092384E-30" />
-      <entry key="H1" value="2.0879192122079538E-15" />
-      <entry key="H2" value="6.462072725538444E-8" />
-      <entry key="H4" value="3.595016748950264E-4" />
-      <entry key="D1" value="0.47512565647637517" />
-      <entry key="W1" value="1.6287539944341607" />
+      <entry key="M5" value="4.166351863498623E-190" />
+      <entry key="M10" value="2.8866406304467828E-95" />
+      <entry key="M15" value="1.1856006345850472E-63" />
+      <entry key="M30" value="4.869497885518742E-32" />
+      <entry key="H1" value="3.120736364937247E-16" />
+      <entry key="H2" value="2.4982939538715333E-8" />
+      <entry key="H4" value="2.2353048780315325E-4" />
+      <entry key="D1" value="0.43894939755358503" />
+      <entry key="W1" value="1.6104307763837504" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.959852247696599" />
-      <entry key="MS500" value="2.6401155697967726" />
-      <entry key="S2" value="6.957810803862144" />
-      <entry key="S5" value="9.077843121327033" />
-      <entry key="S10" value="9.978011036720625" />
-      <entry key="S30" value="10.644784983463845" />
-      <entry key="S60" value="10.837240172794294" />
-      <entry key="M2" value="11.309933054499128" />
-      <entry key="M5" value="14.116420923284613" />
-      <entry key="M10" value="17.37794173628654" />
-      <entry key="M15" value="19.21041821140852" />
-      <entry key="M30" value="22.927073474730204" />
-      <entry key="H1" value="30.19787710377749" />
-      <entry key="H2" value="41.49682335454662" />
-      <entry key="H4" value="52.645188528043285" />
-      <entry key="D1" value="84.05695438640412" />
-      <entry key="W1" value="128.23507214138326" />
+      <entry key="MS100" value="0.8526348917694756" />
+      <entry key="MS500" value="0.972946440585475" />
+      <entry key="S2" value="1.2485550294665335" />
+      <entry key="S5" value="1.5770881096677347" />
+      <entry key="S10" value="1.7601625756662571" />
+      <entry key="S30" value="1.912751379687438" />
+      <entry key="S60" value="1.955392558241577" />
+      <entry key="M2" value="1.9774448913291203" />
+      <entry key="M5" value="1.9909168930584324" />
+      <entry key="M10" value="1.9956419640482017" />
+      <entry key="M15" value="2.00655080156484" />
+      <entry key="M30" value="2.510675537512514" />
+      <entry key="H1" value="6.5128060160243955" />
+      <entry key="H2" value="18.042655515838632" />
+      <entry key="H4" value="34.73346736364194" />
+      <entry key="D1" value="79.65679233050774" />
+      <entry key="W1" value="128.79244386966326" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -167,11 +166,24 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1783708626959</updated>
-      <workItem from="1786976417748" duration="5721000" />
+      <workItem from="1786976417748" duration="8213000" />
     </task>
+    <task id="LOCAL-00001" summary="EEMA-8 Updated the frontend for the additive hardened BookingDto fields">
+      <option name="closed" value="true" />
+      <created>1786987379204</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1786987379204</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="EEMA-8 Updated the frontend for the additive hardened BookingDto fields" />
+    <option name="LAST_COMMIT_MESSAGE" value="EEMA-8 Updated the frontend for the additive hardened BookingDto fields" />
   </component>
 </project>
