@@ -8,7 +8,7 @@ export function venuePhoto(venue: VenueList | Venue): string {
   return `/photos/${venue.id}.jpg`;
 }
 
-function backendMediaUrl(path: string): string {
+export function backendMediaUrl(path: string): string {
   if (/^https?:\/\//i.test(path)) return path;
   try {
     return new URL(path, `${new URL(API_BASE_URL).origin}/`).toString();

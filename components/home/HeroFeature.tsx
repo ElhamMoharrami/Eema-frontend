@@ -31,7 +31,7 @@ export default function HeroFeature({ venue, onOpen }: Props) {
         </p>
         <p className="mt-5 max-w-prose text-[1.05rem] leading-relaxed text-ink/85">
           {venue.sizeM2} m² in {venue.neighbourhood}. Curated for creative productions and
-          available to quote through Eema.
+          available to request through Eema.
         </p>
         <div className="mt-6 flex items-baseline gap-8">
           <div>
@@ -42,7 +42,7 @@ export default function HeroFeature({ venue, onOpen }: Props) {
           </div>
         </div>
         <button onClick={onOpen} className="btn btn-ochre mt-8">
-          Quote this space
+          View availability
         </button>
       </div>
     </section>

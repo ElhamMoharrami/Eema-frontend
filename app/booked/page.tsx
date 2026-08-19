@@ -6,6 +6,7 @@ import AuthPanel from "@/components/auth/AuthPanel";
 import { useAuth } from "@/components/auth/AuthProvider";
 import AppHeader from "@/components/layout/AppHeader";
 import BookingActions from "@/components/booking/BookingActions";
+import BookingWorkflowNotice from "@/components/booking/BookingWorkflowNotice";
 import RefundDetails from "@/components/booking/RefundDetails";
 import PaymentStateNotice from "@/components/booking/PaymentStateNotice";
 import StatusBadge from "@/components/ui/StatusBadge";
@@ -87,6 +88,10 @@ export default function BookedPage() {
 
 function BookingView({ booking, venueName, onRecheck }: { booking: Booking; venueName: string | null; onRecheck: () => void }) {
   const content: Record<BookingStatus, { heading: string; message: string }> = {
+    REQUESTED: { heading: "Request sent to owner.", message: "This booking request is awaiting the venue owner's decision and is not yet confirmed." },
+    AWAITING_PAYMENT: { heading: "Your request was accepted.", message: "The owner accepted your request. Payment is required within the displayed payment window." },
+    DECLINED: { heading: "The request was declined.", message: "The venue owner declined this booking request." },
+    EXPIRED: { heading: "The payment window expired.", message: "This booking request is no longer awaiting payment." },
     PENDING: { heading: "Payment confirmation is processing.", message: "Your payment was submitted and Eema is waiting for authoritative payment confirmation." },
     PAID: { heading: "Payment received.", message: "Payment received. The booking is awaiting confirmation where applicable." },
     CONFIRMED: { heading: "Your booking is confirmed.", message: "The venue owner has confirmed this booking." },
@@ -99,6 +104,7 @@ function BookingView({ booking, venueName, onRecheck }: { booking: Booking; venu
   return <>
     <div className="flex flex-wrap items-center justify-between gap-4"><div className="label label-ink">Authoritative Eema status</div><StatusBadge kind="booking" status={booking.status} /></div>
     <h2 className="mt-5 font-display text-4xl leading-[1.05]">{copy.heading}</h2><p className="mt-4 text-[1.02rem] leading-relaxed text-ink/85">{copy.message}</p>
+    <BookingWorkflowNotice booking={booking} />
     <PaymentStateNotice booking={booking} />
     <div className="mt-8 grid gap-5 border-t border-rule pt-6 sm:grid-cols-2">
       <Detail label="Venue" value={venueName ?? booking.venueId} />

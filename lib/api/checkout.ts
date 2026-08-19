@@ -1,5 +1,5 @@
 import { apiRequest } from "./client";
-import type { CheckoutRequest, CheckoutResponse } from "@/types/checkout";
+import type { CheckoutResponse } from "@/types/checkout";
 
-export const createCheckout = (request: CheckoutRequest) =>
-  apiRequest<CheckoutResponse>("/checkout", { method: "POST", auth: "required", body: request });
+export const createCheckout = (bookingId: string) =>
+  apiRequest<CheckoutResponse>(`/bookings/${encodeURIComponent(bookingId)}/checkout`, { method: "POST", auth: "required" });

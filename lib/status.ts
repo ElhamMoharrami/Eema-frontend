@@ -2,6 +2,10 @@ import type { BookingStatus } from "@/types/booking";
 import type { VenueStatus } from "@/types/venue";
 
 export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
+  REQUESTED: "Requested",
+  AWAITING_PAYMENT: "Awaiting payment",
+  DECLINED: "Declined",
+  EXPIRED: "Expired",
   PENDING: "Pending",
   PAID: "Paid",
   CONFIRMED: "Confirmed",

@@ -1,9 +1,11 @@
+import Link from "next/link";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { formatDate, formatEur, formatTimeRange, formatTimestamp } from "@/lib/format";
 import type { Booking } from "@/types/booking";
 import BookingActions from "./BookingActions";
 import RefundDetails from "./RefundDetails";
 import PaymentStateNotice from "./PaymentStateNotice";
+import BookingWorkflowNotice from "./BookingWorkflowNotice";
 
 export default function BookingCard({ booking, venueName, financialView = "scout", onChanged }: { booking: Booking; venueName: string; financialView?: "scout" | "owner"; onChanged?: () => void | Promise<void> }) {
   return <article className="border border-rule bg-paper p-6 md:p-8">
@@ -25,6 +27,7 @@ export default function BookingCard({ booking, venueName, financialView = "scout
       <Detail label="Confirmed at" value={formatTimestamp(booking.confirmedAt)} />
       <Detail label="Cancelled at" value={formatTimestamp(booking.cancelledAt)} />
     </div>
+    <BookingWorkflowNotice booking={booking} />
     <PaymentStateNotice booking={booking} />
     <RefundDetails booking={booking} />
     <div className="mt-6 border-t border-rule pt-5"><div className="label">Brief</div><p className="mt-2 text-sm leading-relaxed text-ink/80">{booking.rawBrief}</p></div>
@@ -33,6 +36,7 @@ export default function BookingCard({ booking, venueName, financialView = "scout
       <Contact label="Owner contact" contact={booking.ownerContact} />
     </div>
     {onChanged && <BookingActions booking={booking} onChanged={onChanged} />}
+    <Link href={`/bookings/${booking.id}`} className="btn mt-5 inline-block">View booking details</Link>
   </article>;
 }
 

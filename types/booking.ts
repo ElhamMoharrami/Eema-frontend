@@ -1,4 +1,4 @@
-export type BookingStatus = "PENDING" | "PAID" | "CONFIRMED" | "CANCELLED" | "REFUNDED";
+export type BookingStatus = "REQUESTED" | "AWAITING_PAYMENT" | "DECLINED" | "EXPIRED" | "PENDING" | "PAID" | "CONFIRMED" | "CANCELLED" | "REFUNDED";
 export type OwnerPayoutStatus = "CALCULATED_NOT_PAID" | "PAID_MANUALLY";
 export type PaymentCreationStatus = "NOT_STARTED" | "CREATING" | "CREATED";
 export type RefundStatus = "NONE" | "CREATING" | "QUEUED" | "PENDING" | "PROCESSING" | "REFUNDED" | "FAILED" | "CANCELED";
@@ -18,6 +18,8 @@ export type ScoutContactRequest = {
 export type CreateBookingRequest = {
   venueId: string;
   shootDate: string;
+  startTime: string;
+  endTime: string;
   rawBrief: string;
   scoutContact: ScoutContactRequest;
 };
@@ -53,4 +55,8 @@ export type Booking = {
   paidAt: string | null;
   confirmedAt: string | null;
   cancelledAt: string | null;
+  acceptedAt: string | null;
+  paymentExpiresAt: string | null;
+  declinedAt: string | null;
+  expiredAt: string | null;
 };

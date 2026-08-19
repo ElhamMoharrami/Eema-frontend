@@ -1,139 +1,103 @@
 "use client";
 
-import { useState } from "react";
-import { createCheckout } from "@/lib/api/checkout";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getVenueAvailability } from "@/lib/api/availability";
+import { createBooking } from "@/lib/api/bookings";
 import { apiErrorMessage } from "@/lib/api/error-message";
 import { saveBookingNavigation } from "@/lib/auth/booking-navigation";
-import { formatEur } from "@/lib/format";
+import { formatDate, formatEur } from "@/lib/format";
 import type { User } from "@/types/auth";
+import type { AvailabilityIntervalDto, VenueAvailabilityDto } from "@/types/availability";
 import type { MatchedVenue } from "@/types/match";
-import BookerVerification from "./BookerVerification";
+import AvailabilityInquiryForm from "@/components/inquiry/AvailabilityInquiryForm";
 
-type Props = {
-  match: MatchedVenue;
-  brief: string;
-  user: User;
-};
+type Props = { match: MatchedVenue; brief: string; user: User };
+type Month = { year: number; month: number };
 
 export default function InstantQuote({ match, brief, user }: Props) {
-  const [reserving, setReserving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showBooker, setShowBooker] = useState(false);
+  const router = useRouter();
+  const today = useMemo(todayIso, []);
+  const [month, setMonth] = useState<Month>(() => { const [year, value] = today.split("-").map(Number); return { year, month: value - 1 }; });
+  const [availability, setAvailability] = useState<VenueAvailabilityDto | null>(null);
+  const [availabilityState, setAvailabilityState] = useState<"loading" | "ready" | "error">("loading");
+  const [availabilityError, setAvailabilityError] = useState("");
   const [shootDate, setShootDate] = useState("");
+  const [selectedInterval, setSelectedInterval] = useState<AvailabilityIntervalDto | null>(null);
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
   const [name, setName] = useState(user.fullName);
   const [email, setEmail] = useState(user.email);
   const [phone, setPhone] = useState(user.phone ?? "");
-
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+  const [inquiryDate, setInquiryDate] = useState<string | null>(null);
   const venue = match.venue;
-  const totalLabel = formatEur(venue.dayRateEur);
 
-  const reserve = async () => {
-    if (reserving) return;
-    setError(null);
-    setReserving(true);
+  useEffect(() => { void loadAvailability(); }, [month.year, month.month, venue.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function loadAvailability() {
+    setAvailabilityState("loading"); setAvailabilityError(""); setShootDate(""); setInquiryDate(null); clearTime();
+    const from = monthStart(month); const to = monthEnd(month);
+    try { setAvailability(await getVenueAvailability(venue.id, from, to)); setAvailabilityState("ready"); }
+    catch (reason) { setAvailabilityError(apiErrorMessage(reason)); setAvailabilityState("error"); }
+  }
+
+  const selectedDay = availability?.dates.find((day) => day.date === shootDate);
+  const canSubmit = !!shootDate && !!selectedInterval && startTime >= shortTime(selectedInterval.startTime) && endTime <= shortTime(selectedInterval.endTime) && startTime < endTime && name.trim().length >= 2 && !!email.trim();
+
+  function selectDate(date: string) { setInquiryDate(null); setShootDate(date); clearTime(); }
+  function selectUnavailableDate(date: string) { setShootDate(""); clearTime(); setInquiryDate(date); }
+  function selectInterval(interval: AvailabilityIntervalDto) { setSelectedInterval(interval); setStartTime(shortTime(interval.startTime)); setEndTime(shortTime(interval.endTime)); }
+  function clearTime() { setSelectedInterval(null); setStartTime(""); setEndTime(""); }
+
+  async function submit() {
+    if (!canSubmit || submitting) return;
+    setSubmitting(true); setError("");
     try {
-      const checkout = await createCheckout({
-        venueId: venue.id,
-        shootDate,
-        rawBrief: brief,
-        scoutContact: {
-          name: name.trim(),
-          email: email.trim(),
-          ...(phone.trim() ? { phone: phone.trim() } : {}),
-        },
-      });
-      saveBookingNavigation(checkout.bookingId);
-      window.location.assign(checkout.checkoutUrl);
-    } catch (e) {
-      setError(apiErrorMessage(e));
-      setReserving(false);
-    }
-  };
+      const booking = await createBooking({ venueId: venue.id, shootDate, startTime, endTime, rawBrief: brief, scoutContact: { name: name.trim(), email: email.trim(), ...(phone.trim() ? { phone: phone.trim() } : {}) } });
+      saveBookingNavigation(booking.id); setSubmitted(true);
+      window.setTimeout(() => router.push(`/bookings/${booking.id}`), 900);
+    } catch (reason) { setError(apiErrorMessage(reason)); setSubmitting(false); }
+  }
 
-  return (
-    <aside className="settle-slow border border-rule bg-paper p-7 md:p-9">
-      <div className="flex items-center justify-between">
-        <div className="label label-ink">Instant Quote</div>
-        <span className="label">Spring-backed checkout</span>
-      </div>
+  if (submitted) return <aside className="settle border border-rule bg-paper p-7 md:p-9" role="status"><div className="available-mark">Request sent</div><h3 className="mt-4 font-display text-3xl">Request sent to owner</h3><p className="mt-3 text-sm leading-relaxed text-ink/75">This is not yet confirmed. Opening your booking details…</p></aside>;
 
-      <h3 className="mt-4 font-display text-3xl leading-tight">{venue.name}</h3>
-      <p className="mt-2 max-w-prose text-[0.95rem] leading-relaxed text-ink/80">
-        {match.explanation}
-      </p>
+  return <aside className="settle-slow border border-rule bg-paper p-7 md:p-9">
+    <div className="label label-ink">Request this venue</div>
+    <h3 className="mt-4 font-display text-3xl leading-tight">{venue.name}</h3>
+    <p className="mt-2 text-sm leading-relaxed text-ink/75">{match.explanation}</p>
+    <div className="mt-6 flex items-baseline justify-between border-y border-rule py-5"><span className="label label-ochre">Listed venue price</span><span className="font-mono text-2xl">{formatEur(venue.dayRateEur)}</span></div>
 
-      <span className="rule my-7" aria-hidden />
+    <div className="mt-7"><div className="flex items-baseline justify-between gap-4"><div className="label label-ink">Select a date</div>{availability?.timezone && <span className="text-xs text-taupe">Times shown in {availability.timezone}</span>}</div>
+      {availabilityState === "loading" ? <p className="mt-5 text-sm italic text-taupe">Loading authoritative availability…</p> : availabilityState === "error" ? <div className="mt-5 border border-rule p-4"><p className="text-sm text-ochreDeep">{availabilityError}</p><button type="button" className="btn mt-4" onClick={() => void loadAvailability()}>Try again</button></div> : availability && <Calendar month={month} today={today} availability={availability} selected={shootDate || inquiryDate || ""} onSelect={selectDate} onUnavailable={selectUnavailableDate} onMonth={setMonth} />}
+    </div>
 
-      <ul className="space-y-3">
-        {match.quoteItems.map((li, i) => (
-          <li
-            key={i}
-            className="flex items-baseline justify-between gap-6 border-b border-dotted border-rule pb-2"
-          >
-            <span className="text-[0.98rem] text-ink">{li.label}</span>
-            <span className="tabular font-mono text-[0.98rem] text-ink">{formatEur(li.amount)}</span>
-          </li>
-        ))}
-      </ul>
+    {inquiryDate && availability && <AvailabilityInquiryForm venueId={venue.id} timezone={availability.timezone} initialDate={inquiryDate} onCancel={() => setInquiryDate(null)} />}
 
-      <div className="mt-6 flex items-baseline justify-between">
-        <span className="label label-ochre">Listed venue price</span>
-        <span className="tabular font-mono text-2xl text-ink">
-          {totalLabel}
-        </span>
-      </div>
+    {!inquiryDate && selectedDay && <div className="mt-7 border-t border-rule pt-5"><div className="label label-ink">{formatDate(selectedDay.date)}</div><p className="mt-2 text-sm text-taupe">Available intervals</p><div className="mt-3 flex flex-wrap gap-2">{selectedDay.intervals.map((interval) => <button type="button" key={`${interval.startTime}-${interval.endTime}`} onClick={() => selectInterval(interval)} className={selectedInterval === interval ? "chip border-ink" : "chip"}>{shortTime(interval.startTime)}–{shortTime(interval.endTime)}</button>)}</div></div>}
 
-      <span className="rule my-6" aria-hidden />
+    {!inquiryDate && selectedInterval && <div className="mt-5 grid grid-cols-2 gap-4"><label className="label label-ink">Start time<input type="time" className="form-input" min={shortTime(selectedInterval.startTime)} max={shortTime(selectedInterval.endTime)} value={startTime} onChange={(e) => setStartTime(e.target.value)} /></label><label className="label label-ink">End time<input type="time" className="form-input" min={shortTime(selectedInterval.startTime)} max={shortTime(selectedInterval.endTime)} value={endTime} onChange={(e) => setEndTime(e.target.value)} /></label><p className="col-span-2 text-xs text-taupe">Selection must remain within {shortTime(selectedInterval.startTime)}–{shortTime(selectedInterval.endTime)}.</p></div>}
 
-      <p className="text-xs leading-relaxed text-taupe">
-        Eema confirms the authoritative checkout amount with Spring before Mollie opens.
-      </p>
-
-      <div className="mt-6 grid gap-4">
-        <label className="label label-ink">
-          Shoot date
-          <input
-            type="date"
-            min={new Date().toISOString().slice(0, 10)}
-            value={shootDate}
-            onChange={(event) => setShootDate(event.target.value)}
-            className="mt-2 block w-full border-b border-ink/60 bg-transparent py-2 font-sans text-sm normal-case tracking-normal"
-          />
-        </label>
-        <label className="label label-ink">
-          Contact name
-          <input value={name} onChange={(event) => setName(event.target.value)} className="mt-2 block w-full border-b border-ink/60 bg-transparent py-2 font-sans text-sm normal-case tracking-normal" />
-        </label>
-        <label className="label label-ink">
-          Contact email
-          <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} className="mt-2 block w-full border-b border-ink/60 bg-transparent py-2 font-sans text-sm normal-case tracking-normal" />
-        </label>
-        <label className="label label-ink">
-          Phone · optional
-          <input type="tel" value={phone} onChange={(event) => setPhone(event.target.value)} className="mt-2 block w-full border-b border-ink/60 bg-transparent py-2 font-sans text-sm normal-case tracking-normal" />
-        </label>
-      </div>
-
-      {showBooker ? (
-        <BookerVerification
-          totalLabel={totalLabel}
-          paying={reserving}
-          onConfirm={() => {
-            reserve();
-          }}
-        />
-      ) : (
-        <button
-          type="button"
-          onClick={() => setShowBooker(true)}
-          disabled={!shootDate || name.trim().length < 2 || !email.trim()}
-          className="btn btn-ochre mt-6 w-full"
-        >
-          {`Continue — pay ${totalLabel}`}
-        </button>
-      )}
-
-      {error && <p className="mt-3 text-sm text-ochreDeep">{error}</p>}
-    </aside>
-  );
+    {!inquiryDate && <><div className="mt-7 grid gap-4 border-t border-rule pt-5"><label className="label label-ink">Contact name<input className="form-input" value={name} onChange={(e) => setName(e.target.value)} minLength={2} maxLength={100} /></label><label className="label label-ink">Contact email<input className="form-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} /></label><label className="label label-ink">Phone · optional<input className="form-input" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} /></label></div>
+    <button type="button" className="btn btn-ochre mt-7 w-full" disabled={!canSubmit || submitting} onClick={() => void submit()}>{submitting ? "Sending request…" : "Request to book"}</button>
+    <button type="button" className="label label-ochre mt-5 w-full text-center hover:text-ochreDeep" onClick={() => setInquiryDate(today)}>Can&apos;t find your time? Ask the owner</button>
+    <p className="mt-3 text-xs leading-relaxed text-taupe">The owner must approve this request before payment. Availability is checked again by Eema when you submit.</p>{error && <p className="mt-3 text-sm text-ochreDeep">{error}</p>}</>}
+  </aside>;
 }
+
+function Calendar({ month, today, availability, selected, onSelect, onUnavailable, onMonth }: { month: Month; today: string; availability: VenueAvailabilityDto; selected: string; onSelect: (date: string) => void; onUnavailable: (date: string) => void; onMonth: (month: Month) => void }) {
+  const firstWeekday = new Date(Date.UTC(month.year, month.month, 1)).getUTCDay();
+  const days = new Date(Date.UTC(month.year, month.month + 1, 0)).getUTCDate();
+  const available = new Set(availability.dates.filter((day) => day.intervals.length > 0).map((day) => day.date));
+  const current = (() => { const [y, m] = today.split("-").map(Number); return month.year === y && month.month === m - 1; })();
+  return <div className="mt-4"><div className="flex items-center justify-between"><button type="button" className="label hover:text-ink disabled:opacity-30" disabled={current} onClick={() => onMonth(offsetMonth(month, -1))}>← Previous</button><span className="font-display text-lg">{new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(Date.UTC(month.year, month.month, 1)))}</span><button type="button" className="label hover:text-ink" onClick={() => onMonth(offsetMonth(month, 1))}>Next →</button></div><div className="mt-4 grid grid-cols-7 gap-1 text-center">{["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => <span key={day} className="label py-2 text-[0.58rem]">{day}</span>)}{Array.from({ length: firstWeekday }, (_, i) => <span key={`blank-${i}`} />)}{Array.from({ length: days }, (_, index) => { const date = isoDate(month.year, month.month, index + 1); const future = date >= today; const enabled = future && available.has(date); return <button type="button" key={date} disabled={!future} aria-label={`${formatDate(date)}${enabled ? " available" : " unavailable — ask owner"}`} onClick={() => enabled ? onSelect(date) : onUnavailable(date)} className={`aspect-square border text-sm ${selected === date ? "border-ochre bg-ochre text-paper" : enabled ? "border-rule hover:border-ink" : future ? "border-transparent text-taupe/50 line-through hover:border-ochre" : "border-transparent text-taupe/25 line-through"}`}>{index + 1}</button>; })}</div><div className="mt-3 text-xs text-taupe">Dates crossed out have no backend-provided availability. Select a future date to ask the owner.</div></div>;
+}
+
+function todayIso() { const now = new Date(); return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`; }
+function isoDate(year: number, month: number, day: number) { return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`; }
+function monthStart(month: Month) { return isoDate(month.year, month.month, 1); }
+function monthEnd(month: Month) { return isoDate(month.year, month.month, new Date(Date.UTC(month.year, month.month + 1, 0)).getUTCDate()); }
+function offsetMonth(month: Month, offset: number): Month { const value = new Date(Date.UTC(month.year, month.month + offset, 1)); return { year: value.getUTCFullYear(), month: value.getUTCMonth() }; }
+function shortTime(value: string) { return value.slice(0, 5); }

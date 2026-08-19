@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import AuthPanel from "@/components/auth/AuthPanel";
 import { useAuth } from "@/components/auth/AuthProvider";
 import BookingActions from "@/components/booking/BookingActions";
+import BookingWorkflowNotice from "@/components/booking/BookingWorkflowNotice";
 import PaymentStateNotice from "@/components/booking/PaymentStateNotice";
 import RefundDetails from "@/components/booking/RefundDetails";
 import AppHeader from "@/components/layout/AppHeader";
@@ -123,6 +124,7 @@ function BookingDetail({ booking, venueName, role, onChanged }: { booking: Booki
       </>}
     </section>
 
+    <BookingWorkflowNotice booking={booking} />
     <PaymentStateNotice booking={booking} />
     <RefundDetails booking={booking} />
 
@@ -141,6 +143,10 @@ function BookingDetail({ booking, venueName, role, onChanged }: { booking: Booki
       {booking.paidAt && <Detail label="Paid" value={formatTimestamp(booking.paidAt)} />}
       {booking.confirmedAt && <Detail label="Confirmed" value={formatTimestamp(booking.confirmedAt)} />}
       {booking.cancelledAt && <Detail label="Cancelled" value={formatTimestamp(booking.cancelledAt)} />}
+      {booking.acceptedAt && <Detail label="Accepted" value={formatTimestamp(booking.acceptedAt)} />}
+      {booking.paymentExpiresAt && <Detail label="Payment deadline" value={formatTimestamp(booking.paymentExpiresAt)} />}
+      {booking.declinedAt && <Detail label="Declined" value={formatTimestamp(booking.declinedAt)} />}
+      {booking.expiredAt && <Detail label="Expired" value={formatTimestamp(booking.expiredAt)} />}
       {booking.refundedAt && <Detail label="Refunded" value={formatTimestamp(booking.refundedAt)} />}
     </section>
 

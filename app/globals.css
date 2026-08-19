@@ -95,6 +95,25 @@ body {
     cursor: wait;
   }
 
+  .form-input {
+    margin-top: 0.5rem;
+    display: block;
+    width: 100%;
+    border: 1px solid #d9d1be;
+    background: transparent;
+    padding: 0.7rem 0.8rem;
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    font-weight: 400;
+    letter-spacing: normal;
+    text-transform: none;
+    color: #1f1b16;
+  }
+  .form-input:focus {
+    border-color: #9a6a2f;
+    outline: 1px solid #9a6a2f;
+  }
+
   /* Brief input — fountain-pen feel */
   .brief-input {
     font-family: var(--font-display);

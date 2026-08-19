@@ -105,7 +105,7 @@ export default function Page() {
           <section className="mt-10 grid gap-10 md:grid-cols-[1.4fr_1fr] md:items-start">
             <div>
               <h1 className="font-display text-[2.6rem] leading-[1.04] md:text-[3.4rem]">Skip the form.<br />Get a real quote in seconds.</h1>
-              <p className="mt-5 max-w-prose text-[1.05rem] leading-relaxed text-ink/80">Describe your shoot or event in plain words. Eema matches it against the live venue catalogue and prepares an authoritative checkout through Spring.</p>
+              <p className="mt-5 max-w-prose text-[1.05rem] leading-relaxed text-ink/80">Describe your shoot or event in plain words. Eema matches it against the live venue catalogue so you can request an available date and time.</p>
               <div className="mt-10"><SearchBox value={query} onChange={setQuery} onSubmit={() => void runMatch(query)} busy={stage === "matching"} /><div className="mt-5"><ExampleChips onPick={(brief) => void runMatch(brief)} /></div></div>
               {error && <p className="mt-6 text-sm text-ochreDeep">{error}</p>}
             </div>
@@ -142,4 +142,4 @@ function Results({ match, onOpen }: { match: MatchResponse; onOpen: (item: Match
   return <div><div className="flex items-baseline justify-between"><div className="label">Selected spaces</div><div className="label">{match.totalMatches} matches · ranked</div></div><div className="mt-6 grid gap-x-8 gap-y-12 md:grid-cols-2 stagger">{match.venues.map((item, index) => <VenueCard key={item.venue.id} venue={item.venue} rationale={item.explanation} index={index} onOpen={() => onOpen(item)} />)}</div></div>;
 }
 
-function Footer() { return <footer className="mt-24 flex flex-wrap items-baseline justify-between gap-4 border-t border-rule pt-8"><span className="label">Eema · Europe</span><span className="label">Payments secured by Mollie via Eema</span></footer>; }
+function Footer() { return <footer className="mt-24 flex flex-wrap items-baseline justify-between gap-4 border-t border-rule pt-8"><span className="label">Eema · Europe</span><span className="label">Venue requests backed by authoritative availability</span></footer>; }

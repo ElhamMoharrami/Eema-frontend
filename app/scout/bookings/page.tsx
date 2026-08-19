@@ -13,7 +13,7 @@ import { getVenues } from "@/lib/api/venues";
 import type { Booking } from "@/types/booking";
 
 export default function ScoutBookingsPage() {
-  return <DashboardShell eyebrow="Scout dashboard" title="My bookings" intro="Track payment and owner-confirmation status for your shoots."><RoleGuard role="SCOUT"><ScoutBookings /></RoleGuard></DashboardShell>;
+  return <DashboardShell eyebrow="Scout dashboard" title="My bookings" intro="Track owner decisions, payment windows, and confirmed shoots."><RoleGuard role="SCOUT"><ScoutBookings /></RoleGuard></DashboardShell>;
 }
 
 function ScoutBookings() {

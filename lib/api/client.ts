@@ -39,7 +39,8 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
   const headers = new Headers(suppliedHeaders);
   headers.set("Accept", "application/json");
 
-  if (body !== undefined) headers.set("Content-Type", "application/json");
+  const isFormData = typeof FormData !== "undefined" && body instanceof FormData;
+  if (body !== undefined && !isFormData) headers.set("Content-Type", "application/json");
 
   const session = getAuthSession();
   if (auth === "required" && !session) {
@@ -54,7 +55,7 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     response = await fetch(apiUrl(path), {
       ...requestInit,
       headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: body === undefined ? undefined : isFormData ? body : JSON.stringify(body),
     });
   } catch {
     throw new ApiError(0, "Could not reach Eema", undefined, "NETWORK");

@@ -10,8 +10,8 @@ export default function AppHeader({ onSignIn }: { onSignIn?: () => void }) {
     <Link href="/" className="text-left"><div className="font-display text-3xl tracking-tight">Eema<span className="text-ochre">.</span></div><div className="label mt-1">Venue marketplace · Europe</div></Link>
     <nav className="flex flex-wrap items-baseline justify-end gap-5">
       <Link href="/" className="label hover:text-ink">Marketplace</Link>
-      {user?.role === "SCOUT" && <Link href="/scout/bookings" className="label hover:text-ink">My bookings</Link>}
-      {user?.role === "OWNER" && <><Link href="/owner/venues" className="label hover:text-ink">My venues</Link><Link href="/owner/bookings" className="label hover:text-ink">Venue bookings</Link></>}
+      {user?.role === "SCOUT" && <><Link href="/scout/bookings" className="label hover:text-ink">My bookings</Link><Link href="/scout/inquiries" className="label hover:text-ink">Inquiries</Link></>}
+      {user?.role === "OWNER" && <><Link href="/owner/venues" className="label hover:text-ink">My venues</Link><Link href="/owner/bookings" className="label hover:text-ink">Venue bookings</Link><Link href="/owner/inquiries" className="label hover:text-ink">Inquiries</Link></>}
       {isAuthReady && user ? <><span className="label label-ink">{user.fullName} · {roleLabel(user.role)}</span><button onClick={logout} className="label hover:text-ink">Sign out</button></> : isAuthReady && (onSignIn ? <button onClick={onSignIn} className="label hover:text-ink">Sign in / register</button> : <Link href="/" className="label hover:text-ink">Sign in / register</Link>)}
     </nav>
   </header>;

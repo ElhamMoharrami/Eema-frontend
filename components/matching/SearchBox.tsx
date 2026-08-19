@@ -40,15 +40,16 @@ export default function SearchBox({ value, onChange, onSubmit, busy }: Props) {
             }
           }}
           rows={2}
+          maxLength={1000}
           placeholder="Describe your shoot…"
           className="brief-input"
           aria-label="Describe your shoot"
         />
       </div>
       <div className="mt-5 flex items-center justify-between">
-        <span className="label">Press ⌘↵ to quote · Eema replies in seconds</span>
+        <span className="label">Press ⌘↵ to search · Eema replies in seconds</span>
         <button type="submit" className="btn" disabled={busy || !value.trim()}>
-          {busy ? "Reading…" : "Get instant quote"}
+          {busy ? "Reading…" : "Find venues"}
         </button>
       </div>
     </form>

@@ -40,7 +40,7 @@ export default function VenueDetail({ match, brief, user, onBack }: Props) {
       </div>
 
       <div>
-        {user.role === "SCOUT" ? <InstantQuote match={match} brief={brief} user={user} /> : <div className="border border-rule bg-paper p-7 md:p-9"><div className="label label-ink">Scout checkout</div><h3 className="mt-4 font-display text-3xl">This venue is available to browse.</h3><p className="mt-3 text-sm leading-relaxed text-taupe">Checkout is available to scout accounts. Owner accounts can review their venues and incoming bookings from the owner dashboard.</p></div>}
+        {user.role === "SCOUT" ? <InstantQuote match={match} brief={brief} user={user} /> : <div className="border border-rule bg-paper p-7 md:p-9"><div className="label label-ink">Scout booking requests</div><h3 className="mt-4 font-display text-3xl">This venue is available to browse.</h3><p className="mt-3 text-sm leading-relaxed text-taupe">Booking requests are available to scout accounts. Owner accounts can review their venues and incoming requests from the owner dashboard.</p></div>}
       </div>
     </section>
   );

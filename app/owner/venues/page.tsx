@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import RoleGuard from "@/components/auth/RoleGuard";
 import DashboardShell from "@/components/layout/DashboardShell";
@@ -15,7 +16,7 @@ import { venuePhoto } from "@/lib/venue-media";
 import type { Venue } from "@/types/venue";
 
 export default function OwnerVenuesPage() {
-  return <DashboardShell eyebrow="Owner dashboard" title="My venues" intro="Review the venue records and publication status currently held by Eema."><RoleGuard role="OWNER"><OwnerVenues /></RoleGuard></DashboardShell>;
+  return <DashboardShell eyebrow="Owner dashboard" title="My venues" intro="Manage each of your listings and its availability independently."><RoleGuard role="OWNER"><OwnerVenues /></RoleGuard></DashboardShell>;
 }
 
 function OwnerVenues() {
@@ -30,8 +31,7 @@ function OwnerVenues() {
   }
   if (state === "loading") return <LoadingState label="Loading your venues…" />;
   if (state === "error") return <ErrorState message={error} onRetry={() => void load()} />;
-  if (venues.length === 0) return <EmptyState title="No venues yet" message="You do not have any venue records in Eema yet." />;
-  return <div className="grid gap-8 md:grid-cols-2">{venues.map((venue) => <article key={venue.id} className="border border-rule bg-paper p-5"><div className="relative overflow-hidden bg-paperDeep" style={{ aspectRatio: "4 / 3" }}><VenuePhoto src={venuePhoto(venue)} alt={venue.name} /></div><div className="mt-5 flex items-start justify-between gap-4"><div><h2 className="font-display text-2xl">{venue.name}</h2><p className="label mt-2">{venue.neighbourhood}</p></div><StatusBadge kind="venue" status={venue.status} /></div><div className="mt-5 grid grid-cols-2 gap-4 border-t border-rule pt-4"><Metric label="Listed price" value={formatEur(venue.dayRateEur)} /><Metric label="Size" value={`${venue.sizeM2} m²`} /></div><div className="mt-4 flex flex-wrap gap-2">{venue.tags.map((tag) => <span className="chip chip-static" key={tag}>{tag}</span>)}</div></article>)}</div>;
+  return <><div className="mb-8 flex justify-end"><Link href="/owner/venues/new" className="btn btn-ochre">Add listing</Link></div>{venues.length === 0 ? <div><EmptyState title="No venues yet" message="Create your first venue listing to configure its availability." /><div className="mt-6 text-center"><Link href="/owner/venues/new" className="btn btn-ochre">Add listing</Link></div></div> : <div className="grid gap-8 md:grid-cols-2">{venues.map((venue) => <article key={venue.id} className="border border-rule bg-paper p-5"><div className="relative overflow-hidden bg-paperDeep" style={{ aspectRatio: "4 / 3" }}><VenuePhoto src={venuePhoto(venue)} alt={venue.name} /></div><div className="mt-5 flex items-start justify-between gap-4"><div><h2 className="font-display text-2xl">{venue.name}</h2><p className="label mt-2">{venue.neighbourhood}</p></div><StatusBadge kind="venue" status={venue.status} /></div><div className="mt-5 grid grid-cols-2 gap-4 border-t border-rule pt-4"><Metric label="Listed price" value={formatEur(venue.dayRateEur)} /><Metric label="Size" value={`${venue.sizeM2} m²`} /></div><div className="mt-4 flex flex-wrap gap-2">{venue.tags.map((tag) => <span className="chip chip-static" key={tag}>{tag}</span>)}</div><Link href={`/owner/venues/${venue.id}`} className="btn mt-6 inline-block">Manage listing</Link></article>)}</div>}</>;
 }
 
 function Metric({ label, value }: { label: string; value: string }) { return <div><div className="label">{label}</div><div className="mt-1 font-mono text-sm">{value}</div></div>; }

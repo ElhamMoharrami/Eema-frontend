@@ -13,7 +13,7 @@ import { getMyVenues } from "@/lib/api/venues";
 import type { Booking } from "@/types/booking";
 
 export default function OwnerBookingsPage() {
-  return <DashboardShell eyebrow="Owner dashboard" title="Venue bookings" intro="Review bookings and the financial snapshots calculated by Eema."><RoleGuard role="OWNER"><OwnerBookings /></RoleGuard></DashboardShell>;
+  return <DashboardShell eyebrow="Owner dashboard" title="Venue bookings" intro="Review new requests, accept or decline them, and track confirmed bookings."><RoleGuard role="OWNER"><OwnerBookings /></RoleGuard></DashboardShell>;
 }
 
 function OwnerBookings() {
