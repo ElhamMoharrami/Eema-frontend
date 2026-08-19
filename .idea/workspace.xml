@@ -4,14 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="EEMA-8 Updated the frontend for the additive hardened BookingDto fields">
-      <change beforePath="$PROJECT_DIR$/.env.example" beforeDir="false" afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/checkout/BookerVerification.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/checkout/BookerVerification.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="EEMA-8 clean up">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/booking/RefundDetails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/booking/RefundDetails.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +14,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="56" />
+    <option name="cachedIndexableFilesCount" value="84" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -30,23 +25,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0000000000017208" />
-      <entry key="MS500" value="1.004437614315573" />
-      <entry key="S2" value="1.2580996338708106" />
-      <entry key="S5" value="1.5817212858044631" />
-      <entry key="S10" value="1.7627065528789319" />
-      <entry key="S30" value="1.9136625539210192" />
-      <entry key="S60" value="1.955856973569278" />
-      <entry key="M2" value="1.9776793817859093" />
-      <entry key="M5" value="1.9910112470724552" />
-      <entry key="M10" value="1.995689245057241" />
-      <entry key="M15" value="2.0065827006421326" />
-      <entry key="M30" value="2.510701949472746" />
-      <entry key="H1" value="6.51286115801017" />
-      <entry key="H2" value="18.042738386095444" />
-      <entry key="H4" value="34.73332151633961" />
-      <entry key="D1" value="79.21787087020947" />
-      <entry key="W1" value="127.18201942326279" />
+      <entry key="MS100" value="1.023726529914823" />
+      <entry key="MS500" value="1.6071863591619797" />
+      <entry key="S2" value="2.4345263027602266" />
+      <entry key="S5" value="2.7458889281898697" />
+      <entry key="S10" value="2.8677039605554167" />
+      <entry key="S30" value="2.954676072512534" />
+      <entry key="S60" value="2.9771809159110894" />
+      <entry key="M2" value="2.98855087387454" />
+      <entry key="M5" value="2.9954109404266624" />
+      <entry key="M10" value="2.998214256541857" />
+      <entry key="M15" value="3.0065541177770085" />
+      <entry key="M30" value="3.1586068774536606" />
+      <entry key="H1" value="4.64051327126529" />
+      <entry key="H2" value="12.056239797401512" />
+      <entry key="H4" value="27.607752413254527" />
+      <entry key="D1" value="77.7958714814893" />
+      <entry key="W1" value="129.14268574983487" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -57,34 +52,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="4.166351863498623E-190" />
-      <entry key="M10" value="2.8866406304467828E-95" />
-      <entry key="M15" value="1.1856006345850472E-63" />
-      <entry key="M30" value="4.869497885518742E-32" />
-      <entry key="H1" value="3.120736364937247E-16" />
-      <entry key="H2" value="2.4982939538715333E-8" />
-      <entry key="H4" value="2.2353048780315325E-4" />
-      <entry key="D1" value="0.43894939755358503" />
-      <entry key="W1" value="1.6104307763837504" />
+      <entry key="M5" value="2.725633056281559E-197" />
+      <entry key="M10" value="7.38326474790573E-99" />
+      <entry key="M15" value="4.777223617424238E-66" />
+      <entry key="M30" value="3.0910266922309155E-33" />
+      <entry key="H1" value="7.862603377170447E-17" />
+      <entry key="H2" value="1.2540018591916147E-8" />
+      <entry key="H4" value="1.5836678039816496E-4" />
+      <entry key="D1" value="0.41444701012340573" />
+      <entry key="W1" value="1.5972703369508727" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.8526348917694756" />
-      <entry key="MS500" value="0.972946440585475" />
-      <entry key="S2" value="1.2485550294665335" />
-      <entry key="S5" value="1.5770881096677347" />
-      <entry key="S10" value="1.7601625756662571" />
-      <entry key="S30" value="1.912751379687438" />
-      <entry key="S60" value="1.955392558241577" />
-      <entry key="M2" value="1.9774448913291203" />
-      <entry key="M5" value="1.9909168930584324" />
-      <entry key="M10" value="1.9956419640482017" />
-      <entry key="M15" value="2.00655080156484" />
-      <entry key="M30" value="2.510675537512514" />
-      <entry key="H1" value="6.5128060160243955" />
-      <entry key="H2" value="18.042655515838632" />
-      <entry key="H4" value="34.73346736364194" />
-      <entry key="D1" value="79.65679233050774" />
-      <entry key="W1" value="128.79244386966326" />
+      <entry key="MS100" value="0.9156812785373182" />
+      <entry key="MS500" value="1.56937188421266" />
+      <entry key="S2" value="2.419921251602831" />
+      <entry key="S5" value="2.7392918613126427" />
+      <entry key="S10" value="2.8642585981223756" />
+      <entry key="S30" value="2.953492758427763" />
+      <entry key="S60" value="2.976584753995139" />
+      <entry key="M2" value="2.9882516553333534" />
+      <entry key="M5" value="2.9952909785160013" />
+      <entry key="M10" value="2.998154217625479" />
+      <entry key="M15" value="3.006513961159071" />
+      <entry key="M30" value="3.158585181747256" />
+      <entry key="H1" value="4.640489367555022" />
+      <entry key="H2" value="12.056193195489275" />
+      <entry key="H4" value="27.607853240134602" />
+      <entry key="D1" value="78.21029169666006" />
+      <entry key="W1" value="130.73994974893517" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -96,35 +91,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "codeWithMe.voiceChat.enabledByDefault": "false",
-    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
-    "git-widget-placeholder": "main",
-    "js.debugger.nextJs.config.created.client": "true",
-    "js.debugger.nextJs.config.created.server": "true",
-    "junie.onboarding.icon.badge.shown": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/home/elham/workspace/Eema-backend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Modules",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.0",
-    "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/home/elham/workspace/Eema-frontend/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;js.debugger.nextJs.config.created.client&quot;: &quot;true&quot;,
+    &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/elham/workspace/Eema-backend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.0&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/elham/workspace/Eema-frontend/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -166,7 +161,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1783708626959</updated>
-      <workItem from="1786976417748" duration="8213000" />
+      <workItem from="1786976417748" duration="9469000" />
+      <workItem from="1787148850906" duration="3324000" />
     </task>
     <task id="LOCAL-00001" summary="EEMA-8 Updated the frontend for the additive hardened BookingDto fields">
       <option name="closed" value="true" />
@@ -176,7 +172,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786987379204</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="EEMA-8 clean up">
+      <option name="closed" value="true" />
+      <created>1786994513751</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1786994513751</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -184,6 +188,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="EEMA-8 Updated the frontend for the additive hardened BookingDto fields" />
-    <option name="LAST_COMMIT_MESSAGE" value="EEMA-8 Updated the frontend for the additive hardened BookingDto fields" />
+    <MESSAGE value="EEMA-8 clean up" />
+    <option name="LAST_COMMIT_MESSAGE" value="EEMA-8 clean up" />
   </component>
 </project>

@@ -21,7 +21,6 @@ export default function RefundDetails({ booking }: { booking: Booking }) {
       {booking.refundAmountEur !== null && <RefundRow label="Refund amount" value={formatEur(booking.refundAmountEur)} mono />}
       {booking.refundRequestedAt && <RefundRow label="Requested" value={formatTimestamp(booking.refundRequestedAt)} />}
       {booking.refundedAt && <RefundRow label="Refunded" value={formatTimestamp(booking.refundedAt)} />}
-      {booking.mollieRefundId && <RefundRow label="Refund reference" value={booking.mollieRefundId} mono />}
     </dl>
   </div>;
 }
