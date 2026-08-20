@@ -67,7 +67,8 @@ export default function VenueCard({ venue, rationale, featured, index, onOpen }:
 
       <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1">
         <span className="label">{venue.sizeM2} m²</span>
-        {venue.tags.slice(0, 4).map((t) => (
+        {productionFacts(venue).map((fact) => <span key={fact} className="label">· {fact}</span>)}
+        {venue.tags.slice(0, 2).map((t) => (
           <span key={t} className="label">· {t.replace(/-/g, " ")}</span>
         ))}
       </div>
@@ -78,4 +79,14 @@ export default function VenueCard({ venue, rationale, featured, index, onOpen }:
       </div>
     </button>
   );
+}
+
+function productionFacts(venue: VenueList): string[] {
+  return [
+    venue.maxCrewSize !== null ? `Up to ${venue.maxCrewSize} people` : null,
+    venue.naturalLight === true ? "Natural light" : null,
+    venue.loadingAccess === true ? "Loading access" : null,
+    venue.parkingAvailable === true ? "Parking" : null,
+    venue.soundRecordingSuitable === true ? "Sound recording" : null,
+  ].filter((fact): fact is string => fact !== null).slice(0, 3);
 }

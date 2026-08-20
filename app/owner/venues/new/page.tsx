@@ -8,6 +8,7 @@ import DashboardShell from "@/components/layout/DashboardShell";
 import { apiErrorMessage } from "@/lib/api/error-message";
 import { createVenue } from "@/lib/api/venues";
 import { formatDuration } from "@/lib/format";
+import { EMPTY_PRODUCTION_PROFILE } from "@/components/venue/ProductionProfileFields";
 
 export default function NewVenuePage() {
   return <DashboardShell eyebrow="Owner dashboard" title="Add listing" intro="Create a venue record. Availability can be configured after creation."><RoleGuard role="OWNER"><CreateVenueForm /></RoleGuard></DashboardShell>;
@@ -38,7 +39,8 @@ function CreateVenueForm() {
         name: name.trim(), neighbourhood: neighbourhood.trim(), sizeM2: Number(sizeM2),
         hourlyRateEur: Number(hourlyRateEur), minimumBookingMinutes: Number(minimumBookingMinutes),
         fullDayRateEur: fullDayRateEur ? Number(fullDayRateEur) : null, tags: parsedTags,
-        description: description.trim() || undefined, clipUrl: clipUrl.trim() || undefined,
+        ...EMPTY_PRODUCTION_PROFILE,
+        description: description.trim() || null, clipUrl: clipUrl.trim() || null,
       });
       router.push(`/owner/venues/${venue.id}?created=1`);
     } catch (reason) {
@@ -48,6 +50,7 @@ function CreateVenueForm() {
   }
 
   return <form onSubmit={(event) => void submit(event)} className="border border-rule bg-paper p-6 md:p-9">
+    <p className="mb-7 border-l-2 border-ochre pl-4 text-sm text-ink/75">Create the basic draft first. You can add production suitability, access, facilities, rules, media, and availability in the listing editor afterward.</p>
     <div className="grid gap-6 md:grid-cols-2">
       <Field label="Venue name"><input className="form-input" value={name} onChange={(e) => setName(e.target.value)} minLength={2} maxLength={120} required /></Field>
       <Field label="Neighbourhood"><input className="form-input" value={neighbourhood} onChange={(e) => setNeighbourhood(e.target.value)} maxLength={100} required /></Field>

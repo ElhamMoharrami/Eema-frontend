@@ -1,11 +1,15 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import type { User } from "@/types/auth";
 import type { MatchedVenue } from "@/types/match";
 import { venuePhoto } from "@/lib/venue-media";
 import GalleryFrame from "./GalleryFrame";
 import InstantQuote from "@/components/checkout/InstantQuote";
 import VenuePricingSummary from "./VenuePricingSummary";
+import VenueProductionProfile from "./VenueProductionProfile";
+import { getVenue } from "@/lib/api/venues";
+import type { Venue } from "@/types/venue";
 
 type Props = {
   match: MatchedVenue;
@@ -15,6 +19,13 @@ type Props = {
 };
 export default function VenueDetail({ match, brief, user, onBack }: Props) {
   const venue = match.venue;
+  const [venueDetails, setVenueDetails] = useState<Venue | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    void getVenue(venue.id).then((details) => { if (active) setVenueDetails(details); }).catch(() => { if (active) setVenueDetails(null); });
+    return () => { active = false; };
+  }, [venue.id]);
 
   return (
     <section className="grid gap-10 md:grid-cols-[1.1fr_1fr]">
@@ -36,6 +47,7 @@ export default function VenueDetail({ match, brief, user, onBack }: Props) {
             <span key={t} className="label">· {t}</span>
           ))}
         </div>
+        {venueDetails && <VenueProductionProfile venue={venueDetails} />}
       </div>
 
       <div>
