@@ -14,6 +14,7 @@ export default function BookingCard({ booking, venueName, financialView = "scout
       <Detail label="Shoot date" value={formatDate(booking.shootDate)} />
       <Detail label="Time" value={formatTimeRange(booking.startTime, booking.endTime)} />
       <Detail label="Created" value={formatTimestamp(booking.createdAt)} />
+      {booking.status === "REQUESTED" && booking.ownerResponseExpiresAt && <Detail label={financialView === "owner" ? "Respond by" : "Owner response expected by"} value={formatTimestamp(booking.ownerResponseExpiresAt)} />}
       <Detail label="Venue price" value={formatEur(booking.venuePriceEur)} mono />
       <Detail label="Total paid" value={formatEur(booking.totalPaidEur)} mono />
       {financialView === "owner" && <>

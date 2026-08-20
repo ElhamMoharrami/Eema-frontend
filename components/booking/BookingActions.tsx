@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { apiErrorMessage } from "@/lib/api/error-message";
+import { ApiError } from "@/lib/api/client";
 import { acceptBookingRequest, cancelBooking, confirmBooking, declineBookingRequest } from "@/lib/api/bookings";
 import { createCheckout } from "@/lib/api/checkout";
 import { saveBookingNavigation } from "@/lib/auth/booking-navigation";
@@ -37,6 +38,12 @@ export default function BookingActions({ booking, onChanged }: { booking: Bookin
       else await cancelBooking(booking.id);
       await onChanged();
     } catch (reason) {
+      if (action === "accept" && reason instanceof ApiError && reason.status === 409) {
+        setError("This time is no longer available. Another booking may have reserved it.");
+        setBusy(null);
+        await onChanged();
+        return;
+      }
       setError(apiErrorMessage(reason)); setBusy(null);
     }
   }

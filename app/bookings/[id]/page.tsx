@@ -15,6 +15,7 @@ import StatusBadge from "@/components/ui/StatusBadge";
 import { getBooking } from "@/lib/api/bookings";
 import { ApiError } from "@/lib/api/client";
 import { apiErrorMessage } from "@/lib/api/error-message";
+import { isPaymentWindowExpiry } from "@/lib/booking-lifecycle";
 import { getVenue } from "@/lib/api/venues";
 import { formatDate, formatEur, formatTimeRange, formatTimestamp } from "@/lib/format";
 import type { Booking } from "@/types/booking";
@@ -125,6 +126,7 @@ function BookingDetail({ booking, venueName, role, onChanged }: { booking: Booki
     </section>
 
     <BookingWorkflowNotice booking={booking} />
+    <BookingLifecycle booking={booking} />
     <PaymentStateNotice booking={booking} />
     <RefundDetails booking={booking} />
 
@@ -144,6 +146,7 @@ function BookingDetail({ booking, venueName, role, onChanged }: { booking: Booki
       {booking.confirmedAt && <Detail label="Confirmed" value={formatTimestamp(booking.confirmedAt)} />}
       {booking.cancelledAt && <Detail label="Cancelled" value={formatTimestamp(booking.cancelledAt)} />}
       {booking.acceptedAt && <Detail label="Accepted" value={formatTimestamp(booking.acceptedAt)} />}
+      {booking.ownerResponseExpiresAt && <Detail label="Owner response deadline" value={formatTimestamp(booking.ownerResponseExpiresAt)} />}
       {booking.paymentExpiresAt && <Detail label="Payment deadline" value={formatTimestamp(booking.paymentExpiresAt)} />}
       {booking.declinedAt && <Detail label="Declined" value={formatTimestamp(booking.declinedAt)} />}
       {booking.expiredAt && <Detail label="Expired" value={formatTimestamp(booking.expiredAt)} />}
@@ -152,6 +155,18 @@ function BookingDetail({ booking, venueName, role, onChanged }: { booking: Booki
 
     <BookingActions booking={booking} onChanged={onChanged} />
   </article>;
+}
+
+function BookingLifecycle({ booking }: { booking: Booking }) {
+  let steps: string[] | null = null;
+  if (booking.status === "REQUESTED") steps = ["Requested", "Waiting for owner", booking.ownerResponseExpiresAt ? `Response deadline: ${formatTimestamp(booking.ownerResponseExpiresAt)}` : "Response deadline pending"];
+  else if (booking.status === "AWAITING_PAYMENT") steps = ["Requested", "Owner accepted", "Payment required", booking.paymentExpiresAt ? `Payment deadline: ${formatTimestamp(booking.paymentExpiresAt)}` : "Payment deadline pending"];
+  else if (booking.status === "UNAVAILABLE") steps = ["Requested", "Slot reserved by another booking"];
+  else if (booking.status === "DECLINED") steps = ["Requested", "Declined by owner"];
+  else if (booking.status === "EXPIRED" && isPaymentWindowExpiry(booking)) steps = ["Requested", "Owner accepted", "Payment window expired"];
+  else if (booking.status === "EXPIRED") steps = ["Requested", "Response window expired"];
+  if (!steps) return null;
+  return <section className="mt-6 border-t border-rule pt-5"><div className="label">Booking lifecycle</div><ol className="mt-3 flex flex-wrap items-center gap-2 text-sm text-ink/80">{steps.map((step, index) => <li key={step} className="flex items-center gap-2">{index > 0 && <span aria-hidden className="text-taupe">→</span>}<span>{step}</span></li>)}</ol></section>;
 }
 
 function Detail({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {

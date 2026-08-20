@@ -16,6 +16,7 @@ import { getBooking } from "@/lib/api/bookings";
 import { getVenues } from "@/lib/api/venues";
 import { getBookingNavigation } from "@/lib/auth/booking-navigation";
 import { formatDate, formatEur, formatTimestamp } from "@/lib/format";
+import { isPaymentWindowExpiry } from "@/lib/booking-lifecycle";
 import type { Booking, BookingStatus } from "@/types/booking";
 
 type ViewState = "loading" | "auth" | "missing" | "not-found" | "error" | "ready";
@@ -88,10 +89,13 @@ export default function BookedPage() {
 
 function BookingView({ booking, venueName, onRecheck }: { booking: Booking; venueName: string | null; onRecheck: () => void }) {
   const content: Record<BookingStatus, { heading: string; message: string }> = {
-    REQUESTED: { heading: "Request sent to owner.", message: "This booking request is awaiting the venue owner's decision and is not yet confirmed." },
+    REQUESTED: { heading: "Waiting for owner response.", message: `This request does not reserve the venue yet.${booking.ownerResponseExpiresAt ? ` Owner response expected by ${formatTimestamp(booking.ownerResponseExpiresAt)}.` : ""}` },
     AWAITING_PAYMENT: { heading: "Your request was accepted.", message: "The owner accepted your request. Payment is required within the displayed payment window." },
     DECLINED: { heading: "The request was declined.", message: "The venue owner declined this booking request." },
-    EXPIRED: { heading: "The payment window expired.", message: "This booking request is no longer awaiting payment." },
+    EXPIRED: isPaymentWindowExpiry(booking)
+      ? { heading: "The payment window expired.", message: "The accepted request can no longer be paid because its payment deadline passed." }
+      : { heading: "The response window expired.", message: "The owner did not respond before the response deadline." },
+    UNAVAILABLE: { heading: "This time is no longer available.", message: "Another booking reserved this time before your request was accepted." },
     PENDING: { heading: "Payment confirmation is processing.", message: "Your payment was submitted and Eema is waiting for authoritative payment confirmation." },
     PAID: { heading: "Payment received.", message: "Payment received. The booking is awaiting confirmation where applicable." },
     CONFIRMED: { heading: "Your booking is confirmed.", message: "The venue owner has confirmed this booking." },

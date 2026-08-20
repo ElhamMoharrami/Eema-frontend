@@ -1,4 +1,4 @@
-export type BookingStatus = "REQUESTED" | "AWAITING_PAYMENT" | "DECLINED" | "EXPIRED" | "PENDING" | "PAID" | "CONFIRMED" | "CANCELLED" | "REFUNDED";
+export type BookingStatus = "REQUESTED" | "AWAITING_PAYMENT" | "DECLINED" | "EXPIRED" | "UNAVAILABLE" | "PENDING" | "PAID" | "CONFIRMED" | "CANCELLED" | "REFUNDED";
 export type OwnerPayoutStatus = "CALCULATED_NOT_PAID" | "PAID_MANUALLY";
 export type PaymentCreationStatus = "NOT_STARTED" | "CREATING" | "CREATED";
 export type RefundStatus = "NONE" | "CREATING" | "QUEUED" | "PENDING" | "PROCESSING" | "REFUNDED" | "FAILED" | "CANCELED";
@@ -56,6 +56,7 @@ export type Booking = {
   confirmedAt: string | null;
   cancelledAt: string | null;
   acceptedAt: string | null;
+  ownerResponseExpiresAt: string | null;
   paymentExpiresAt: string | null;
   declinedAt: string | null;
   expiredAt: string | null;

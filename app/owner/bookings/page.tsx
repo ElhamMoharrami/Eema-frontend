@@ -30,7 +30,7 @@ function OwnerBookings() {
       setState("error");
       return;
     }
-    setBookings(bookingResult.value);
+    setBookings(prioritizeRequestedBookings(bookingResult.value));
     setVenueNames(venueResult.status === "fulfilled" ? Object.fromEntries(venueResult.value.map((venue) => [venue.id, venue.name])) : {});
     setState("ready");
   }
@@ -38,4 +38,18 @@ function OwnerBookings() {
   if (state === "error") return <ErrorState message={error} onRetry={() => void load()} />;
   if (bookings.length === 0) return <EmptyState title="No venue bookings" message="Bookings for your venues will appear here." />;
   return <div className="grid gap-6">{bookings.map((booking) => <BookingCard key={booking.id} booking={booking} venueName={venueNames[booking.venueId] ?? `Venue ${booking.venueId}`} financialView="owner" onChanged={load} />)}</div>;
+}
+
+function prioritizeRequestedBookings(bookings: Booking[]): Booking[] {
+  const requested = bookings
+    .filter((booking) => booking.status === "REQUESTED")
+    .sort((left, right) => deadlineValue(left.ownerResponseExpiresAt) - deadlineValue(right.ownerResponseExpiresAt));
+  const others = bookings.filter((booking) => booking.status !== "REQUESTED");
+  return [...requested, ...others];
+}
+
+function deadlineValue(deadline: string | null): number {
+  if (!deadline) return Number.POSITIVE_INFINITY;
+  const value = new Date(deadline).getTime();
+  return Number.isNaN(value) ? Number.POSITIVE_INFINITY : value;
 }
