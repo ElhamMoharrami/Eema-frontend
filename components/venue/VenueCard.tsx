@@ -3,7 +3,7 @@
 import type { VenueList } from "@/types/venue";
 import { venuePhoto } from "@/lib/venue-media";
 import VenuePhoto from "./VenuePhoto";
-import { formatEur } from "@/lib/format";
+import VenuePricingSummary from "./VenuePricingSummary";
 
 type Props = {
   venue: VenueList;
@@ -58,12 +58,7 @@ export default function VenueCard({ venue, rationale, featured, index, onOpen }:
             {venue.name}
           </h3>
         </div>
-        <div className="text-right">
-          <div className="label mb-1">Day rate</div>
-          <div className="tabular font-mono text-lg text-ink">
-            {formatEur(venue.dayRateEur)}
-          </div>
-        </div>
+        <VenuePricingSummary {...venue} compact />
       </div>
 
       <p className="mt-3 max-w-prose text-[0.95rem] leading-relaxed text-ink/80">

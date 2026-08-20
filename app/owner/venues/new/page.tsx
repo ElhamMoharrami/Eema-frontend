@@ -7,6 +7,7 @@ import RoleGuard from "@/components/auth/RoleGuard";
 import DashboardShell from "@/components/layout/DashboardShell";
 import { apiErrorMessage } from "@/lib/api/error-message";
 import { createVenue } from "@/lib/api/venues";
+import { formatDuration } from "@/lib/format";
 
 export default function NewVenuePage() {
   return <DashboardShell eyebrow="Owner dashboard" title="Add listing" intro="Create a venue record. Availability can be configured after creation."><RoleGuard role="OWNER"><CreateVenueForm /></RoleGuard></DashboardShell>;
@@ -17,7 +18,9 @@ function CreateVenueForm() {
   const [name, setName] = useState("");
   const [neighbourhood, setNeighbourhood] = useState("");
   const [sizeM2, setSizeM2] = useState("");
-  const [dayRateEur, setDayRateEur] = useState("");
+  const [hourlyRateEur, setHourlyRateEur] = useState("");
+  const [minimumBookingMinutes, setMinimumBookingMinutes] = useState("");
+  const [fullDayRateEur, setFullDayRateEur] = useState("");
   const [tags, setTags] = useState("");
   const [description, setDescription] = useState("");
   const [clipUrl, setClipUrl] = useState("");
@@ -33,7 +36,8 @@ function CreateVenueForm() {
     try {
       const venue = await createVenue({
         name: name.trim(), neighbourhood: neighbourhood.trim(), sizeM2: Number(sizeM2),
-        dayRateEur: Number(dayRateEur), tags: parsedTags,
+        hourlyRateEur: Number(hourlyRateEur), minimumBookingMinutes: Number(minimumBookingMinutes),
+        fullDayRateEur: fullDayRateEur ? Number(fullDayRateEur) : null, tags: parsedTags,
         description: description.trim() || undefined, clipUrl: clipUrl.trim() || undefined,
       });
       router.push(`/owner/venues/${venue.id}?created=1`);
@@ -48,7 +52,9 @@ function CreateVenueForm() {
       <Field label="Venue name"><input className="form-input" value={name} onChange={(e) => setName(e.target.value)} minLength={2} maxLength={120} required /></Field>
       <Field label="Neighbourhood"><input className="form-input" value={neighbourhood} onChange={(e) => setNeighbourhood(e.target.value)} maxLength={100} required /></Field>
       <Field label="Size (m²)"><input className="form-input" type="number" value={sizeM2} onChange={(e) => setSizeM2(e.target.value)} min={1} max={9999} step={1} required /></Field>
-      <Field label="Day rate (EUR)"><input className="form-input" type="number" value={dayRateEur} onChange={(e) => setDayRateEur(e.target.value)} min="0.01" max="99999999.99" step="0.01" required /></Field>
+      <Field label="Hourly rate"><input className="form-input" type="number" value={hourlyRateEur} onChange={(e) => setHourlyRateEur(e.target.value)} min="0.01" max="99999999.99" step="0.01" required /></Field>
+      <Field label="Minimum booking" hint={minimumBookingMinutes ? `${formatDuration(Number(minimumBookingMinutes))} · stored as minutes` : "Enter minutes"}><input className="form-input" type="number" value={minimumBookingMinutes} onChange={(e) => setMinimumBookingMinutes(e.target.value)} min={1} max={10080} step={1} required /></Field>
+      <Field label="Full-day rate (optional)"><input className="form-input" type="number" value={fullDayRateEur} onChange={(e) => setFullDayRateEur(e.target.value)} min="0.01" max="99999999.99" step="0.01" /></Field>
       <Field label="Tags" hint="Comma-separated, up to 20"><input className="form-input" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="daylight, kitchen, industrial" /></Field>
       <Field label="Video clip URL" hint="Optional, up to 500 characters"><input className="form-input" type="url" value={clipUrl} onChange={(e) => setClipUrl(e.target.value)} maxLength={500} /></Field>
     </div>

@@ -17,10 +17,14 @@ export default function BookingWorkflowNotice({ booking }: { booking: Booking })
     else if (booking.status === "DECLINED") { heading = "The owner declined this request"; message = "You can return to the venue and choose another available time."; }
     else if (booking.status === "AWAITING_PAYMENT") { heading = "Request accepted — payment required"; message = booking.paymentExpiresAt ? `Pay before ${formatTimestamp(booking.paymentExpiresAt)}.` : "Complete payment to confirm the booking."; }
     else if (booking.status === "CONFIRMED") { heading = "Booking confirmed"; message = "Payment was received and the booking is confirmed."; }
+    else if (booking.status === "CANCELLED") { heading = "Booking cancelled"; message = "This booking has been cancelled."; }
+    else if (booking.status === "REFUNDED") { heading = "Booking refunded"; message = "This booking has been refunded. See the refund details for its authoritative state."; }
     else if (booking.status === "EXPIRED" && isPaymentWindowExpiry(booking)) { heading = "Payment window expired"; message = "This accepted request can no longer be paid because the payment deadline passed."; }
     else if (booking.status === "EXPIRED") { heading = "Response window expired"; message = "This request expired because the owner did not respond before the response window ended."; }
-  } else if (role === "OWNER" && booking.status === "REQUESTED") {
-    heading = "New request"; message = booking.ownerResponseExpiresAt ? `Respond by ${formatTimestamp(booking.ownerResponseExpiresAt)}. Review the shoot details and accept or decline this request.` : "Review the shoot details and accept or decline this request.";
+  } else if (role === "OWNER") {
+    if (booking.status === "REQUESTED") { heading = "New request"; message = booking.ownerResponseExpiresAt ? `Respond by ${formatTimestamp(booking.ownerResponseExpiresAt)}. Review the shoot details and accept or decline this request.` : "Review the shoot details and accept or decline this request."; }
+    else if (booking.status === "AWAITING_PAYMENT") { heading = "Accepted — waiting for scout payment"; message = booking.paymentExpiresAt ? `The venue is reserved until ${formatTimestamp(booking.paymentExpiresAt)} while the scout completes payment.` : "The venue is reserved while the scout completes payment."; }
+    else if (booking.status === "CONFIRMED") { heading = "Booking confirmed"; message = "Payment has been authoritatively received. No further owner approval is required."; }
   }
 
   if (!heading) return null;

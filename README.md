@@ -91,18 +91,25 @@ is not available.
 - Confirm active venues load from `GET /api/venues`.
 - Sign in with a seed account or register a new account.
 
-### B. Scout and Mollie test flow
+### B. Scout request and Mollie test flow
 
 1. Sign in or register as SCOUT.
 2. Enter a venue brief and run authenticated matching.
-3. Select a venue, shoot date, and contact information.
-4. Start checkout. Spring creates the booking and Mollie payment.
-5. The browser redirects to Spring's returned `checkoutUrl`.
-6. Complete the Mollie **TEST** checkout.
-7. Mollie redirects the browser to <http://localhost:3000/booked>.
-8. `/booked` fetches authoritative state from `GET /api/bookings/{id}`.
-9. Verify the booking moves from `PENDING` to `PAID` after the webhook.
-10. Check the same state under <http://localhost:3000/scout/bookings>.
+3. Select a venue, shoot date, time range, and contact information. The frontend
+   shows an informational estimate from the hourly rate, minimum booking duration,
+   and optional full-day cap.
+4. Submit the request. Spring creates a `REQUESTED` booking and returns the
+   authoritative `venuePriceEur`; the request does not reserve inventory.
+5. Sign in as the venue OWNER, open <http://localhost:3000/owner/bookings>, and
+   accept the request before its response deadline. The booking becomes
+   `AWAITING_PAYMENT` and reserves the selected time.
+6. Return as the SCOUT and choose **Pay now** before the payment deadline.
+7. The browser redirects to Spring's returned `checkoutUrl`.
+8. Complete the Mollie **TEST** checkout.
+9. Mollie redirects the browser to <http://localhost:3000/booked>.
+10. `/booked` fetches authoritative state from `GET /api/bookings/{id}`.
+11. Verify an on-time successful payment produces `CONFIRMED` after the webhook.
+12. Check the same state under <http://localhost:3000/scout/bookings>.
 
 The frontend never calls Mollie, trusts redirect parameters, or changes payment
 state locally.
@@ -129,19 +136,11 @@ README and keep `MOLLIE_REDIRECT_URL=http://localhost:3000/booked`.
 1. Sign in as OWNER.
 2. Open <http://localhost:3000/owner/venues> to verify owned venues.
 3. Open <http://localhost:3000/owner/bookings>.
-4. Find a `PAID` booking and confirm it.
-5. Verify Spring returns and displays `CONFIRMED`.
+4. Accept a `REQUESTED` booking or decline it before the displayed response deadline.
+5. After acceptance, verify the owner sees `AWAITING_PAYMENT` with no second
+   confirmation action. Successful scout payment changes it directly to `CONFIRMED`.
 
-### E. Cancellation flow
-
-1. Create another checkout as SCOUT but do not complete payment.
-2. Return to the booking list while it is still `PENDING`.
-3. Cancel it.
-4. Verify Spring returns and displays `CANCELLED`.
-
-Cancellation is intentionally unavailable after payment.
-
-### F. Refunds
+### E. Refunds
 
 Refund is currently an ADMIN/backend operational flow. The SCOUT and OWNER
 interfaces display authoritative refund state but expose no refund action.
@@ -179,6 +178,12 @@ npm run check     # typecheck + lint + build
 - `app/api/verify-booker` is the sole Next.js BFF route and protects the optional
   server-only Cala credential.
 - Spring and its Mollie webhook own payment and refund state.
+- Venue pricing is `hourlyRateEur` plus `minimumBookingMinutes`, with an optional
+  `fullDayRateEur` cap. Booking pages explain the immutable pricing snapshot and
+  always treat `BookingDto.venuePriceEur` as authoritative.
+- The booking lifecycle is `REQUESTED → AWAITING_PAYMENT → CONFIRMED`. Requests
+  can instead become `DECLINED`, response/payment windows can become `EXPIRED`,
+  and overlapping requests can become `UNAVAILABLE`. Refunds end in `REFUNDED`.
 - The frontend shows concise retry/auth/role/empty states and never displays raw
   backend stack traces.
 - Browser tokens currently live in `localStorage`, isolated by `lib/auth/token.ts`.

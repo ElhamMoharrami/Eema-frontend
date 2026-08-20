@@ -1,10 +1,9 @@
 import Link from "next/link";
 import StatusBadge from "@/components/ui/StatusBadge";
-import { formatDate, formatEur, formatTimeRange, formatTimestamp } from "@/lib/format";
+import { formatDate, formatDuration, formatEur, formatTimeRange, formatTimestamp } from "@/lib/format";
 import type { Booking } from "@/types/booking";
 import BookingActions from "./BookingActions";
 import RefundDetails from "./RefundDetails";
-import PaymentStateNotice from "./PaymentStateNotice";
 import BookingWorkflowNotice from "./BookingWorkflowNotice";
 
 export default function BookingCard({ booking, venueName, financialView = "scout", onChanged }: { booking: Booking; venueName: string; financialView?: "scout" | "owner"; onChanged?: () => void | Promise<void> }) {
@@ -16,6 +15,11 @@ export default function BookingCard({ booking, venueName, financialView = "scout
       <Detail label="Created" value={formatTimestamp(booking.createdAt)} />
       {booking.status === "REQUESTED" && booking.ownerResponseExpiresAt && <Detail label={financialView === "owner" ? "Respond by" : "Owner response expected by"} value={formatTimestamp(booking.ownerResponseExpiresAt)} />}
       <Detail label="Venue price" value={formatEur(booking.venuePriceEur)} mono />
+      <Detail label="Hourly rate at request" value={`${formatEur(booking.hourlyRateEurSnapshot)}/hour`} mono />
+      <Detail label="Minimum booking at request" value={formatDuration(booking.minimumBookingMinutesSnapshot)} />
+      {booking.fullDayRateEurSnapshot !== null && <Detail label="Full-day rate at request" value={formatEur(booking.fullDayRateEurSnapshot)} mono />}
+      <Detail label="Selected duration" value={formatDuration(booking.durationMinutes)} />
+      <Detail label="Billable duration" value={formatDuration(booking.billableMinutes)} />
       <Detail label="Total paid" value={formatEur(booking.totalPaidEur)} mono />
       {financialView === "owner" && <>
         <Detail label="Commission rate" value={`${booking.commissionPercentage}%`} mono />
@@ -29,7 +33,6 @@ export default function BookingCard({ booking, venueName, financialView = "scout
       <Detail label="Cancelled at" value={formatTimestamp(booking.cancelledAt)} />
     </div>
     <BookingWorkflowNotice booking={booking} />
-    <PaymentStateNotice booking={booking} />
     <RefundDetails booking={booking} />
     <div className="mt-6 border-t border-rule pt-5"><div className="label">Brief</div><p className="mt-2 text-sm leading-relaxed text-ink/80">{booking.rawBrief}</p></div>
     <div className="mt-6 grid gap-6 border-t border-rule pt-5 md:grid-cols-2">

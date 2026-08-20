@@ -1,4 +1,4 @@
-export type BookingStatus = "REQUESTED" | "AWAITING_PAYMENT" | "DECLINED" | "EXPIRED" | "UNAVAILABLE" | "PENDING" | "PAID" | "CONFIRMED" | "CANCELLED" | "REFUNDED";
+export type BookingStatus = "REQUESTED" | "AWAITING_PAYMENT" | "CONFIRMED" | "DECLINED" | "EXPIRED" | "UNAVAILABLE" | "CANCELLED" | "REFUNDED";
 export type OwnerPayoutStatus = "CALCULATED_NOT_PAID" | "PAID_MANUALLY";
 export type PaymentCreationStatus = "NOT_STARTED" | "CREATING" | "CREATED";
 export type RefundStatus = "NONE" | "CREATING" | "QUEUED" | "PENDING" | "PROCESSING" | "REFUNDED" | "FAILED" | "CANCELED";
@@ -34,6 +34,11 @@ export type Booking = {
   endTime: string;
   rawBrief: string;
   venuePriceEur: number;
+  hourlyRateEurSnapshot: number;
+  minimumBookingMinutesSnapshot: number;
+  fullDayRateEurSnapshot: number | null;
+  durationMinutes: number;
+  billableMinutes: number;
   commissionPercentage: number;
   commissionEur: number;
   mollieFeeEur: number | null;

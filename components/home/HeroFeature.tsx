@@ -3,7 +3,7 @@
 import type { VenueList } from "@/types/venue";
 import { venuePhoto } from "@/lib/venue-media";
 import GalleryFrame from "@/components/venue/GalleryFrame";
-import { formatEur } from "@/lib/format";
+import VenuePricingSummary from "@/components/venue/VenuePricingSummary";
 
 type Props = {
   venue: VenueList;
@@ -33,14 +33,7 @@ export default function HeroFeature({ venue, onOpen }: Props) {
           {venue.sizeM2} m² in {venue.neighbourhood}. Curated for creative productions and
           available to request through Eema.
         </p>
-        <div className="mt-6 flex items-baseline gap-8">
-          <div>
-            <div className="label">Day rate</div>
-            <div className="tabular font-mono text-2xl text-ink mt-1">
-              {formatEur(venue.dayRateEur)}
-            </div>
-          </div>
-        </div>
+        <div className="mt-6"><VenuePricingSummary {...venue} /></div>
         <button onClick={onOpen} className="btn btn-ochre mt-8">
           View availability
         </button>

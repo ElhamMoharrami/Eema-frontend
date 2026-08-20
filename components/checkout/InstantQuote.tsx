@@ -6,7 +6,8 @@ import { getVenueAvailability } from "@/lib/api/availability";
 import { createBooking } from "@/lib/api/bookings";
 import { apiErrorMessage } from "@/lib/api/error-message";
 import { saveBookingNavigation } from "@/lib/auth/booking-navigation";
-import { formatDate, formatEur } from "@/lib/format";
+import { formatDate, formatDuration, formatEur } from "@/lib/format";
+import { calculatePricingPreview } from "@/lib/pricing";
 import type { User } from "@/types/auth";
 import type { AvailabilityIntervalDto, VenueAvailabilityDto } from "@/types/availability";
 import type { MatchedVenue } from "@/types/match";
@@ -31,9 +32,11 @@ export default function InstantQuote({ match, brief, user }: Props) {
   const [phone, setPhone] = useState(user.phone ?? "");
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submittedPrice, setSubmittedPrice] = useState<number | null>(null);
   const [error, setError] = useState("");
   const [inquiryDate, setInquiryDate] = useState<string | null>(null);
   const venue = match.venue;
+  const pricePreview = useMemo(() => calculatePricingPreview(startTime, endTime, venue.hourlyRateEur, venue.minimumBookingMinutes, venue.fullDayRateEur), [endTime, startTime, venue.fullDayRateEur, venue.hourlyRateEur, venue.minimumBookingMinutes]);
 
   useEffect(() => { void loadAvailability(); }, [month.year, month.month, venue.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -57,18 +60,18 @@ export default function InstantQuote({ match, brief, user }: Props) {
     setSubmitting(true); setError("");
     try {
       const booking = await createBooking({ venueId: venue.id, shootDate, startTime, endTime, rawBrief: brief, scoutContact: { name: name.trim(), email: email.trim(), ...(phone.trim() ? { phone: phone.trim() } : {}) } });
-      saveBookingNavigation(booking.id); setSubmitted(true);
+      saveBookingNavigation(booking.id); setSubmittedPrice(booking.venuePriceEur); setSubmitted(true);
       window.setTimeout(() => router.push(`/bookings/${booking.id}`), 900);
     } catch (reason) { setError(apiErrorMessage(reason)); setSubmitting(false); }
   }
 
-  if (submitted) return <aside className="settle border border-rule bg-paper p-7 md:p-9" role="status"><div className="available-mark">Request sent</div><h3 className="mt-4 font-display text-3xl">Request sent to owner</h3><p className="mt-3 text-sm leading-relaxed text-ink/75">This is not yet confirmed. Opening your booking details…</p></aside>;
+  if (submitted) return <aside className="settle border border-rule bg-paper p-7 md:p-9" role="status"><div className="available-mark">Request sent</div><h3 className="mt-4 font-display text-3xl">Request sent to owner</h3><p className="mt-3 text-sm leading-relaxed text-ink/75">This request does not reserve the venue yet. Opening your booking details…</p>{submittedPrice !== null && <p className="mt-4 font-mono text-lg">Authoritative booking price: {formatEur(submittedPrice)}</p>}</aside>;
 
   return <aside className="settle-slow border border-rule bg-paper p-7 md:p-9">
     <div className="label label-ink">Request this venue</div>
     <h3 className="mt-4 font-display text-3xl leading-tight">{venue.name}</h3>
     <p className="mt-2 text-sm leading-relaxed text-ink/75">{match.explanation}</p>
-    <div className="mt-6 flex items-baseline justify-between border-y border-rule py-5"><span className="label label-ochre">Listed venue price</span><span className="font-mono text-2xl">{formatEur(venue.dayRateEur)}</span></div>
+    <div className="mt-6 space-y-1 border-y border-rule py-5"><div className="flex items-baseline justify-between"><span className="label label-ochre">Hourly rate</span><span className="font-mono text-xl">{formatEur(venue.hourlyRateEur)}/hour</span></div><p className="text-xs text-taupe">Minimum {formatDuration(venue.minimumBookingMinutes)}</p>{venue.fullDayRateEur !== null && <p className="text-xs text-taupe">Full day {formatEur(venue.fullDayRateEur)}</p>}</div>
 
     <div className="mt-7"><div className="flex items-baseline justify-between gap-4"><div className="label label-ink">Select a date</div>{availability?.timezone && <span className="text-xs text-taupe">Times shown in {availability.timezone}</span>}</div>
       {availabilityState === "loading" ? <p className="mt-5 text-sm italic text-taupe">Loading authoritative availability…</p> : availabilityState === "error" ? <div className="mt-5 border border-rule p-4"><p className="text-sm text-ochreDeep">{availabilityError}</p><button type="button" className="btn mt-4" onClick={() => void loadAvailability()}>Try again</button></div> : availability && <Calendar month={month} today={today} availability={availability} selected={shootDate || inquiryDate || ""} onSelect={selectDate} onUnavailable={selectUnavailableDate} onMonth={setMonth} />}
@@ -79,6 +82,8 @@ export default function InstantQuote({ match, brief, user }: Props) {
     {!inquiryDate && selectedDay && <div className="mt-7 border-t border-rule pt-5"><div className="label label-ink">{formatDate(selectedDay.date)}</div><p className="mt-2 text-sm text-taupe">Available intervals</p><div className="mt-3 flex flex-wrap gap-2">{selectedDay.intervals.map((interval) => <button type="button" key={`${interval.startTime}-${interval.endTime}`} onClick={() => selectInterval(interval)} className={selectedInterval === interval ? "chip border-ink" : "chip"}>{shortTime(interval.startTime)}–{shortTime(interval.endTime)}</button>)}</div></div>}
 
     {!inquiryDate && selectedInterval && <div className="mt-5 grid grid-cols-2 gap-4"><label className="label label-ink">Start time<input type="time" className="form-input" min={shortTime(selectedInterval.startTime)} max={shortTime(selectedInterval.endTime)} value={startTime} onChange={(e) => setStartTime(e.target.value)} /></label><label className="label label-ink">End time<input type="time" className="form-input" min={shortTime(selectedInterval.startTime)} max={shortTime(selectedInterval.endTime)} value={endTime} onChange={(e) => setEndTime(e.target.value)} /></label><p className="col-span-2 text-xs text-taupe">Selection must remain within {shortTime(selectedInterval.startTime)}–{shortTime(selectedInterval.endTime)}.</p></div>}
+
+    {!inquiryDate && pricePreview && <div className="mt-5 border border-rule bg-paperDeep/30 p-4"><div className="label label-ochre">Indicative price</div><div className="mt-3 space-y-1 text-sm text-ink/75"><p>Selected: {formatDuration(pricePreview.durationMinutes)}</p><p>Minimum booking: {formatDuration(venue.minimumBookingMinutes)}</p>{pricePreview.minimumApplies && <p className="font-medium text-ink">{formatDuration(venue.minimumBookingMinutes)} minimum applies</p>}{pricePreview.fullDayRateApplies && <><p>Hourly calculation: {formatEur(pricePreview.hourlyTotal)}</p><p>Full-day rate: {formatEur(venue.fullDayRateEur)}</p></>}<p className="pt-2 font-mono text-lg text-ink">Estimated booking price: {formatEur(pricePreview.estimatedPrice)}</p><p className="pt-1 text-xs text-taupe">Informational estimate. Eema calculates the authoritative price when the request is created.</p></div></div>}
 
     {!inquiryDate && <><div className="mt-7 grid gap-4 border-t border-rule pt-5"><label className="label label-ink">Contact name<input className="form-input" value={name} onChange={(e) => setName(e.target.value)} minLength={2} maxLength={100} /></label><label className="label label-ink">Contact email<input className="form-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} /></label><label className="label label-ink">Phone · optional<input className="form-input" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} /></label></div>
     <button type="button" className="btn btn-ochre mt-7 w-full" disabled={!canSubmit || submitting} onClick={() => void submit()}>{submitting ? "Sending request…" : "Request to book"}</button>

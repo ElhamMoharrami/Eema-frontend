@@ -10,14 +10,8 @@ export const getBookings = () =>
 export const getBooking = (id: string) =>
   apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}`, { auth: "required" });
 
-export const confirmBooking = (id: string) =>
-  apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}/confirm`, { method: "POST", auth: "required" });
-
 export const acceptBookingRequest = (id: string) =>
   apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}/accept`, { method: "POST", auth: "required" });
 
 export const declineBookingRequest = (id: string) =>
   apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}/decline`, { method: "POST", auth: "required" });
-
-export const cancelBooking = (id: string) =>
-  apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}/cancel`, { method: "POST", auth: "required" });

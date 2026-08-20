@@ -7,7 +7,9 @@ export type VenueList = {
   name: string;
   neighbourhood: string;
   sizeM2: number;
-  dayRateEur: number;
+  hourlyRateEur: number;
+  minimumBookingMinutes: number;
+  fullDayRateEur: number | null;
   tags: string[];
   firstPhotoUrl: string | null;
   status: VenueStatus;
@@ -19,7 +21,9 @@ export type Venue = {
   name: string;
   neighbourhood: string;
   sizeM2: number;
-  dayRateEur: number;
+  hourlyRateEur: number;
+  minimumBookingMinutes: number;
+  fullDayRateEur: number | null;
   tags: string[];
   photoPaths: string[];
   clipUrl: string | null;
@@ -64,7 +68,9 @@ export type CreateVenueRequest = {
   name: string;
   neighbourhood: string;
   sizeM2: number;
-  dayRateEur: number;
+  hourlyRateEur: number;
+  minimumBookingMinutes: number;
+  fullDayRateEur: number | null;
   tags: string[];
   description?: string;
   clipUrl?: string;
@@ -74,7 +80,9 @@ export type UpdateVenueRequest = {
   name: string;
   neighbourhood: string;
   sizeM2: number;
-  dayRateEur: number;
+  hourlyRateEur: number;
+  minimumBookingMinutes: number;
+  fullDayRateEur: number | null;
   tags: string[];
   description: string | null;
   clipUrl: string | null;

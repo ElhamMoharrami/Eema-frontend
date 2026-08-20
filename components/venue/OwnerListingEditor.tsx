@@ -6,6 +6,7 @@ import VenuePhoto from "@/components/venue/VenuePhoto";
 import { apiErrorMessage } from "@/lib/api/error-message";
 import { updateVenue, uploadAndAttachVenuePhoto } from "@/lib/api/venues";
 import { backendMediaUrl } from "@/lib/venue-media";
+import { formatDuration } from "@/lib/format";
 import type { UpdateVenueRequest, Venue } from "@/types/venue";
 
 export default function OwnerListingEditor({ venue, timezone, onVenueChanged }: { venue: Venue; timezone: string; onVenueChanged: (venue: Venue) => void }) {
@@ -16,7 +17,9 @@ function MetadataEditor({ venue, timezone, onVenueChanged }: { venue: Venue; tim
   const [name, setName] = useState(venue.name);
   const [neighbourhood, setNeighbourhood] = useState(venue.neighbourhood);
   const [sizeM2, setSizeM2] = useState(String(venue.sizeM2));
-  const [dayRateEur, setDayRateEur] = useState(String(venue.dayRateEur));
+  const [hourlyRateEur, setHourlyRateEur] = useState(String(venue.hourlyRateEur));
+  const [minimumBookingMinutes, setMinimumBookingMinutes] = useState(String(venue.minimumBookingMinutes));
+  const [fullDayRateEur, setFullDayRateEur] = useState(venue.fullDayRateEur === null ? "" : String(venue.fullDayRateEur));
   const [tags, setTags] = useState(venue.tags.join(", "));
   const [description, setDescription] = useState(venue.description ?? "");
   const [clipUrl, setClipUrl] = useState(venue.clipUrl ?? "");
@@ -26,7 +29,8 @@ function MetadataEditor({ venue, timezone, onVenueChanged }: { venue: Venue; tim
 
   useEffect(() => {
     setName(venue.name); setNeighbourhood(venue.neighbourhood); setSizeM2(String(venue.sizeM2));
-    setDayRateEur(String(venue.dayRateEur)); setTags(venue.tags.join(", "));
+    setHourlyRateEur(String(venue.hourlyRateEur)); setMinimumBookingMinutes(String(venue.minimumBookingMinutes));
+    setFullDayRateEur(venue.fullDayRateEur === null ? "" : String(venue.fullDayRateEur)); setTags(venue.tags.join(", "));
     setDescription(venue.description ?? ""); setClipUrl(venue.clipUrl ?? "");
   }, [venue]);
 
@@ -39,7 +43,8 @@ function MetadataEditor({ venue, timezone, onVenueChanged }: { venue: Venue; tim
     setBusy(true); setSuccess(false); setError("");
     try {
       const updated = await updateVenue(venue.id, {
-        name: name.trim(), neighbourhood: neighbourhood.trim(), sizeM2: Number(sizeM2), dayRateEur: Number(dayRateEur),
+        name: name.trim(), neighbourhood: neighbourhood.trim(), sizeM2: Number(sizeM2), hourlyRateEur: Number(hourlyRateEur),
+        minimumBookingMinutes: Number(minimumBookingMinutes), fullDayRateEur: fullDayRateEur ? Number(fullDayRateEur) : null,
         tags: parsedTags, description: description.trim() || null, clipUrl: clipUrl.trim() || null,
         timezone, photoPaths: venue.photoPaths,
       });
@@ -47,7 +52,7 @@ function MetadataEditor({ venue, timezone, onVenueChanged }: { venue: Venue; tim
     } catch (reason) { setError(apiErrorMessage(reason)); } finally { setBusy(false); }
   }
 
-  return <section className="border border-rule bg-paper p-6 md:p-8"><div className="flex flex-wrap items-start justify-between gap-4"><div><div className="label label-ochre">Listing information</div><h2 className="mt-2 font-display text-3xl">Edit details</h2></div><StatusBadge kind="venue" status={venue.status} /></div><p className="mt-3 text-sm text-ink/70">Status and ownership are controlled by Eema and are not changed here.</p><form onSubmit={(event) => void submit(event)} className="mt-6"><div className="grid gap-5 md:grid-cols-2"><Field label="Venue name"><input className="form-input" required minLength={2} maxLength={120} value={name} onChange={(e) => setName(e.target.value)} /></Field><Field label="Neighbourhood"><input className="form-input" required maxLength={100} value={neighbourhood} onChange={(e) => setNeighbourhood(e.target.value)} /></Field><Field label="Size (m²)"><input className="form-input" type="number" required min={1} max={9999} step={1} value={sizeM2} onChange={(e) => setSizeM2(e.target.value)} /></Field><Field label="Day rate (EUR)"><input className="form-input" type="number" required min="0.01" max="99999999.99" step="0.01" value={dayRateEur} onChange={(e) => setDayRateEur(e.target.value)} /></Field><Field label="Tags" hint="Comma-separated, up to 20"><input className="form-input" value={tags} onChange={(e) => setTags(e.target.value)} /></Field><Field label="Video clip URL" hint="Optional"><input className="form-input" type="url" maxLength={500} value={clipUrl} onChange={(e) => setClipUrl(e.target.value)} /></Field></div><div className="mt-5"><Field label="Description" hint="Optional"><textarea className="form-input min-h-32 resize-y" maxLength={5000} value={description} onChange={(e) => setDescription(e.target.value)} /></Field></div><button className="btn btn-ochre mt-6" disabled={busy}>{busy ? "Saving…" : "Save listing details"}</button>{success && <p className="mt-4 text-sm text-ochreDeep" role="status">Listing details saved.</p>}{error && <p className="mt-4 text-sm text-ochreDeep" role="alert">{error}</p>}</form></section>;
+  return <section className="border border-rule bg-paper p-6 md:p-8"><div className="flex flex-wrap items-start justify-between gap-4"><div><div className="label label-ochre">Listing information</div><h2 className="mt-2 font-display text-3xl">Edit details</h2></div><StatusBadge kind="venue" status={venue.status} /></div><p className="mt-3 text-sm text-ink/70">Status and ownership are controlled by Eema and are not changed here.</p><form onSubmit={(event) => void submit(event)} className="mt-6"><div className="grid gap-5 md:grid-cols-2"><Field label="Venue name"><input className="form-input" required minLength={2} maxLength={120} value={name} onChange={(e) => setName(e.target.value)} /></Field><Field label="Neighbourhood"><input className="form-input" required maxLength={100} value={neighbourhood} onChange={(e) => setNeighbourhood(e.target.value)} /></Field><Field label="Size (m²)"><input className="form-input" type="number" required min={1} max={9999} step={1} value={sizeM2} onChange={(e) => setSizeM2(e.target.value)} /></Field><Field label="Hourly rate"><input className="form-input" type="number" required min="0.01" max="99999999.99" step="0.01" value={hourlyRateEur} onChange={(e) => setHourlyRateEur(e.target.value)} /></Field><Field label="Minimum booking" hint={`${formatDuration(Number(minimumBookingMinutes))} · stored as minutes`}><input className="form-input" type="number" required min={1} max={10080} step={1} value={minimumBookingMinutes} onChange={(e) => setMinimumBookingMinutes(e.target.value)} /></Field><Field label="Full-day rate (optional)"><input className="form-input" type="number" min="0.01" max="99999999.99" step="0.01" value={fullDayRateEur} onChange={(e) => setFullDayRateEur(e.target.value)} /></Field><Field label="Tags" hint="Comma-separated, up to 20"><input className="form-input" value={tags} onChange={(e) => setTags(e.target.value)} /></Field><Field label="Video clip URL" hint="Optional"><input className="form-input" type="url" maxLength={500} value={clipUrl} onChange={(e) => setClipUrl(e.target.value)} /></Field></div><div className="mt-5"><Field label="Description" hint="Optional"><textarea className="form-input min-h-32 resize-y" maxLength={5000} value={description} onChange={(e) => setDescription(e.target.value)} /></Field></div><button className="btn btn-ochre mt-6" disabled={busy}>{busy ? "Saving…" : "Save listing details"}</button>{success && <p className="mt-4 text-sm text-ochreDeep" role="status">Listing details saved.</p>}{error && <p className="mt-4 text-sm text-ochreDeep" role="alert">{error}</p>}</form></section>;
 }
 
 function PhotoManager({ venue, timezone, onVenueChanged }: { venue: Venue; timezone: string; onVenueChanged: (venue: Venue) => void }) {
@@ -90,7 +95,7 @@ function PhotoManager({ venue, timezone, onVenueChanged }: { venue: Venue; timez
 }
 
 function venueRequest(venue: Venue, timezone: string, photoPaths: string[]): UpdateVenueRequest {
-  return { name: venue.name, neighbourhood: venue.neighbourhood, sizeM2: venue.sizeM2, dayRateEur: venue.dayRateEur, tags: venue.tags, description: venue.description, clipUrl: venue.clipUrl, timezone, photoPaths };
+  return { name: venue.name, neighbourhood: venue.neighbourhood, sizeM2: venue.sizeM2, hourlyRateEur: venue.hourlyRateEur, minimumBookingMinutes: venue.minimumBookingMinutes, fullDayRateEur: venue.fullDayRateEur, tags: venue.tags, description: venue.description, clipUrl: venue.clipUrl, timezone, photoPaths };
 }
 
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {

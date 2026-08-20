@@ -8,7 +8,6 @@ import AppHeader from "@/components/layout/AppHeader";
 import BookingActions from "@/components/booking/BookingActions";
 import BookingWorkflowNotice from "@/components/booking/BookingWorkflowNotice";
 import RefundDetails from "@/components/booking/RefundDetails";
-import PaymentStateNotice from "@/components/booking/PaymentStateNotice";
 import StatusBadge from "@/components/ui/StatusBadge";
 import { ApiError } from "@/lib/api/client";
 import { apiErrorMessage } from "@/lib/api/error-message";
@@ -90,15 +89,13 @@ export default function BookedPage() {
 function BookingView({ booking, venueName, onRecheck }: { booking: Booking; venueName: string | null; onRecheck: () => void }) {
   const content: Record<BookingStatus, { heading: string; message: string }> = {
     REQUESTED: { heading: "Waiting for owner response.", message: `This request does not reserve the venue yet.${booking.ownerResponseExpiresAt ? ` Owner response expected by ${formatTimestamp(booking.ownerResponseExpiresAt)}.` : ""}` },
-    AWAITING_PAYMENT: { heading: "Your request was accepted.", message: "The owner accepted your request. Payment is required within the displayed payment window." },
+    AWAITING_PAYMENT: { heading: "Payment confirmation is still processing.", message: "Eema is checking the authoritative payment state. The booking has not been locally promoted." },
     DECLINED: { heading: "The request was declined.", message: "The venue owner declined this booking request." },
     EXPIRED: isPaymentWindowExpiry(booking)
       ? { heading: "The payment window expired.", message: "The accepted request can no longer be paid because its payment deadline passed." }
       : { heading: "The response window expired.", message: "The owner did not respond before the response deadline." },
     UNAVAILABLE: { heading: "This time is no longer available.", message: "Another booking reserved this time before your request was accepted." },
-    PENDING: { heading: "Payment confirmation is processing.", message: "Your payment was submitted and Eema is waiting for authoritative payment confirmation." },
-    PAID: { heading: "Payment received.", message: "Payment received. The booking is awaiting confirmation where applicable." },
-    CONFIRMED: { heading: "Your booking is confirmed.", message: "The venue owner has confirmed this booking." },
+    CONFIRMED: { heading: "Your booking is confirmed.", message: "Payment has been authoritatively received and the booking is confirmed." },
     CANCELLED: { heading: "This booking has been cancelled.", message: "The authoritative booking record is marked as cancelled." },
     REFUNDED: booking.refundStatus === "REFUNDED"
       ? { heading: "This booking has been refunded.", message: "Eema has recorded the authoritative refund as completed." }
@@ -109,11 +106,11 @@ function BookingView({ booking, venueName, onRecheck }: { booking: Booking; venu
     <div className="flex flex-wrap items-center justify-between gap-4"><div className="label label-ink">Authoritative Eema status</div><StatusBadge kind="booking" status={booking.status} /></div>
     <h2 className="mt-5 font-display text-4xl leading-[1.05]">{copy.heading}</h2><p className="mt-4 text-[1.02rem] leading-relaxed text-ink/85">{copy.message}</p>
     <BookingWorkflowNotice booking={booking} />
-    <PaymentStateNotice booking={booking} />
     <div className="mt-8 grid gap-5 border-t border-rule pt-6 sm:grid-cols-2">
       <Detail label="Venue" value={venueName ?? booking.venueId} />
       <Detail label="Shoot date" value={formatDate(booking.shootDate)} />
-      <Detail label="Authoritative total" value={formatEur(booking.totalPaidEur)} mono />
+      <Detail label="Authoritative booking price" value={formatEur(booking.venuePriceEur)} mono />
+      <Detail label="Total paid" value={formatEur(booking.totalPaidEur)} mono />
       <Detail label="Created" value={formatTimestamp(booking.createdAt)} />
       <Detail label="Paid at" value={formatTimestamp(booking.paidAt)} />
       <Detail label="Confirmed at" value={formatTimestamp(booking.confirmedAt)} />
@@ -123,7 +120,7 @@ function BookingView({ booking, venueName, onRecheck }: { booking: Booking; venu
     <div className="mt-8 grid gap-6 border-t border-rule pt-6 sm:grid-cols-2"><Contact label="Scout contact" contact={booking.scoutContact} /><Contact label="Owner contact" contact={booking.ownerContact} /></div>
     <RefundDetails booking={booking} />
     <BookingActions booking={booking} onChanged={onRecheck} />
-    <div className="mt-8 flex flex-wrap gap-3">{booking.status === "PENDING" && <button onClick={onRecheck} className="btn">Check again</button>}<Link href="/scout/bookings" className="btn inline-block">My bookings</Link><Link href="/" className="btn inline-block">Marketplace</Link></div>
+    <div className="mt-8 flex flex-wrap gap-3">{booking.status === "AWAITING_PAYMENT" && <button onClick={onRecheck} className="btn">Check payment status</button>}<Link href="/scout/bookings" className="btn inline-block">My bookings</Link><Link href="/" className="btn inline-block">Marketplace</Link></div>
   </>;
 }
 

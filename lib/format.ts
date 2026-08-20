@@ -18,3 +18,12 @@ export function formatTimestamp(value: string | null): string {
 export function formatTimeRange(start: string, end: string): string {
   return `${start.slice(0, 5)}–${end.slice(0, 5)}`;
 }
+
+export function formatDuration(minutes: number): string {
+  const hours = Math.floor(minutes / 60);
+  const remainder = minutes % 60;
+  const parts: string[] = [];
+  if (hours) parts.push(`${hours} ${hours === 1 ? "hour" : "hours"}`);
+  if (remainder) parts.push(`${remainder} ${remainder === 1 ? "minute" : "minutes"}`);
+  return parts.join(" ") || "0 minutes";
+}

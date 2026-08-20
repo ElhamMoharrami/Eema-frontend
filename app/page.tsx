@@ -17,7 +17,7 @@ import { matchVenues } from "@/lib/api/match";
 import { getVenues } from "@/lib/api/venues";
 import { apiErrorMessage } from "@/lib/api/error-message";
 import { venuePhoto } from "@/lib/venue-media";
-import { formatEur } from "@/lib/format";
+import VenuePricingSummary from "@/components/venue/VenuePricingSummary";
 import type { MatchedVenue, MatchResponse } from "@/types/match";
 import type { VenueList } from "@/types/venue";
 
@@ -135,7 +135,7 @@ export default function Page() {
 }
 
 function HeroSummary({ venue, onOpen }: { venue: VenueList; onOpen: () => void }) {
-  return <button onClick={onOpen} className="group block w-full text-left"><div className="mat"><div className="relative overflow-hidden bg-paperDeep" style={{ aspectRatio: "4 / 5" }}><VenuePhoto src={venuePhoto(venue)} alt={venue.name} className="transition-transform duration-700 group-hover:scale-[1.02]" /></div></div><div className="mt-3 flex items-baseline justify-between gap-4"><span className="font-display text-lg">{venue.name}</span><span className="tabular font-mono text-sm text-taupe">{formatEur(venue.dayRateEur)}/day</span></div><div className="label mt-1">{venue.sizeM2} m² · {venue.neighbourhood}</div></button>;
+  return <button onClick={onOpen} className="group block w-full text-left"><div className="mat"><div className="relative overflow-hidden bg-paperDeep" style={{ aspectRatio: "4 / 5" }}><VenuePhoto src={venuePhoto(venue)} alt={venue.name} className="transition-transform duration-700 group-hover:scale-[1.02]" /></div></div><div className="mt-3 flex items-start justify-between gap-4"><span className="font-display text-lg">{venue.name}</span><VenuePricingSummary {...venue} compact /></div><div className="label mt-1">{venue.sizeM2} m² · {venue.neighbourhood}</div></button>;
 }
 
 function Results({ match, onOpen }: { match: MatchResponse; onOpen: (item: MatchedVenue) => void }) {

@@ -5,7 +5,7 @@ import type { MatchedVenue } from "@/types/match";
 import { venuePhoto } from "@/lib/venue-media";
 import GalleryFrame from "./GalleryFrame";
 import InstantQuote from "@/components/checkout/InstantQuote";
-import { formatEur } from "@/lib/format";
+import VenuePricingSummary from "./VenuePricingSummary";
 
 type Props = {
   match: MatchedVenue;
@@ -27,10 +27,9 @@ export default function VenueDetail({ match, brief, user, onBack }: Props) {
           caption={`${venue.name} · ${venue.sizeM2} m² · ${venue.neighbourhood}`}
           large
         />
-        <div className="mt-6 grid grid-cols-3 gap-4">
-          <Stat label="Day rate" value={formatEur(venue.dayRateEur)} />
+        <div className="mt-6 grid grid-cols-2 gap-4">
+          <div className="border-t border-rule pt-3"><div className="label">Pricing</div><div className="mt-1"><VenuePricingSummary {...venue} /></div></div>
           <Stat label="Size" value={`${venue.sizeM2} m²`} />
-          <Stat label="Where" value={venue.neighbourhood} />
         </div>
         <div className="mt-4 flex flex-wrap gap-x-3 gap-y-1">
           {venue.tags.map((t) => (

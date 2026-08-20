@@ -7,8 +7,6 @@ export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
   DECLINED: "Declined",
   EXPIRED: "Expired",
   UNAVAILABLE: "Time unavailable",
-  PENDING: "Pending",
-  PAID: "Paid",
   CONFIRMED: "Confirmed",
   CANCELLED: "Cancelled",
   REFUNDED: "Refunded",

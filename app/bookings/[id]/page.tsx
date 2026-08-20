@@ -6,7 +6,6 @@ import AuthPanel from "@/components/auth/AuthPanel";
 import { useAuth } from "@/components/auth/AuthProvider";
 import BookingActions from "@/components/booking/BookingActions";
 import BookingWorkflowNotice from "@/components/booking/BookingWorkflowNotice";
-import PaymentStateNotice from "@/components/booking/PaymentStateNotice";
 import RefundDetails from "@/components/booking/RefundDetails";
 import AppHeader from "@/components/layout/AppHeader";
 import ErrorState from "@/components/ui/ErrorState";
@@ -17,7 +16,7 @@ import { ApiError } from "@/lib/api/client";
 import { apiErrorMessage } from "@/lib/api/error-message";
 import { isPaymentWindowExpiry } from "@/lib/booking-lifecycle";
 import { getVenue } from "@/lib/api/venues";
-import { formatDate, formatEur, formatTimeRange, formatTimestamp } from "@/lib/format";
+import { formatDate, formatDuration, formatEur, formatTimeRange, formatTimestamp } from "@/lib/format";
 import type { Booking } from "@/types/booking";
 
 type LoadState = "idle" | "loading" | "ready" | "forbidden" | "not-found" | "expired" | "error";
@@ -112,6 +111,11 @@ function BookingDetail({ booking, venueName, role, onChanged }: { booking: Booki
       <Detail label="Shoot date" value={formatDate(booking.shootDate)} />
       <Detail label="Time" value={formatTimeRange(booking.startTime, booking.endTime)} />
       <Detail label="Venue price" value={formatEur(booking.venuePriceEur)} mono />
+      <Detail label="Hourly rate at request" value={`${formatEur(booking.hourlyRateEurSnapshot)}/hour`} mono />
+      <Detail label="Minimum booking at request" value={formatDuration(booking.minimumBookingMinutesSnapshot)} />
+      {booking.fullDayRateEurSnapshot !== null && <Detail label="Full-day rate at request" value={formatEur(booking.fullDayRateEurSnapshot)} mono />}
+      <Detail label="Selected duration" value={formatDuration(booking.durationMinutes)} />
+      <Detail label="Billable duration" value={formatDuration(booking.billableMinutes)} />
       <Detail label="Total paid" value={formatEur(booking.totalPaidEur)} mono />
       {ownerView && <>
         <Detail label="Commission rate" value={`${booking.commissionPercentage}%`} mono />
@@ -127,7 +131,6 @@ function BookingDetail({ booking, venueName, role, onChanged }: { booking: Booki
 
     <BookingWorkflowNotice booking={booking} />
     <BookingLifecycle booking={booking} />
-    <PaymentStateNotice booking={booking} />
     <RefundDetails booking={booking} />
 
     {!ownerView && <section className="mt-6 border-t border-rule pt-5">
