@@ -4,14 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="EEMA-9 implement calender" />
+    <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="EEMA-12 Implemented structured production-profile support">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/bookings/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/bookings/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/booking/RefundDetails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/booking/RefundDetails.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/api/bookings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/bookings.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/format.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/format.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/booking.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/booking.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="84" />
+    <option name="cachedIndexableFilesCount" value="96" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -22,23 +29,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0006640701285372" />
-      <entry key="MS500" value="1.4212168664509592" />
-      <entry key="S2" value="3.688554095416999" />
-      <entry key="S5" value="6.136618280839338" />
-      <entry key="S10" value="7.701855768098252" />
-      <entry key="S30" value="9.130913971471408" />
-      <entry key="S60" value="9.550915035679397" />
-      <entry key="M2" value="9.771683361727533" />
-      <entry key="M5" value="9.907749282374661" />
-      <entry key="M10" value="9.954225590370209" />
-      <entry key="M15" value="9.977155970332849" />
-      <entry key="M30" value="10.143510342408474" />
-      <entry key="H1" value="11.631097611009995" />
-      <entry key="H2" value="19.046866717187154" />
-      <entry key="H4" value="34.598174014480215" />
-      <entry key="D1" value="84.79164372188822" />
-      <entry key="W1" value="136.1416972045444" />
+      <entry key="MS100" value="1.0312411570833295" />
+      <entry key="MS500" value="1.7861358592255003" />
+      <entry key="S2" value="4.6233662684273575" />
+      <entry key="S5" value="7.979109997831426" />
+      <entry key="S10" value="10.313746856043782" />
+      <entry key="S30" value="12.571305987965381" />
+      <entry key="S60" value="13.256630981016158" />
+      <entry key="M2" value="13.620714567276371" />
+      <entry key="M5" value="13.846415481800491" />
+      <entry key="M10" value="13.923397259621101" />
+      <entry key="M15" value="13.956554745713527" />
+      <entry key="M30" value="14.133059118024606" />
+      <entry key="H1" value="15.625216848868359" />
+      <entry key="H2" value="23.042295610680522" />
+      <entry key="H4" value="38.594178708316214" />
+      <entry key="D1" value="88.79005809707056" />
+      <entry key="W1" value="140.14133626920872" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -49,34 +56,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="2.684787708992932E-197" />
-      <entry key="M10" value="7.327734461128663E-99" />
-      <entry key="M15" value="4.75324016685555E-66" />
-      <entry key="M30" value="3.083257873919298E-33" />
-      <entry key="H1" value="7.852716441170595E-17" />
-      <entry key="H2" value="1.2532131804572886E-8" />
-      <entry key="H4" value="1.5831697179716906E-4" />
-      <entry key="D1" value="0.41442528236433057" />
-      <entry key="W1" value="1.597258374061943" />
+      <entry key="M5" value="2.6706569711303886E-197" />
+      <entry key="M10" value="7.308425131386301E-99" />
+      <entry key="M15" value="4.744886312641166E-66" />
+      <entry key="M30" value="3.0805472583284307E-33" />
+      <entry key="H1" value="7.849263863277125E-17" />
+      <entry key="H2" value="1.2529376521194905E-8" />
+      <entry key="H4" value="1.582995672523481E-4" />
+      <entry key="D1" value="0.41441768872298285" />
+      <entry key="W1" value="1.5972541930213564" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9599053801085954" />
-      <entry key="MS500" value="1.4098050216439115" />
-      <entry key="S2" value="3.6799636192028675" />
-      <entry key="S5" value="6.129604142422966" />
-      <entry key="S10" value="7.697061435810001" />
-      <entry key="S30" value="9.128905566895636" />
-      <entry key="S60" value="9.549849267603275" />
-      <entry key="M2" value="9.771134197134298" />
-      <entry key="M5" value="9.90752558983216" />
-      <entry key="M10" value="9.954113050795215" />
-      <entry key="M15" value="9.977080671898715" />
-      <entry key="M30" value="10.143471008514803" />
-      <entry key="H1" value="11.631064885740798" />
-      <entry key="H2" value="19.04681571746013" />
-      <entry key="H4" value="34.59827259575775" />
-      <entry key="D1" value="85.2060418416771" />
-      <entry key="W1" value="137.73894918808392" />
+      <entry key="MS100" value="0.9821939186992278" />
+      <entry key="MS500" value="1.7669827212019529" />
+      <entry key="S2" value="4.608968458598946" />
+      <entry key="S5" value="7.968530557080548" />
+      <entry key="S10" value="10.30664427989272" />
+      <entry key="S30" value="12.568328648059984" />
+      <entry key="S60" value="13.255047771542067" />
+      <entry key="M2" value="13.619897685660968" />
+      <entry key="M5" value="13.846082439474658" />
+      <entry key="M10" value="13.923229659038332" />
+      <entry key="M15" value="13.956442653656241" />
+      <entry key="M30" value="14.133001345262437" />
+      <entry key="H1" value="15.625174898644557" />
+      <entry key="H2" value="23.042240001839932" />
+      <entry key="H4" value="38.59427496842939" />
+      <entry key="D1" value="89.20444823863858" />
+      <entry key="W1" value="141.7385840167128" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -160,6 +167,7 @@
       <updated>1783708626959</updated>
       <workItem from="1786976417748" duration="9469000" />
       <workItem from="1787148850906" duration="9261000" />
+      <workItem from="1787238488362" duration="3798000" />
     </task>
     <task id="LOCAL-00001" summary="EEMA-8 Updated the frontend for the additive hardened BookingDto fields">
       <option name="closed" value="true" />
@@ -193,7 +201,31 @@
       <option name="project" value="LOCAL" />
       <updated>1787162224566</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="EEMA-10 Implemented the booking-model change">
+      <option name="closed" value="true" />
+      <created>1787238893312</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1787238893312</updated>
+    </task>
+    <task id="LOCAL-00006" summary="EEMA-11 clean up">
+      <option name="closed" value="true" />
+      <created>1787241011332</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1787241011332</updated>
+    </task>
+    <task id="LOCAL-00007" summary="EEMA-12 Implemented structured production-profile support">
+      <option name="closed" value="true" />
+      <created>1787242347406</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1787242347406</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -204,6 +236,9 @@
     <MESSAGE value="EEMA-8 clean up" />
     <MESSAGE value="EEMA-9 implement email notification" />
     <MESSAGE value="EEMA-9 implement calender" />
-    <option name="LAST_COMMIT_MESSAGE" value="EEMA-9 implement calender" />
+    <MESSAGE value="EEMA-10 Implemented the booking-model change" />
+    <MESSAGE value="EEMA-11 clean up" />
+    <MESSAGE value="EEMA-12 Implemented structured production-profile support" />
+    <option name="LAST_COMMIT_MESSAGE" value="EEMA-12 Implemented structured production-profile support" />
   </component>
 </project>

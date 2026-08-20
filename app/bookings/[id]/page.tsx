@@ -5,6 +5,8 @@ import { useCallback, useEffect, useState } from "react";
 import AuthPanel from "@/components/auth/AuthPanel";
 import { useAuth } from "@/components/auth/AuthProvider";
 import BookingActions from "@/components/booking/BookingActions";
+import BookingCancellation from "@/components/booking/BookingCancellation";
+import CancellationDetails from "@/components/booking/CancellationDetails";
 import BookingWorkflowNotice from "@/components/booking/BookingWorkflowNotice";
 import RefundDetails from "@/components/booking/RefundDetails";
 import AppHeader from "@/components/layout/AppHeader";
@@ -29,6 +31,7 @@ export default function BookingDetailPage({ params }: { params: { id: string } }
   const validId = UUID_PATTERN.test(bookingId);
   const [booking, setBooking] = useState<Booking | null>(null);
   const [venueName, setVenueName] = useState<string | null>(null);
+  const [venueTimezone, setVenueTimezone] = useState<string | null>(null);
   const [state, setState] = useState<LoadState>("idle");
   const [error, setError] = useState("");
 
@@ -45,8 +48,10 @@ export default function BookingDetailPage({ params }: { params: { id: string } }
       try {
         const venue = await getVenue(loaded.venueId);
         setVenueName(venue.name);
+        setVenueTimezone(venue.timezone);
       } catch {
         setVenueName(null);
+        setVenueTimezone(null);
       }
     } catch (reason) {
       setBooking(null);
@@ -89,11 +94,11 @@ export default function BookingDetailPage({ params }: { params: { id: string } }
     {auth.isAuthReady && auth.user && state === "not-found" && <ErrorState title="Booking not found" message="This booking does not exist, or it is no longer available." />}
     {auth.isAuthReady && auth.user && state === "expired" && <ErrorState title="Session expired" message="Your session has expired. Please sign in again." />}
     {auth.isAuthReady && auth.user && state === "error" && <ErrorState title="Could not load booking" message={error} onRetry={() => void load()} />}
-    {auth.isAuthReady && auth.user && state === "ready" && booking && <BookingDetail booking={booking} venueName={venueName} role={auth.role} onChanged={load} />}
+    {auth.isAuthReady && auth.user && state === "ready" && booking && <BookingDetail booking={booking} venueName={venueName} venueTimezone={venueTimezone} role={auth.role} onChanged={load} />}
   </main>;
 }
 
-function BookingDetail({ booking, venueName, role, onChanged }: { booking: Booking; venueName: string | null; role: string | null; onChanged: () => Promise<void> }) {
+function BookingDetail({ booking, venueName, venueTimezone, role, onChanged }: { booking: Booking; venueName: string | null; venueTimezone: string | null; role: string | null; onChanged: () => Promise<void> }) {
   const ownerView = role === "OWNER";
   return <article className="border border-rule bg-paper p-6 md:p-9">
     <header className="flex flex-wrap items-start justify-between gap-5">
@@ -132,6 +137,7 @@ function BookingDetail({ booking, venueName, role, onChanged }: { booking: Booki
     <BookingWorkflowNotice booking={booking} />
     <BookingLifecycle booking={booking} />
     <RefundDetails booking={booking} />
+    <CancellationDetails booking={booking} venueTimezone={venueTimezone} />
 
     {!ownerView && <section className="mt-6 border-t border-rule pt-5">
       <div className="label">Brief</div>
@@ -157,6 +163,7 @@ function BookingDetail({ booking, venueName, role, onChanged }: { booking: Booki
     </section>
 
     <BookingActions booking={booking} onChanged={onChanged} />
+    <BookingCancellation booking={booking} venueName={venueName ?? `Venue ${booking.venueId}`} venueTimezone={venueTimezone} onChanged={onChanged} />
   </article>;
 }
 

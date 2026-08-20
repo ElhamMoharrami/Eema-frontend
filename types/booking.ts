@@ -2,6 +2,18 @@ export type BookingStatus = "REQUESTED" | "AWAITING_PAYMENT" | "CONFIRMED" | "DE
 export type OwnerPayoutStatus = "CALCULATED_NOT_PAID" | "PAID_MANUALLY";
 export type PaymentCreationStatus = "NOT_STARTED" | "CREATING" | "CREATED";
 export type RefundStatus = "NONE" | "CREATING" | "QUEUED" | "PENDING" | "PROCESSING" | "REFUNDED" | "FAILED" | "CANCELED";
+export type CancellationPolicyTier = "PRE_PAYMENT_WITHDRAWAL" | "GRACE_PERIOD" | "FLEXIBLE_FULL_REFUND" | "PARTIAL_REFUND" | "NON_REFUNDABLE" | "OWNER_FULL_REFUND" | "ADMIN_FULL_REFUND";
+export type ActorType = "SCOUT" | "OWNER" | "ADMIN" | "SYSTEM" | "WEBHOOK";
+
+export type CancellationPreview = {
+  bookingId: string;
+  policyTier: CancellationPolicyTier | null;
+  refundPercentage: number;
+  refundAmountEur: number;
+  retainedAmountEur: number;
+  cancellationDeadline: string | null;
+  canCancel: boolean;
+};
 
 export type BookingContactSnapshot = {
   name: string;
@@ -65,4 +77,15 @@ export type Booking = {
   paymentExpiresAt: string | null;
   declinedAt: string | null;
   expiredAt: string | null;
+  cancellationPolicyVersion: string | null;
+  gracePeriodEndsAt: string | null;
+  fullRefundUntil: string | null;
+  partialRefundUntil: string | null;
+  partialRefundPercentage: number | null;
+  cancellationPolicyTier: CancellationPolicyTier | null;
+  cancelledByActorType: ActorType | null;
+  cancellationRefundPercentage: number | null;
+  cancellationRefundAmountEur: number | null;
+  cancellationRetainedAmountEur: number | null;
+  cancellationReason: string | null;
 };

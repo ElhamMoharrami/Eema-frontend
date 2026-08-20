@@ -13,7 +13,7 @@ const REFUND_COPY: Record<Exclude<RefundStatus, "NONE">, { label: string; messag
 
 export default function RefundDetails({ booking }: { booking: Booking }) {
   if (booking.refundStatus === "NONE") return null;
-  const copy = REFUND_COPY[booking.refundStatus];
+  const copy = booking.status === "CANCELLED" ? cancellationRefundCopy(booking.refundStatus) : REFUND_COPY[booking.refundStatus];
   return <div className="mt-6 border border-rule bg-paperDeep/40 p-5">
     <div className="label label-ochre">{copy.label}</div>
     <p className="mt-2 text-sm leading-relaxed text-ink/75">{copy.message}</p>
@@ -23,6 +23,13 @@ export default function RefundDetails({ booking }: { booking: Booking }) {
       {booking.refundedAt && <RefundRow label="Refunded" value={formatTimestamp(booking.refundedAt)} />}
     </dl>
   </div>;
+}
+
+function cancellationRefundCopy(status: Exclude<RefundStatus, "NONE">): { label: string; message: string } {
+  if (status === "CREATING" || status === "QUEUED" || status === "PENDING" || status === "PROCESSING") return { label: "Refund in progress", message: "Your refund has been initiated and its provider status is still in progress." };
+  if (status === "REFUNDED") return { label: "Refund processed", message: "Eema has recorded the provider refund as completed." };
+  if (status === "FAILED") return { label: "Refund requires attention", message: "The refund could not be completed. Eema support may need to review it." };
+  return REFUND_COPY[status];
 }
 
 function RefundRow({ label, value, mono }: { label: string; value: string; mono?: boolean }) {

@@ -145,6 +145,27 @@ README and keep `MOLLIE_REDIRECT_URL=http://localhost:3000/booked`.
 Refund is currently an ADMIN/backend operational flow. The SCOUT and OWNER
 interfaces display authoritative refund state but expose no refund action.
 
+### F. Cancellations
+
+Scout cancellation is available from the booking detail page:
+
+- `REQUESTED` and `AWAITING_PAYMENT` bookings can be withdrawn without a refund
+  because payment has not completed.
+- `CONFIRMED` bookings first load the authoritative cancellation preview from
+  Spring. The scout must review the policy tier, refund percentage, refund amount,
+  and retained amount before explicitly confirming.
+- A successful cancellation produces `CANCELLED`. `RefundStatus` separately tracks
+  whether any required provider refund is being created, processed, completed, or
+  requires attention.
+
+An owner can cancel a `CONFIRMED` booking from its detail page after providing a
+reason. Spring applies the owner full-refund policy; the scout receives a full
+refund and the owner receives no payout. Administrative cancellation remains a
+backend operations capability and has no frontend controls.
+
+The frontend never derives cancellation eligibility or economics from policy
+timestamps. Spring re-evaluates the policy when cancellation is submitted.
+
 ## Database and logs
 
 PostgreSQL is stored in the backend Docker volume; do not install it locally.
