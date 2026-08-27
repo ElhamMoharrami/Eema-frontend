@@ -9,6 +9,7 @@ import BookingCancellation from "@/components/booking/BookingCancellation";
 import CancellationDetails from "@/components/booking/CancellationDetails";
 import BookingWorkflowNotice from "@/components/booking/BookingWorkflowNotice";
 import RefundDetails from "@/components/booking/RefundDetails";
+import ReceiptDownload from "@/components/booking/ReceiptDownload";
 import AppHeader from "@/components/layout/AppHeader";
 import ErrorState from "@/components/ui/ErrorState";
 import LoadingState from "@/components/ui/LoadingState";
@@ -137,6 +138,7 @@ function BookingDetail({ booking, venueName, venueTimezone, role, onChanged }: {
     <BookingWorkflowNotice booking={booking} />
     <BookingLifecycle booking={booking} />
     <RefundDetails booking={booking} />
+    {role === "SCOUT" && receiptMayBeAvailable(booking) && <ReceiptDownload bookingId={booking.id} />}
     <CancellationDetails booking={booking} venueTimezone={venueTimezone} />
 
     {!ownerView && <section className="mt-6 border-t border-rule pt-5">
@@ -165,6 +167,11 @@ function BookingDetail({ booking, venueName, venueTimezone, role, onChanged }: {
     <BookingActions booking={booking} onChanged={onChanged} />
     <BookingCancellation booking={booking} venueName={venueName ?? `Venue ${booking.venueId}`} venueTimezone={venueTimezone} onChanged={onChanged} />
   </article>;
+}
+
+function receiptMayBeAvailable(booking: Booking): boolean {
+  return booking.paidAt !== null && booking.confirmedAt !== null && booking.totalPaidEur > 0
+    && (booking.status === "CONFIRMED" || booking.status === "CANCELLED" || booking.status === "REFUNDED");
 }
 
 function BookingLifecycle({ booking }: { booking: Booking }) {

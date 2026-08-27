@@ -1,4 +1,5 @@
-import { apiRequest } from "./client";
+import { apiBinaryRequest, apiRequest } from "./client";
+import { saveBinaryDownload } from "@/lib/download";
 import type { Booking, CancellationPreview, CreateBookingRequest } from "@/types/booking";
 
 export const createBooking = (request: CreateBookingRequest) =>
@@ -9,6 +10,11 @@ export const getBookings = () =>
 
 export const getBooking = (id: string) =>
   apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}`, { auth: "required" });
+
+export async function downloadBookingReceipt(id: string): Promise<void> {
+  const response = await apiBinaryRequest(`/bookings/${encodeURIComponent(id)}/receipt`);
+  saveBinaryDownload(response, "eema-booking-receipt.pdf");
+}
 
 export const acceptBookingRequest = (id: string) =>
   apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}/accept`, { method: "POST", auth: "required" });

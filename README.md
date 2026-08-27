@@ -223,6 +223,17 @@ money.** Marking a liability settled records settlement state; it does not move
 money or replace the backend amount. The console deliberately has no generic
 booking-status, refund, fee, amount, event, waiver, or analytics controls.
 
+## Financial documents
+
+SCOUT users can download a booking receipt from a confirmed or historically paid
+booking detail page. OWNER users can open **Payouts**, review payout status and
+backend-provided ledger values, then download a payout statement once the payout
+is `PAID` and Spring reports that a statement is available.
+
+PDFs are requested from authorized Spring endpoints and are never generated or
+calculated by the frontend. A booking receipt is not a tax invoice, and a payout
+statement is not a tax invoice.
+
 ## Backend TODOs
 
 - Expose venue update/delete endpoints before adding owner editing controls.

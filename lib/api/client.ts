@@ -7,8 +7,10 @@ type ApiRequestOptions = Omit<RequestInit, "body"> & {
   auth?: AuthMode;
   body?: unknown;
   retryOnUnauthorized?: boolean;
-  responseMode?: "json" | "empty";
+  responseMode?: "json" | "empty" | "blob";
 };
+
+export type BinaryResponse = { blob: Blob; contentDisposition: string | null };
 
 export class ApiError extends Error {
   constructor(
@@ -70,6 +72,9 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
 
   if (!response.ok) throw await toApiError(response);
   if (response.status === 204 || responseMode === "empty") return undefined as T;
+  if (responseMode === "blob") {
+    return { blob: await response.blob(), contentDisposition: response.headers.get("Content-Disposition") } as T;
+  }
 
   const text = await response.text();
   if (!text) {
@@ -80,6 +85,14 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
   } catch {
     throw new ApiError(response.status, "Could not read the server response", undefined, "MALFORMED_RESPONSE");
   }
+}
+
+export function apiBinaryRequest(path: string): Promise<BinaryResponse> {
+  return apiRequest<BinaryResponse>(path, {
+    auth: "required",
+    responseMode: "blob",
+    headers: { Accept: "application/pdf" },
+  });
 }
 
 async function refreshSession(refreshToken: string): Promise<boolean> {

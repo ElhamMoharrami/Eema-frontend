@@ -1,0 +1,19 @@
+export type OwnerPayoutStatus = "CALCULATED" | "HELD" | "READY" | "PAID" | "CANCELLED";
+export type OwnerPayoutHoldReason = "WAITING_FOR_BOOKING_END" | "WAITING_FOR_PROVIDER_COST" | "REFUND_IN_PROGRESS";
+export type OwnerPayout = {
+  id: string;
+  bookingId: string;
+  venueId: string;
+  currency: string;
+  grossRetainedAmountEur: number;
+  commissionEur: number;
+  providerCostEur: number | null;
+  payoutAmountEur: number;
+  status: OwnerPayoutStatus;
+  holdReason: OwnerPayoutHoldReason | null;
+  eligibleAt: string | null;
+  readyAt: string | null;
+  paidAt: string | null;
+  statementAvailable: boolean;
+};
+export type OwnerPayoutPage = { content: OwnerPayout[]; totalElements: number; totalPages: number; size: number; number: number; numberOfElements: number; first: boolean; last: boolean; empty: boolean };
