@@ -4,8 +4,11 @@ import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { createAvailabilityInquiry } from "@/lib/api/inquiries";
 import { apiErrorMessage } from "@/lib/api/error-message";
+import { useAuth } from "@/components/auth/AuthProvider";
+import VerificationRequired from "@/components/auth/VerificationRequired";
 
 export default function AvailabilityInquiryForm({ venueId, timezone, initialDate = "", onCancel }: { venueId: string; timezone: string; initialDate?: string; onCancel: () => void }) {
+  const { user } = useAuth();
   const [date, setDate] = useState(initialDate);
   const [startTime, setStartTime] = useState("09:00");
   const [endTime, setEndTime] = useState("17:00");
@@ -13,6 +16,8 @@ export default function AvailabilityInquiryForm({ venueId, timezone, initialDate
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
+
+  if (user && !user.emailVerified) return <div className="mt-6"><VerificationRequired /></div>;
 
   async function submit(event: FormEvent) {
     event.preventDefault();

@@ -8,17 +8,19 @@ import { acceptBookingRequest, declineBookingRequest } from "@/lib/api/bookings"
 import { createCheckout } from "@/lib/api/checkout";
 import { saveBookingNavigation } from "@/lib/auth/booking-navigation";
 import type { Booking } from "@/types/booking";
+import VerificationRequired from "@/components/auth/VerificationRequired";
 
 type Action = "accept" | "decline" | "pay";
 
 export default function BookingActions({ booking, onChanged }: { booking: Booking; onChanged: () => void | Promise<void> }) {
-  const { role } = useAuth();
+  const { role, user } = useAuth();
   const [busy, setBusy] = useState<Action | null>(null);
   const [error, setError] = useState<string | null>(null);
   const canReview = role === "OWNER" && booking.status === "REQUESTED";
   const canPay = role === "SCOUT" && booking.status === "AWAITING_PAYMENT";
 
   if (!canReview && !canPay) return null;
+  if (user && !user.emailVerified) return <div className="mt-6 border-t border-rule pt-5"><VerificationRequired /></div>;
 
   async function run(action: Action) {
     if (busy) return;

@@ -234,6 +234,19 @@ PDFs are requested from authorized Spring endpoints and are never generated or
 calculated by the frontend. A booking receipt is not a tax invoice, and a payout
 statement is not a tax invoice.
 
+## Email verification and password recovery
+
+Registration sends a verification email. The link opens `/verify-email`, verifies
+the token with Spring, and reactively updates the signed-in user. Unverified users
+may continue browsing and reading their dashboards, but marketplace mutations
+such as booking, payment, inquiry, booking-response, and listing-management actions
+require email verification. Spring remains authoritative for enforcement.
+
+“Forgot password?” opens `/forgot-password`. Reset links open `/reset-password`,
+where a new 8–72 character password is submitted directly to Spring. After a
+successful reset the frontend clears the existing local session because backend
+refresh tokens have been revoked. Verification and reset tokens are never stored.
+
 ## Backend TODOs
 
 - Expose venue update/delete endpoints before adding owner editing controls.

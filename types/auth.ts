@@ -23,6 +23,7 @@ export type RegisterRequest = LoginRequest & {
 export type RefreshRequest = {
   refreshToken: string;
 };
+export type MessageResponse = { message: string };
 
 export type AuthResponse = {
   accessToken: string;

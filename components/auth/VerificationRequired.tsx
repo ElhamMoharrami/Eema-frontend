@@ -1,0 +1,1 @@
+import VerificationNotice from"./VerificationNotice";export default function VerificationRequired(){return <div className="border border-ochre bg-amber-50 p-5"><p className="font-semibold">Verify your email before continuing.</p><div className="mt-3"><VerificationNotice/></div></div>}

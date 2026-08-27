@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { login, register } from "@/lib/api/auth";
 import { apiErrorMessage } from "@/lib/api/error-message";
@@ -74,6 +75,7 @@ export default function AuthPanel({ onAuthenticated, onCancel }: Props) {
         </label>
         {error && <p className="text-sm text-ochreDeep">{error}</p>}
         <button type="submit" disabled={busy} className="btn btn-ochre mt-2">{busy ? "Please wait…" : mode === "login" ? "Sign in" : "Create account"}</button>
+        {mode === "login" && <Link href="/forgot-password" className="text-sm text-ochre hover:underline">Forgot password?</Link>}
       </form>
     </section>
   );

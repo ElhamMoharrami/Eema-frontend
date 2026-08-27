@@ -44,6 +44,13 @@ export function clearAuthSession(): void {
   storage()?.removeItem(SESSION_KEY);
   notify(null);
 }
+export function updateAuthUser(user: User): void {
+  const session = getAuthSession();
+  if (!session) return;
+  const updated = { ...session, user };
+  storage()?.setItem(SESSION_KEY, JSON.stringify(updated));
+  notify(updated);
+}
 
 export function getAccessToken(): string | null {
   return getAuthSession()?.accessToken ?? null;

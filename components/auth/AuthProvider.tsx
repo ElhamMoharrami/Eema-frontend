@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { clearAuthSession, getAuthSession, saveAuthSession, subscribeAuthSession } from "@/lib/auth/token";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { clearAuthSession, getAuthSession, saveAuthSession, subscribeAuthSession, updateAuthUser } from "@/lib/auth/token";
+import { getCurrentUser } from "@/lib/api/auth";
 import type { AuthResponse, User, UserRole } from "@/types/auth";
 
 type AuthContextValue = {
@@ -11,6 +12,7 @@ type AuthContextValue = {
   isAuthReady: boolean;
   completeSession: (response: AuthResponse) => void;
   logout: () => void;
+  refreshUser: () => Promise<User | null>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -36,6 +38,11 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     };
   }, []);
 
+  const refreshUser = useCallback(async () => {
+    try { const current = await getCurrentUser(); updateAuthUser(current); return current; }
+    catch { return null; }
+  }, []);
+
   const value = useMemo<AuthContextValue>(() => ({
     user,
     role: user?.role ?? null,
@@ -43,7 +50,8 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     isAuthReady,
     completeSession: (response) => { saveAuthSession(response); },
     logout: () => { clearAuthSession(); },
-  }), [isAuthReady, user]);
+    refreshUser,
+  }), [isAuthReady, refreshUser, user]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

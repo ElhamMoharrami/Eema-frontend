@@ -9,12 +9,15 @@ import { apiErrorMessage } from "@/lib/api/error-message";
 import { createVenue } from "@/lib/api/venues";
 import { formatDuration } from "@/lib/format";
 import { EMPTY_PRODUCTION_PROFILE } from "@/components/venue/ProductionProfileFields";
+import { useAuth } from "@/components/auth/AuthProvider";
+import VerificationRequired from "@/components/auth/VerificationRequired";
 
 export default function NewVenuePage() {
   return <DashboardShell eyebrow="Owner dashboard" title="Add listing" intro="Create a venue record. Availability can be configured after creation."><RoleGuard role="OWNER"><CreateVenueForm /></RoleGuard></DashboardShell>;
 }
 
 function CreateVenueForm() {
+  const { user } = useAuth();
   const router = useRouter();
   const [name, setName] = useState("");
   const [neighbourhood, setNeighbourhood] = useState("");
@@ -27,6 +30,8 @@ function CreateVenueForm() {
   const [clipUrl, setClipUrl] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+
+  if (user && !user.emailVerified) return <VerificationRequired />;
 
   async function submit(event: FormEvent) {
     event.preventDefault();

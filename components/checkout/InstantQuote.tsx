@@ -12,6 +12,7 @@ import type { User } from "@/types/auth";
 import type { AvailabilityIntervalDto, VenueAvailabilityDto } from "@/types/availability";
 import type { MatchedVenue } from "@/types/match";
 import AvailabilityInquiryForm from "@/components/inquiry/AvailabilityInquiryForm";
+import VerificationRequired from "@/components/auth/VerificationRequired";
 
 type Props = { match: MatchedVenue; brief: string; user: User };
 type Month = { year: number; month: number };
@@ -86,7 +87,7 @@ export default function InstantQuote({ match, brief, user }: Props) {
     {!inquiryDate && pricePreview && <div className="mt-5 border border-rule bg-paperDeep/30 p-4"><div className="label label-ochre">Indicative price</div><div className="mt-3 space-y-1 text-sm text-ink/75"><p>Selected: {formatDuration(pricePreview.durationMinutes)}</p><p>Minimum booking: {formatDuration(venue.minimumBookingMinutes)}</p>{pricePreview.minimumApplies && <p className="font-medium text-ink">{formatDuration(venue.minimumBookingMinutes)} minimum applies</p>}{pricePreview.fullDayRateApplies && <><p>Hourly calculation: {formatEur(pricePreview.hourlyTotal)}</p><p>Full-day rate: {formatEur(venue.fullDayRateEur)}</p></>}<p className="pt-2 font-mono text-lg text-ink">Estimated booking price: {formatEur(pricePreview.estimatedPrice)}</p><p className="pt-1 text-xs text-taupe">Informational estimate. Eema calculates the authoritative price when the request is created.</p></div></div>}
 
     {!inquiryDate && <><div className="mt-7 grid gap-4 border-t border-rule pt-5"><label className="label label-ink">Contact name<input className="form-input" value={name} onChange={(e) => setName(e.target.value)} minLength={2} maxLength={100} /></label><label className="label label-ink">Contact email<input className="form-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} /></label><label className="label label-ink">Phone · optional<input className="form-input" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} /></label></div>
-    <button type="button" className="btn btn-ochre mt-7 w-full" disabled={!canSubmit || submitting} onClick={() => void submit()}>{submitting ? "Sending request…" : "Request to book"}</button>
+    {!user.emailVerified ? <div className="mt-7"><VerificationRequired /></div> : <button type="button" className="btn btn-ochre mt-7 w-full" disabled={!canSubmit || submitting} onClick={() => void submit()}>{submitting ? "Sending request…" : "Request to book"}</button>}
     <button type="button" className="label label-ochre mt-5 w-full text-center hover:text-ochreDeep" onClick={() => setInquiryDate(today)}>Can&apos;t find your time? Ask the owner</button>
     <p className="mt-3 text-xs leading-relaxed text-taupe">The owner must approve this request before payment. Availability is checked again by Eema when you submit.</p>{error && <p className="mt-3 text-sm text-ochreDeep">{error}</p>}</>}
   </aside>;
