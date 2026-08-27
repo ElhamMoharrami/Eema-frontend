@@ -1,4 +1,161 @@
 "use client";
-import Link from"next/link";import{useEffect,useState}from"react";import RoleGuard from"@/components/auth/RoleGuard";import DashboardShell from"@/components/layout/DashboardShell";import Pagination from"@/components/admin/Pagination";import EmptyState from"@/components/ui/EmptyState";import ErrorState from"@/components/ui/ErrorState";import LoadingState from"@/components/ui/LoadingState";import{getOwnerPayouts}from"@/lib/api/owner-payouts";import{getMyVenues}from"@/lib/api/venues";import{apiErrorMessage}from"@/lib/api/error-message";import{formatEur,formatTimestamp}from"@/lib/format";import{OWNER_PAYOUT_HOLD_LABELS,OWNER_PAYOUT_STATUS_COPY,OWNER_PAYOUT_STATUS_LABELS}from"@/lib/owner-payout-status";import type{OwnerPayoutPage}from"@/types/owner-payout";
-export default function Page(){return <DashboardShell eyebrow="Owner dashboard" title="Payouts" intro="Track authoritative payout calculations, holds, readiness, and completed transfers."><RoleGuard role="OWNER"><List/></RoleGuard></DashboardShell>};function List(){const[page,setPage]=useState(0),[data,setData]=useState<OwnerPayoutPage|null>(null),[venues,setVenues]=useState<Record<string,string>>({}),[state,setState]=useState<"loading"|"ready"|"error">("loading"),[error,setError]=useState(""),[retry,setRetry]=useState(0);useEffect(()=>{let active=true;setState("loading");Promise.allSettled([getOwnerPayouts(page,20),getMyVenues()]).then(([p,v])=>{if(!active)return;if(p.status==="rejected"){setError(apiErrorMessage(p.reason));setState("error");return}setData(p.value);setVenues(v.status==="fulfilled"?Object.fromEntries(v.value.map(x=>[x.id,x.name])):{});setState("ready")});return()=>{active=false}},[page,retry]);if(state==="loading")return <LoadingState label="Loading payouts…"/>;if(state==="error")return <ErrorState title="Could not load payouts" message={error} onRetry={()=>setRetry(x=>x+1)}/>;if(!data||data.empty)return <EmptyState title="No payouts yet" message="Payout records appear after a booking is confirmed."/>;return <><div className="grid gap-5">{data.content.map(p=><article key={p.id} className="border border-rule bg-paper p-6"><div className="flex flex-wrap justify-between gap-4"><div><div className="label">Venue</div><h2 className="mt-2 font-display text-2xl">{venues[p.venueId]??`Venue ${p.venueId}`}</h2><p className="mt-1 font-mono text-xs text-taupe">{p.venueId}</p></div><span className="border border-rule px-3 py-2 text-xs font-semibold uppercase tracking-wider">{OWNER_PAYOUT_STATUS_LABELS[p.status]}</span></div><p className="mt-4 text-sm text-ink/75">{p.holdReason?OWNER_PAYOUT_HOLD_LABELS[p.holdReason]:OWNER_PAYOUT_STATUS_COPY[p.status]}</p><dl className="mt-6 grid gap-5 border-t border-rule pt-5 sm:grid-cols-2 lg:grid-cols-4"><Fact label="Gross retained" value={formatEur(p.grossRetainedAmountEur)}/><Fact label="Eema commission" value={formatEur(p.commissionEur)}/><Fact label="Payment processing cost" value={formatEur(p.providerCostEur)}/><Fact label="Owner payout" value={formatEur(p.payoutAmountEur)}/><Fact label="Booking" value={<Link className="font-mono text-xs text-ochre hover:underline" href={`/bookings/${p.bookingId}`}>{p.bookingId}</Link>}/><Fact label={p.paidAt?"Paid":p.readyAt?"Ready":"Eligible"} value={formatTimestamp(p.paidAt??p.readyAt??p.eligibleAt)}/></dl><Link href={`/owner/payouts/${p.id}`} className="btn mt-5 inline-block">View payout details</Link></article>)}</div><Pagination page={data.number} totalPages={data.totalPages} onPage={setPage}/></>}
-function Fact({label,value}:{label:string;value:React.ReactNode}){return <div><dt className="label">{label}</dt><dd className="mt-1 text-sm">{value}</dd></div>}
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import RoleGuard from "@/components/auth/RoleGuard";
+import DashboardShell from "@/components/layout/DashboardShell";
+import Pagination from "@/components/admin/Pagination";
+import EmptyState from "@/components/ui/EmptyState";
+import ErrorState from "@/components/ui/ErrorState";
+import LoadingState from "@/components/ui/LoadingState";
+import { getOwnerPayouts } from "@/lib/api/owner-payouts";
+import { getMyVenues } from "@/lib/api/venues";
+import { apiErrorMessage } from "@/lib/api/error-message";
+import { formatEur, formatTimestamp } from "@/lib/format";
+import {
+  OWNER_PAYOUT_HOLD_LABELS,
+  OWNER_PAYOUT_STATUS_COPY,
+  OWNER_PAYOUT_STATUS_LABELS,
+} from "@/lib/owner-payout-status";
+import type { OwnerPayoutPage } from "@/types/owner-payout";
+export default function Page() {
+  return (
+    <DashboardShell
+      eyebrow="Owner dashboard"
+      title="Payouts"
+      intro="Track authoritative payout calculations, holds, readiness, and completed transfers."
+    >
+      <RoleGuard role="OWNER">
+        <List />
+      </RoleGuard>
+    </DashboardShell>
+  );
+}
+function List() {
+  const [page, setPage] = useState(0),
+    [data, setData] = useState<OwnerPayoutPage | null>(null),
+    [venues, setVenues] = useState<Record<string, string>>({}),
+    [state, setState] = useState<"loading" | "ready" | "error">("loading"),
+    [error, setError] = useState(""),
+    [retry, setRetry] = useState(0);
+  useEffect(() => {
+    let active = true;
+    setState("loading");
+    Promise.allSettled([getOwnerPayouts(page, 20), getMyVenues()]).then(
+      ([p, v]) => {
+        if (!active) return;
+        if (p.status === "rejected") {
+          setError(apiErrorMessage(p.reason));
+          setState("error");
+          return;
+        }
+        setData(p.value);
+        setVenues(
+          v.status === "fulfilled"
+            ? Object.fromEntries(v.value.map((x) => [x.id, x.name]))
+            : {},
+        );
+        setState("ready");
+      },
+    );
+    return () => {
+      active = false;
+    };
+  }, [page, retry]);
+  if (state === "loading") return <LoadingState label="Loading payouts…" />;
+  if (state === "error")
+    return (
+      <ErrorState
+        title="Could not load payouts"
+        message={error}
+        onRetry={() => setRetry((x) => x + 1)}
+      />
+    );
+  if (!data || data.empty)
+    return (
+      <EmptyState
+        title="No payouts yet"
+        message="Payout records appear after a booking is confirmed."
+      />
+    );
+  return (
+    <>
+      <div className="grid gap-5">
+        {data.content.map((p) => (
+          <article key={p.id} className="border border-rule bg-paper p-6">
+            <div className="flex flex-wrap justify-between gap-4">
+              <div>
+                <div className="label">Venue</div>
+                <h2 className="mt-2 font-display text-2xl">
+                  {venues[p.venueId] ?? `Venue ${p.venueId}`}
+                </h2>
+                <p className="mt-1 font-mono text-xs text-taupe">{p.venueId}</p>
+              </div>
+              <span className="border border-rule px-3 py-2 text-xs font-semibold uppercase tracking-wider">
+                {OWNER_PAYOUT_STATUS_LABELS[p.status]}
+              </span>
+            </div>
+            <p className="mt-4 text-sm text-ink/75">
+              {p.holdReason
+                ? OWNER_PAYOUT_HOLD_LABELS[p.holdReason]
+                : OWNER_PAYOUT_STATUS_COPY[p.status]}
+            </p>
+            {p.holdReason === "WAITING_FOR_PAYOUT_DESTINATION" && (
+              <Link href="/owner/payout-destination" className="mt-3 inline-block text-sm font-semibold text-ochre hover:underline">
+                Add or verify payout details →
+              </Link>
+            )}
+            <dl className="mt-6 grid gap-5 border-t border-rule pt-5 sm:grid-cols-2 lg:grid-cols-4">
+              <Fact
+                label="Gross retained"
+                value={formatEur(p.grossRetainedAmountEur)}
+              />
+              <Fact
+                label="Eema commission"
+                value={formatEur(p.commissionEur)}
+              />
+              <Fact
+                label="Payment processing cost"
+                value={formatEur(p.providerCostEur)}
+              />
+              <Fact label="Owner payout" value={formatEur(p.payoutAmountEur)} />
+              <Fact
+                label="Booking"
+                value={
+                  <Link
+                    className="font-mono text-xs text-ochre hover:underline"
+                    href={`/bookings/${p.bookingId}`}
+                  >
+                    {p.bookingId}
+                  </Link>
+                }
+              />
+              <Fact
+                label={p.paidAt ? "Paid" : p.readyAt ? "Ready" : "Eligible"}
+                value={formatTimestamp(p.paidAt ?? p.readyAt ?? p.eligibleAt)}
+              />
+            </dl>
+            <Link
+              href={`/owner/payouts/${p.id}`}
+              className="btn mt-5 inline-block"
+            >
+              View payout details
+            </Link>
+          </article>
+        ))}
+      </div>
+      <Pagination
+        page={data.number}
+        totalPages={data.totalPages}
+        onPage={setPage}
+      />
+    </>
+  );
+}
+function Fact({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div>
+      <dt className="label">{label}</dt>
+      <dd className="mt-1 text-sm">{value}</dd>
+    </div>
+  );
+}

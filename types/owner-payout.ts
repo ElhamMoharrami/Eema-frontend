@@ -1,5 +1,5 @@
 export type OwnerPayoutStatus = "CALCULATED" | "HELD" | "READY" | "PAID" | "CANCELLED";
-export type OwnerPayoutHoldReason = "WAITING_FOR_BOOKING_END" | "WAITING_FOR_PROVIDER_COST" | "REFUND_IN_PROGRESS";
+export type OwnerPayoutHoldReason = "WAITING_FOR_BOOKING_END" | "WAITING_FOR_PROVIDER_COST" | "REFUND_IN_PROGRESS" | "WAITING_FOR_PAYOUT_DESTINATION";
 export type OwnerPayout = {
   id: string;
   bookingId: string;
@@ -14,6 +14,8 @@ export type OwnerPayout = {
   eligibleAt: string | null;
   readyAt: string | null;
   paidAt: string | null;
+  payoutDestinationId: string | null;
+  payoutDestinationMaskedIban: string | null;
   statementAvailable: boolean;
 };
 export type OwnerPayoutPage = { content: OwnerPayout[]; totalElements: number; totalPages: number; size: number; number: number; numberOfElements: number; first: boolean; last: boolean; empty: boolean };

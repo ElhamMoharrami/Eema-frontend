@@ -4,7 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="EEMA-13 Implemented the cancellation-policy experience with Spring remaining authoritative for all eligibility and financial outcomes" />
+    <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="EEMA-16 Implemented the frontend trust and moderation workflow">
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/owner-verifications/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/owner-verifications/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/payouts/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/payouts/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/admin/venues/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin/venues/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/owner/payouts/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/payouts/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/owner/payouts/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/payouts/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/AppHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/layout/AppHeader.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/venue/OwnerModerationPanel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/venue/OwnerModerationPanel.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/admin-status.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/admin-status.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/api/admin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/admin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/owner-payout-status.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/owner-payout-status.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/admin.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/admin.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/owner-payout.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/owner-payout.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -226,7 +240,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787246419633</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="EEMA-16 Implemented the frontend trust and moderation workflow">
+      <option name="closed" value="true" />
+      <created>1787846390692</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1787846390692</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -241,6 +263,7 @@
     <MESSAGE value="EEMA-11 clean up" />
     <MESSAGE value="EEMA-12 Implemented structured production-profile support" />
     <MESSAGE value="EEMA-13 Implemented the cancellation-policy experience with Spring remaining authoritative for all eligibility and financial outcomes" />
-    <option name="LAST_COMMIT_MESSAGE" value="EEMA-13 Implemented the cancellation-policy experience with Spring remaining authoritative for all eligibility and financial outcomes" />
+    <MESSAGE value="EEMA-16 Implemented the frontend trust and moderation workflow" />
+    <option name="LAST_COMMIT_MESSAGE" value="EEMA-16 Implemented the frontend trust and moderation workflow" />
   </component>
 </project>

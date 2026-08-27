@@ -276,6 +276,18 @@ where a new 8–72 character password is submitted directly to Spring. After a
 successful reset the frontend clears the existing local session because backend
 refresh tokens have been revoked. Verification and reset tokens are never stored.
 
+## Owner payout destinations
+
+An owner completes email and manual owner verification before adding EUR/IBAN
+payout details. Submitted details remain under Eema review until verified. During
+replacement review the existing verified destination remains active; approval
+makes the replacement current and the old destination historical.
+
+Each READY payout displays the masked destination Spring snapshotted for that
+payout, so later changes never redirect the record. Admin full-IBAN access requires
+explicit confirmation and an audited POST reveal. The revealed value exists only
+in ephemeral component state and is cleared when hidden, reviewed, or unmounted.
+
 ## Backend TODOs
 
 - Expose venue update/delete endpoints before adding owner editing controls.

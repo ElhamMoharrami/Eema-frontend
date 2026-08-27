@@ -1,6 +1,7 @@
 import { apiRequest } from "./client";
 import type { AdminBookingDetailDto, AdminBookingSummaryDto, BookingEventDto, OperationalExceptionDto, OwnerFinancialLiabilityDto, OwnerPayoutDto, SpringPage } from "@/types/admin";
 import type { AdminOwnerVerificationDto, AdminVenueModerationDto, TrustEventDto, VerificationMethod } from "@/types/trust";
+import type { PayoutDestinationDto, PayoutDestinationRevealDto } from "@/types/payout-destination";
 type Params = Record<string, string | number | undefined>;
 const query = (params: Params = {}) => { const q = new URLSearchParams(); Object.entries(params).forEach(([k,v]) => { if (v !== undefined && v !== "") q.set(k,String(v)); }); const s=q.toString(); return s ? `?${s}` : ""; };
 export const getAdminPayouts = (p: Params) => apiRequest<SpringPage<OwnerPayoutDto>>(`/admin/payouts${query(p)}`, { auth:"required" });
@@ -25,3 +26,8 @@ export const requestAdminVenueChanges = (id: string, reason: string) => venueAct
 export const suspendAdminVenue = (id: string, reason: string) => venueAction(id,"suspend",{reason:reason.trim()});
 export const reactivateAdminVenue = (id: string, note?: string) => venueAction(id,"reactivate",note?.trim()?{note:note.trim()}:undefined);
 const venueAction = (id:string, action:string, body?:unknown) => apiRequest<AdminVenueModerationDto>(`/admin/venues/${encodeURIComponent(id)}/${action}`, {method:"POST",auth:"required",body});
+export const getAdminPayoutDestinations = (p: Params) => apiRequest<SpringPage<PayoutDestinationDto>>(`/admin/payout-destinations${query(p)}`, {auth:"required"});
+export const getAdminPayoutDestination = (id:string) => apiRequest<PayoutDestinationDto>(`/admin/payout-destinations/${encodeURIComponent(id)}`, {auth:"required"});
+export const verifyAdminPayoutDestination = (id:string,note?:string) => apiRequest<PayoutDestinationDto>(`/admin/payout-destinations/${encodeURIComponent(id)}/verify`, {method:"POST",auth:"required",body:note?.trim()?{note:note.trim()}:undefined});
+export const rejectAdminPayoutDestination = (id:string,reason:string) => apiRequest<PayoutDestinationDto>(`/admin/payout-destinations/${encodeURIComponent(id)}/reject`, {method:"POST",auth:"required",body:{reason:reason.trim()}});
+export const revealAdminPayoutDestination = (id:string) => apiRequest<PayoutDestinationRevealDto>(`/admin/payout-destinations/${encodeURIComponent(id)}/reveal`, {method:"POST",auth:"required"});
