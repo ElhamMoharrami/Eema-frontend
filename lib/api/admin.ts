@@ -1,0 +1,14 @@
+import { apiRequest } from "./client";
+import type { AdminBookingDetailDto, AdminBookingSummaryDto, BookingEventDto, OperationalExceptionDto, OwnerFinancialLiabilityDto, OwnerPayoutDto, SpringPage } from "@/types/admin";
+type Params = Record<string, string | number | undefined>;
+const query = (params: Params = {}) => { const q = new URLSearchParams(); Object.entries(params).forEach(([k,v]) => { if (v !== undefined && v !== "") q.set(k,String(v)); }); const s=q.toString(); return s ? `?${s}` : ""; };
+export const getAdminPayouts = (p: Params) => apiRequest<SpringPage<OwnerPayoutDto>>(`/admin/payouts${query(p)}`, { auth:"required" });
+export const getAdminPayout = (id: string) => apiRequest<OwnerPayoutDto>(`/admin/payouts/${encodeURIComponent(id)}`, { auth:"required" });
+export const markAdminPayoutPaid = (id: string, externalTransferReference: string) => apiRequest<OwnerPayoutDto>(`/admin/payouts/${encodeURIComponent(id)}/mark-paid`, { method:"POST", auth:"required", body:{externalTransferReference} });
+export const getAdminLiabilities = (p: Params) => apiRequest<SpringPage<OwnerFinancialLiabilityDto>>(`/admin/liabilities${query(p)}`, { auth:"required" });
+export const getAdminLiability = (id: string) => apiRequest<OwnerFinancialLiabilityDto>(`/admin/liabilities/${encodeURIComponent(id)}`, { auth:"required" });
+export const settleAdminLiability = (id: string) => apiRequest<OwnerFinancialLiabilityDto>(`/admin/liabilities/${encodeURIComponent(id)}/settle`, { method:"POST", auth:"required" });
+export const getAdminBookings = (p: Params) => apiRequest<SpringPage<AdminBookingSummaryDto>>(`/admin/bookings${query(p)}`, { auth:"required" });
+export const getAdminBooking = (id: string) => apiRequest<AdminBookingDetailDto>(`/admin/bookings/${encodeURIComponent(id)}`, { auth:"required" });
+export const getAdminBookingEvents = (id: string, p: Params) => apiRequest<SpringPage<BookingEventDto>>(`/admin/bookings/${encodeURIComponent(id)}/events${query(p)}`, { auth:"required" });
+export const getOperationalExceptions = (p: Params) => apiRequest<SpringPage<OperationalExceptionDto>>(`/admin/operations/exceptions${query(p)}`, { auth:"required" });

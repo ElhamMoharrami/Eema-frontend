@@ -4,14 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="EEMA-12 Implemented structured production-profile support">
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/bookings/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/bookings/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/booking/RefundDetails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/booking/RefundDetails.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/api/bookings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/bookings.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/format.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/format.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/booking.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/booking.ts" afterDir="false" />
-    </list>
+    <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="EEMA-13 Implemented the cancellation-policy experience with Spring remaining authoritative for all eligibility and financial outcomes" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -29,23 +22,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0312411570833295" />
-      <entry key="MS500" value="1.7861358592255003" />
-      <entry key="S2" value="4.6233662684273575" />
-      <entry key="S5" value="7.979109997831426" />
-      <entry key="S10" value="10.313746856043782" />
-      <entry key="S30" value="12.571305987965381" />
-      <entry key="S60" value="13.256630981016158" />
-      <entry key="M2" value="13.620714567276371" />
-      <entry key="M5" value="13.846415481800491" />
-      <entry key="M10" value="13.923397259621101" />
-      <entry key="M15" value="13.956554745713527" />
-      <entry key="M30" value="14.133059118024606" />
-      <entry key="H1" value="15.625216848868359" />
-      <entry key="H2" value="23.042295610680522" />
-      <entry key="H4" value="38.594178708316214" />
-      <entry key="D1" value="88.79005809707056" />
-      <entry key="W1" value="140.14133626920872" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0" />
+      <entry key="S30" value="1.0" />
+      <entry key="S60" value="1.0" />
+      <entry key="M2" value="1.0000000000003666" />
+      <entry key="M5" value="1.0000516856736572" />
+      <entry key="M10" value="1.026900578863812" />
+      <entry key="M15" value="1.2164989681492016" />
+      <entry key="M30" value="2.7602525383832326" />
+      <entry key="H1" value="6.514364315463277" />
+      <entry key="H2" value="14.688644500068891" />
+      <entry key="H4" value="30.74672468539634" />
+      <entry key="D1" value="86.01924263798718" />
+      <entry key="W1" value="140.27520622913613" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -56,34 +49,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="2.6706569711303886E-197" />
-      <entry key="M10" value="7.308425131386301E-99" />
-      <entry key="M15" value="4.744886312641166E-66" />
-      <entry key="M30" value="3.0805472583284307E-33" />
-      <entry key="H1" value="7.849263863277125E-17" />
-      <entry key="H2" value="1.2529376521194905E-8" />
-      <entry key="H4" value="1.582995672523481E-4" />
-      <entry key="D1" value="0.41441768872298285" />
-      <entry key="W1" value="1.5972541930213564" />
+      <entry key="M5" value="9.96898474134558E-203" />
+      <entry key="M10" value="1.412017936077134E-101" />
+      <entry key="M15" value="7.360433927918959E-68" />
+      <entry key="M30" value="3.836778071752693E-34" />
+      <entry key="H1" value="2.770118390609445E-17" />
+      <entry key="H2" value="7.443276655414874E-9" />
+      <entry key="H4" value="1.2201046381791035E-4" />
+      <entry key="D1" value="0.39681782832593476" />
+      <entry key="W1" value="1.5873825172186498" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9821939186992278" />
-      <entry key="MS500" value="1.7669827212019529" />
-      <entry key="S2" value="4.608968458598946" />
-      <entry key="S5" value="7.968530557080548" />
-      <entry key="S10" value="10.30664427989272" />
-      <entry key="S30" value="12.568328648059984" />
-      <entry key="S60" value="13.255047771542067" />
-      <entry key="M2" value="13.619897685660968" />
-      <entry key="M5" value="13.846082439474658" />
-      <entry key="M10" value="13.923229659038332" />
-      <entry key="M15" value="13.956442653656241" />
-      <entry key="M30" value="14.133001345262437" />
-      <entry key="H1" value="15.625174898644557" />
-      <entry key="H2" value="23.042240001839932" />
-      <entry key="H4" value="38.59427496842939" />
-      <entry key="D1" value="89.20444823863858" />
-      <entry key="W1" value="141.7385840167128" />
+      <entry key="MS100" value="0.9592641193252643" />
+      <entry key="MS500" value="0.9917167307382933" />
+      <entry key="S2" value="0.9979227189990506" />
+      <entry key="S5" value="0.999168569213607" />
+      <entry key="S10" value="0.9995841981612189" />
+      <entry key="S30" value="0.9998613801725043" />
+      <entry key="S60" value="0.9999306876841536" />
+      <entry key="M2" value="0.9999653432418979" />
+      <entry key="M5" value="1.0000378215829613" />
+      <entry key="M10" value="1.0268933236047773" />
+      <entry key="M15" value="1.2164926083674004" />
+      <entry key="M30" value="2.7602430323794236" />
+      <entry key="H1" value="6.514348355379813" />
+      <entry key="H2" value="14.688610887124634" />
+      <entry key="H4" value="30.746798589719376" />
+      <entry key="D1" value="86.4160340409201" />
+      <entry key="W1" value="141.86258233379692" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -167,7 +160,7 @@
       <updated>1783708626959</updated>
       <workItem from="1786976417748" duration="9469000" />
       <workItem from="1787148850906" duration="9261000" />
-      <workItem from="1787238488362" duration="3798000" />
+      <workItem from="1787238488362" duration="4764000" />
     </task>
     <task id="LOCAL-00001" summary="EEMA-8 Updated the frontend for the additive hardened BookingDto fields">
       <option name="closed" value="true" />
@@ -225,7 +218,15 @@
       <option name="project" value="LOCAL" />
       <updated>1787242347406</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="EEMA-13 Implemented the cancellation-policy experience with Spring remaining authoritative for all eligibility and financial outcomes">
+      <option name="closed" value="true" />
+      <created>1787246419633</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1787246419633</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -239,6 +240,7 @@
     <MESSAGE value="EEMA-10 Implemented the booking-model change" />
     <MESSAGE value="EEMA-11 clean up" />
     <MESSAGE value="EEMA-12 Implemented structured production-profile support" />
-    <option name="LAST_COMMIT_MESSAGE" value="EEMA-12 Implemented structured production-profile support" />
+    <MESSAGE value="EEMA-13 Implemented the cancellation-policy experience with Spring remaining authoritative for all eligibility and financial outcomes" />
+    <option name="LAST_COMMIT_MESSAGE" value="EEMA-13 Implemented the cancellation-policy experience with Spring remaining authoritative for all eligibility and financial outcomes" />
   </component>
 </project>

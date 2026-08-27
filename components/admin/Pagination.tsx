@@ -1,0 +1,2 @@
+"use client";
+export default function Pagination({ page, totalPages, onPage }: { page:number; totalPages:number; onPage:(page:number)=>void }) { if (totalPages <= 1) return null; return <nav aria-label="Pagination" className="mt-8 flex items-center justify-between gap-4"><button className="btn" disabled={page===0} onClick={()=>onPage(page-1)}>Previous</button><span className="label label-ink" aria-live="polite">Page {page+1} / {totalPages}</span><button className="btn" disabled={page+1>=totalPages} onClick={()=>onPage(page+1)}>Next</button></nav>; }

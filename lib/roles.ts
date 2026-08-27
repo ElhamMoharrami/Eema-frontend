@@ -5,5 +5,5 @@ export function roleLabel(role: UserRole): string {
 }
 
 export function roleHome(role: UserRole): string {
-  return role === "SCOUT" ? "/scout/bookings" : role === "OWNER" ? "/owner/venues" : "/";
+  return role === "SCOUT" ? "/scout/bookings" : role === "OWNER" ? "/owner/venues" : "/admin";
 }

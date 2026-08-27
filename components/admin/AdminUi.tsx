@@ -1,0 +1,7 @@
+import Link from "next/link";
+export function Detail({ label, value, mono=false }: { label:string; value:React.ReactNode; mono?:boolean }) { return <div><dt className="label">{label}</dt><dd className={`mt-1 break-words text-sm text-ink ${mono ? "font-mono" : ""}`}>{value}</dd></div>; }
+export function IdLink({ href, children }: { href:string; children:string }) { return <Link href={href} className="break-all font-mono text-xs text-ochre underline-offset-4 hover:underline focus:outline focus:outline-2 focus:outline-ochre">{children}</Link>; }
+export function StatusPill({ label, tone="normal" }: { label:string; tone?:"normal"|"warning"|"critical"|"open" }) { const colors = tone === "critical" ? "border-red-700 bg-red-50 text-red-800" : tone === "warning" || tone === "open" ? "border-amber-700 bg-amber-50 text-amber-900" : "border-rule bg-paper text-ink"; return <span className={`inline-flex border px-2 py-1 text-xs font-semibold uppercase tracking-wider ${colors}`}>{label}</span>; }
+export function AdminTable({ children }: { children:React.ReactNode }) { return <div className="overflow-x-auto border border-rule bg-paper"><table className="w-full min-w-[900px] text-left text-sm">{children}</table></div>; }
+export const Th = ({children}:{children:React.ReactNode}) => <th className="border-b border-rule px-3 py-3 label label-ink">{children}</th>;
+export const Td = ({children}:{children:React.ReactNode}) => <td className="border-b border-rule px-3 py-3 align-top">{children}</td>;

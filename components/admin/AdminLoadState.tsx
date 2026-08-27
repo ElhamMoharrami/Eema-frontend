@@ -1,0 +1,5 @@
+import EmptyState from "@/components/ui/EmptyState";
+import ErrorState from "@/components/ui/ErrorState";
+import LoadingState from "@/components/ui/LoadingState";
+import type { LoadState } from "@/hooks/useAdminPage";
+export default function AdminLoadState({state,error,retry,notFound="Record not found"}:{state:LoadState;error:string;retry:()=>void;notFound?:string}) { if(state==="loading")return <LoadingState label="Loading operational data…"/>; if(state==="expired")return <ErrorState title="Session expired" message="Your session has expired. Please sign in again."/>; if(state==="forbidden")return <ErrorState title="ADMIN access required" message="This operational view requires an ADMIN account. Spring remains authoritative for access."/>; if(state==="not-found")return <EmptyState title={notFound} message="The requested record does not exist or is no longer available."/>; if(state==="error")return <ErrorState title="Operation unavailable" message={error} onRetry={retry}/>; return null; }

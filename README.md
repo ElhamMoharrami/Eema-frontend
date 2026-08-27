@@ -210,10 +210,18 @@ npm run check     # typecheck + lint + build
 - Browser tokens currently live in `localStorage`, isolated by `lib/auth/token.ts`.
   A future production hardening phase should evaluate HttpOnly cookies and CSP.
 
-## Future admin UI
+## Admin operations
 
-Spring exposes an ADMIN-only `POST /api/bookings/{id}/refund` endpoint. Refund
-controls are intentionally absent from the current frontend.
+ADMIN accounts have a focused console at `/admin`, with routes for
+`/admin/exceptions`, `/admin/bookings`, `/admin/bookings/[id]`, `/admin/payouts`,
+`/admin/payouts/[id]`, `/admin/liabilities`, and `/admin/liabilities/[id]`.
+Spring authorization remains authoritative; frontend role checks provide UX only.
+
+The only admin mutations exposed are marking a READY payout paid and settling an
+OPEN owner liability. **“Mark paid” records an external transfer; it does not send
+money.** Marking a liability settled records settlement state; it does not move
+money or replace the backend amount. The console deliberately has no generic
+booking-status, refund, fee, amount, event, waiver, or analytics controls.
 
 ## Backend TODOs
 
