@@ -114,6 +114,35 @@ is not available.
 The frontend never calls Mollie, trusts redirect parameters, or changes payment
 state locally.
 
+## Owner trust and venue moderation
+
+Spring owns every verification, readiness, and moderation decision. The frontend
+only displays returned state and invokes supported actions.
+
+Owner launch flow:
+
+1. Verify the account email.
+2. Submit owner verification at `/owner/verification`.
+3. Eema manually reviews the owner: `UNVERIFIED → PENDING → VERIFIED` (or
+   `REJECTED`, with an owner-visible reason and resubmission option).
+4. Create and complete a `DRAFT` venue.
+5. Submit the venue from `/owner/venues/{id}`.
+6. Eema reviews `DRAFT → PENDING → ACTIVE`.
+
+Venue moderation transitions:
+
+- Changes requested: `PENDING → DRAFT`.
+- Suspension: `ACTIVE → SUSPENDED`; this stops new public requests and does not
+  imply that existing bookings were cancelled.
+- Reactivation: `SUSPENDED → ACTIVE`, after Spring rechecks owner verification
+  and venue readiness.
+- Production-critical owner edits may return `ACTIVE → PENDING`; the frontend
+  uses the status returned by Spring and does not predict which edits qualify.
+
+Admin work queues are available at `/admin/owner-verifications` and
+`/admin/venues`. This workflow is manual marketplace review, not automated KYC,
+government-ID verification, or bank-account verification.
+
 ### C. Manual Mollie webhook
 
 Localhost cannot receive Mollie's public callback unless you configure a tunnel.

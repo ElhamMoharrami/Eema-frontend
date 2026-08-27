@@ -1,5 +1,6 @@
 import { apiRequest } from "./client";
 import type { CreateAvailabilityOverrideRequest, CreateVenueRequest, UpdateVenueRequest, Venue, VenueAvailabilitySettings, VenueList, WeeklyIntervalRequest } from "@/types/venue";
+import type { VenueModerationDto } from "@/types/trust";
 
 export function getVenues(tag?: string): Promise<VenueList[]> {
   const query = tag?.trim() ? `?tag=${encodeURIComponent(tag.trim())}` : "";
@@ -38,3 +39,9 @@ export const createAvailabilityOverride = (venueId: string, request: CreateAvail
 
 export const deleteAvailabilityOverride = (venueId: string, overrideId: string) =>
   apiRequest<void>(`/venues/${encodeURIComponent(venueId)}/availability/overrides/${encodeURIComponent(overrideId)}`, { method: "DELETE", auth: "required", responseMode: "empty" });
+
+export const getVenueModeration = (venueId: string) =>
+  apiRequest<VenueModerationDto>(`/venues/${encodeURIComponent(venueId)}/moderation`, { auth:"required" });
+
+export const submitVenueForReview = (venueId: string) =>
+  apiRequest<VenueModerationDto>(`/venues/${encodeURIComponent(venueId)}/submit-for-review`, { method:"POST", auth:"required" });

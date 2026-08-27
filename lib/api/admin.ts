@@ -1,5 +1,6 @@
 import { apiRequest } from "./client";
 import type { AdminBookingDetailDto, AdminBookingSummaryDto, BookingEventDto, OperationalExceptionDto, OwnerFinancialLiabilityDto, OwnerPayoutDto, SpringPage } from "@/types/admin";
+import type { AdminOwnerVerificationDto, AdminVenueModerationDto, TrustEventDto, VerificationMethod } from "@/types/trust";
 type Params = Record<string, string | number | undefined>;
 const query = (params: Params = {}) => { const q = new URLSearchParams(); Object.entries(params).forEach(([k,v]) => { if (v !== undefined && v !== "") q.set(k,String(v)); }); const s=q.toString(); return s ? `?${s}` : ""; };
 export const getAdminPayouts = (p: Params) => apiRequest<SpringPage<OwnerPayoutDto>>(`/admin/payouts${query(p)}`, { auth:"required" });
@@ -12,3 +13,15 @@ export const getAdminBookings = (p: Params) => apiRequest<SpringPage<AdminBookin
 export const getAdminBooking = (id: string) => apiRequest<AdminBookingDetailDto>(`/admin/bookings/${encodeURIComponent(id)}`, { auth:"required" });
 export const getAdminBookingEvents = (id: string, p: Params) => apiRequest<SpringPage<BookingEventDto>>(`/admin/bookings/${encodeURIComponent(id)}/events${query(p)}`, { auth:"required" });
 export const getOperationalExceptions = (p: Params) => apiRequest<SpringPage<OperationalExceptionDto>>(`/admin/operations/exceptions${query(p)}`, { auth:"required" });
+export const getAdminOwnerVerifications = (p: Params) => apiRequest<SpringPage<AdminOwnerVerificationDto>>(`/admin/owner-verifications${query(p)}`, { auth:"required" });
+export const getAdminOwnerVerification = (id: string) => apiRequest<AdminOwnerVerificationDto>(`/admin/owner-verifications/${encodeURIComponent(id)}`, { auth:"required" });
+export const approveOwnerVerification = (id: string, verificationMethod: VerificationMethod, note?: string) => apiRequest<AdminOwnerVerificationDto>(`/admin/owner-verifications/${encodeURIComponent(id)}/approve`, { method:"POST", auth:"required", body:{ verificationMethod, note:note?.trim() || undefined } });
+export const rejectOwnerVerification = (id: string, reason: string) => apiRequest<AdminOwnerVerificationDto>(`/admin/owner-verifications/${encodeURIComponent(id)}/reject`, { method:"POST", auth:"required", body:{reason:reason.trim()} });
+export const getAdminVenues = (p: Params) => apiRequest<SpringPage<AdminVenueModerationDto>>(`/admin/venues${query(p)}`, { auth:"required" });
+export const getAdminVenue = (id: string) => apiRequest<AdminVenueModerationDto>(`/admin/venues/${encodeURIComponent(id)}`, { auth:"required" });
+export const getAdminVenueEvents = (id: string) => apiRequest<TrustEventDto[]>(`/admin/venues/${encodeURIComponent(id)}/events`, { auth:"required" });
+export const approveAdminVenue = (id: string, note?: string) => venueAction(id,"approve",note?.trim()?{note:note.trim()}:undefined);
+export const requestAdminVenueChanges = (id: string, reason: string) => venueAction(id,"request-changes",{reason:reason.trim()});
+export const suspendAdminVenue = (id: string, reason: string) => venueAction(id,"suspend",{reason:reason.trim()});
+export const reactivateAdminVenue = (id: string, note?: string) => venueAction(id,"reactivate",note?.trim()?{note:note.trim()}:undefined);
+const venueAction = (id:string, action:string, body?:unknown) => apiRequest<AdminVenueModerationDto>(`/admin/venues/${encodeURIComponent(id)}/${action}`, {method:"POST",auth:"required",body});

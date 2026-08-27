@@ -14,7 +14,7 @@ export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
 
 export const VENUE_STATUS_LABELS: Record<VenueStatus, string> = {
   DRAFT: "Draft",
-  PENDING: "Pending review",
-  ACTIVE: "Active",
+  PENDING: "In review",
+  ACTIVE: "Live",
   SUSPENDED: "Suspended",
 };

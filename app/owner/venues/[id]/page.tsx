@@ -7,6 +7,7 @@ import DashboardShell from "@/components/layout/DashboardShell";
 import ErrorState from "@/components/ui/ErrorState";
 import LoadingState from "@/components/ui/LoadingState";
 import OwnerListingEditor from "@/components/venue/OwnerListingEditor";
+import OwnerModerationPanel from "@/components/venue/OwnerModerationPanel";
 import { ApiError } from "@/lib/api/client";
 import { apiErrorMessage } from "@/lib/api/error-message";
 import { createAvailabilityOverride, deleteAvailabilityOverride, getVenue, getVenueAvailabilitySettings, replaceWeeklyAvailability, updateVenueTimezone } from "@/lib/api/venues";
@@ -28,6 +29,8 @@ function OwnerVenue({ venueId }: { venueId: string }) {
   const [settings, setSettings] = useState<VenueAvailabilitySettings | null>(null);
   const [state, setState] = useState<"loading" | "ready" | "forbidden" | "not-found" | "error">("loading");
   const [error, setError] = useState("");
+  const [moderationRefresh, setModerationRefresh] = useState(0);
+  const [reviewNotice, setReviewNotice] = useState("");
 
   const load = useCallback(async () => {
     if (!UUID_PATTERN.test(venueId)) { setState("not-found"); return; }
@@ -48,9 +51,16 @@ function OwnerVenue({ venueId }: { venueId: string }) {
   if (state === "not-found") return <ErrorState title="Listing not found" message="This listing reference is invalid or the venue no longer exists." />;
   if (state === "error") return <ErrorState message={error} onRetry={() => void load()} />;
   if (!venue || !settings) return null;
+  function venueChanged(updated: Venue) {
+    if (venue?.status === "ACTIVE" && updated.status === "PENDING") setReviewNotice("Your changes were saved. Because production-critical information changed, Eema will review the listing again.");
+    else setReviewNotice("");
+    setVenue(updated); setModerationRefresh((value) => value + 1);
+  }
   return <div className="grid gap-8">
     <div><Link href="/owner/venues" className="btn">Back to My venues</Link></div>
-    <OwnerListingEditor venue={venue} timezone={settings.timezone} onVenueChanged={setVenue} />
+    {reviewNotice&&<p className="border-l-2 border-ochre bg-paper p-4 text-sm" role="status">{reviewNotice}</p>}
+    <OwnerModerationPanel venue={venue} refreshKey={moderationRefresh} onSubmitted={load}/>
+    <OwnerListingEditor venue={venue} timezone={settings.timezone} onVenueChanged={venueChanged} />
     <TimezoneEditor venueId={venueId} settings={settings} onSaved={setSettings} />
     <WeeklyEditor venueId={venueId} settings={settings} onSaved={setSettings} />
     <OverridesEditor venueId={venueId} settings={settings} onChanged={setSettings} />

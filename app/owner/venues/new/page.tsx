@@ -24,6 +24,7 @@ function CreateVenueForm() {
   const [sizeM2, setSizeM2] = useState("");
   const [hourlyRateEur, setHourlyRateEur] = useState("");
   const [minimumBookingMinutes, setMinimumBookingMinutes] = useState("");
+  const [minimumLeadTimeMinutes, setMinimumLeadTimeMinutes] = useState("");
   const [fullDayRateEur, setFullDayRateEur] = useState("");
   const [tags, setTags] = useState("");
   const [description, setDescription] = useState("");
@@ -42,7 +43,7 @@ function CreateVenueForm() {
     try {
       const venue = await createVenue({
         name: name.trim(), neighbourhood: neighbourhood.trim(), sizeM2: Number(sizeM2),
-        hourlyRateEur: Number(hourlyRateEur), minimumBookingMinutes: Number(minimumBookingMinutes),
+        hourlyRateEur: Number(hourlyRateEur), minimumBookingMinutes: Number(minimumBookingMinutes), minimumLeadTimeMinutes: Number(minimumLeadTimeMinutes),
         fullDayRateEur: fullDayRateEur ? Number(fullDayRateEur) : null, tags: parsedTags,
         ...EMPTY_PRODUCTION_PROFILE,
         description: description.trim() || null, clipUrl: clipUrl.trim() || null,
@@ -62,6 +63,7 @@ function CreateVenueForm() {
       <Field label="Size (m²)"><input className="form-input" type="number" value={sizeM2} onChange={(e) => setSizeM2(e.target.value)} min={1} max={9999} step={1} required /></Field>
       <Field label="Hourly rate"><input className="form-input" type="number" value={hourlyRateEur} onChange={(e) => setHourlyRateEur(e.target.value)} min="0.01" max="99999999.99" step="0.01" required /></Field>
       <Field label="Minimum booking" hint={minimumBookingMinutes ? `${formatDuration(Number(minimumBookingMinutes))} · stored as minutes` : "Enter minutes"}><input className="form-input" type="number" value={minimumBookingMinutes} onChange={(e) => setMinimumBookingMinutes(e.target.value)} min={1} max={10080} step={1} required /></Field>
+      <Field label="Minimum lead time" hint={minimumLeadTimeMinutes ? `${formatDuration(Number(minimumLeadTimeMinutes))} notice` : "Enter minutes"}><input className="form-input" type="number" value={minimumLeadTimeMinutes} onChange={(e) => setMinimumLeadTimeMinutes(e.target.value)} min={60} max={43200} step={1} required /></Field>
       <Field label="Full-day rate (optional)"><input className="form-input" type="number" value={fullDayRateEur} onChange={(e) => setFullDayRateEur(e.target.value)} min="0.01" max="99999999.99" step="0.01" /></Field>
       <Field label="Tags" hint="Comma-separated, up to 20"><input className="form-input" value={tags} onChange={(e) => setTags(e.target.value)} placeholder="daylight, kitchen, industrial" /></Field>
       <Field label="Video clip URL" hint="Optional, up to 500 characters"><input className="form-input" type="url" value={clipUrl} onChange={(e) => setClipUrl(e.target.value)} maxLength={500} /></Field>

@@ -29,6 +29,7 @@ export type VenueList = {
   sizeM2: number;
   hourlyRateEur: number;
   minimumBookingMinutes: number;
+  minimumLeadTimeMinutes: number;
   fullDayRateEur: number | null;
   maxCrewSize: number | null;
   naturalLight: boolean | null;
@@ -48,6 +49,7 @@ export type Venue = VenueProductionProfile & {
   sizeM2: number;
   hourlyRateEur: number;
   minimumBookingMinutes: number;
+  minimumLeadTimeMinutes: number;
   fullDayRateEur: number | null;
   tags: string[];
   photoPaths: string[];
@@ -95,6 +97,7 @@ export type CreateVenueRequest = VenueProductionProfile & {
   sizeM2: number;
   hourlyRateEur: number;
   minimumBookingMinutes: number;
+  minimumLeadTimeMinutes: number;
   fullDayRateEur: number | null;
   tags: string[];
   description: string | null;
@@ -107,6 +110,7 @@ export type UpdateVenueRequest = VenueProductionProfile & {
   sizeM2: number;
   hourlyRateEur: number;
   minimumBookingMinutes: number;
+  minimumLeadTimeMinutes: number;
   fullDayRateEur: number | null;
   tags: string[];
   description: string | null;
