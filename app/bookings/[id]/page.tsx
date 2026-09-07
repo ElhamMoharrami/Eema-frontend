@@ -21,6 +21,7 @@ import { isPaymentWindowExpiry } from "@/lib/booking-lifecycle";
 import { getVenue } from "@/lib/api/venues";
 import { formatDate, formatDuration, formatEur, formatTimeRange, formatTimestamp } from "@/lib/format";
 import type { Booking } from "@/types/booking";
+import BookingIncidents from "@/components/incident/BookingIncidents";
 
 type LoadState = "idle" | "loading" | "ready" | "forbidden" | "not-found" | "expired" | "error";
 
@@ -166,6 +167,7 @@ function BookingDetail({ booking, venueName, venueTimezone, role, onChanged }: {
 
     <BookingActions booking={booking} onChanged={onChanged} />
     <BookingCancellation booking={booking} venueName={venueName ?? `Venue ${booking.venueId}`} venueTimezone={venueTimezone} onChanged={onChanged} />
+    {(role === "SCOUT" || role === "OWNER") && <BookingIncidents bookingId={booking.id} />}
   </article>;
 }
 

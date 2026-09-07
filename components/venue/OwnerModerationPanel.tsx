@@ -8,6 +8,7 @@ import { getVenueModeration, submitVenueForReview } from "@/lib/api/venues";
 import { formatTimestamp } from "@/lib/format";
 import type { Venue } from "@/types/venue";
 import type { OwnerVerificationDto, VenueModerationDto } from "@/types/trust";
+import PolicyGate from "@/components/policy/PolicyGate";
 export default function OwnerModerationPanel({
   venue,
   refreshKey,
@@ -120,13 +121,13 @@ export default function OwnerModerationPanel({
             Once submitted, Eema will review the listing before it becomes
             public.
           </p>
-          <button
+          <PolicyGate><button
             className="btn btn-ochre mt-4"
             disabled={busy}
             onClick={() => void submit()}
           >
             {busy ? "Submitting…" : "Submit for review"}
-          </button>
+          </button></PolicyGate>
         </div>
       )}
       {error && (

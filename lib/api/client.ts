@@ -74,7 +74,13 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     }
   }
 
-  if (!response.ok) throw await toApiError(response);
+  if (!response.ok) {
+    const error = await toApiError(response);
+    if (error.status === 403 && /polic/i.test(error.message) && typeof window !== "undefined") {
+      window.dispatchEvent(new Event("eema:policy-stale"));
+    }
+    throw error;
+  }
   if (response.status === 204 || responseMode === "empty") return undefined as T;
   if (responseMode === "blob") {
     return { blob: await response.blob(), contentDisposition: response.headers.get("Content-Disposition") } as T;

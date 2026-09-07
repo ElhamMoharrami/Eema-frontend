@@ -4,6 +4,25 @@ Next.js presentation layer for the Eema venue marketplace. Spring Boot is the
 authoritative API for authentication, venues, matching, bookings, pricing,
 checkout, Mollie payments, and booking state.
 
+## Phase A policies and incidents
+
+Spring supplies authoritative policy content and acceptance status. Policy versions follow `DRAFT → PUBLISHED → RETIRED`; published and retired versions are read-only. A new current required version must be reviewed before users start new transactional marketplace actions. Existing bookings, receipts, payouts, cancellation rights, and refund visibility remain accessible.
+
+Booking incidents follow `OPEN → UNDER_REVIEW → RESOLVED → CLOSED`. A booking participant reports an issue and an administrator operates the review lifecycle. Incident state alone never changes a booking, refund, payout, liability, or venue. Evidence uploads and support chat are outside this phase.
+
+### Production legal and business inputs still required
+
+This checklist is intentionally incomplete; the frontend does not provide or generate these materials:
+
+- [ ] Approved Terms of Service
+- [ ] Approved Privacy notice
+- [ ] Approved Acceptable Use Policy
+- [ ] Approved Production Policy
+- [ ] Approved Insurance Requirements
+- [ ] Final privacy acknowledgement semantics
+- [ ] Retention requirements
+- [ ] Incident-resolution communication policy
+
 ## Local end-to-end development
 
 ### Prerequisites

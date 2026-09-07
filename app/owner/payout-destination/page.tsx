@@ -13,6 +13,8 @@ import { getOwnerVerification } from "@/lib/api/trust";
 import { formatTimestamp } from "@/lib/format";
 import type { PayoutDestinationDto, PayoutDestinationStatus } from "@/types/payout-destination";
 import type { OwnerVerificationDto } from "@/types/trust";
+import PolicyGate from "@/components/policy/PolicyGate";
+import { usePolicyStatus } from "@/components/policy/PolicyStatusProvider";
 
 const LABELS: Record<PayoutDestinationStatus,string>={PENDING_VERIFICATION:"Under review",VERIFIED:"Verified",REJECTED:"Rejected",REPLACED:"Previous destination"};
 
@@ -20,6 +22,7 @@ export default function Page(){return <DashboardShell eyebrow="Owner account" ti
 
 function Destinations(){
   const {user}=useAuth();
+  const {status:policyStatus}=usePolicyStatus();
   const [items,setItems]=useState<PayoutDestinationDto[]>([]),[verification,setVerification]=useState<OwnerVerificationDto|null>(null);
   const [state,setState]=useState<"loading"|"ready"|"error">("loading"),[error,setError]=useState("");
   const [showForm,setShowForm]=useState(false),[holder,setHolder]=useState(""),[iban,setIban]=useState(""),[busy,setBusy]=useState(false),[actionError,setActionError]=useState("");
@@ -30,6 +33,7 @@ function Destinations(){
   if(state==="error")return <ErrorState title="Could not load payout details" message={error} onRetry={()=>void load()}/>;
   const verified=items.find(x=>x.status==="VERIFIED"),pending=items.filter(x=>x.status==="PENDING_VERIFICATION"),history=items.filter(x=>x.status==="REJECTED"||x.status==="REPLACED");
   const eligible=user?.emailVerified&&verification?.status==="VERIFIED";
+  if(showForm&&policyStatus&&!policyStatus.allRequiredAccepted)return <PolicyGate><span /></PolicyGate>;
   return <div className="grid gap-7">
     {!eligible&&<section className="max-w-3xl border border-ochre bg-amber-50 p-6"><h2 className="font-display text-2xl">Complete owner verification before adding payout details.</h2><p className="mt-3 text-sm text-ink/75">A verified email and completed Eema owner review are required before Eema collects a payout destination.</p><Link href="/owner/verification" className="btn mt-5 inline-block">Complete owner verification</Link></section>}
     {verified&&<DestinationCard destination={verified} title="Payout destination verified" copy="Eema has verified this payout destination."/>}

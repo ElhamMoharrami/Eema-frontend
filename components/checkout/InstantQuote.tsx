@@ -13,12 +13,16 @@ import type { AvailabilityIntervalDto, VenueAvailabilityDto } from "@/types/avai
 import type { MatchedVenue } from "@/types/match";
 import AvailabilityInquiryForm from "@/components/inquiry/AvailabilityInquiryForm";
 import VerificationRequired from "@/components/auth/VerificationRequired";
+import Link from "next/link";
+import { usePolicyStatus } from "@/components/policy/PolicyStatusProvider";
+import { ApiError } from "@/lib/api/client";
 
 type Props = { match: MatchedVenue; brief: string; user: User };
 type Month = { year: number; month: number };
 
 export default function InstantQuote({ match, brief, user }: Props) {
   const router = useRouter();
+  const { status:policyStatus,refresh:refreshPolicies } = usePolicyStatus();
   const today = useMemo(todayIso, []);
   const [month, setMonth] = useState<Month>(() => { const [year, value] = today.split("-").map(Number); return { year, month: value - 1 }; });
   const [availability, setAvailability] = useState<VenueAvailabilityDto | null>(null);
@@ -63,7 +67,7 @@ export default function InstantQuote({ match, brief, user }: Props) {
       const booking = await createBooking({ venueId: venue.id, shootDate, startTime, endTime, rawBrief: brief, scoutContact: { name: name.trim(), email: email.trim(), ...(phone.trim() ? { phone: phone.trim() } : {}) } });
       saveBookingNavigation(booking.id); setSubmittedPrice(booking.venuePriceEur); setSubmitted(true);
       window.setTimeout(() => router.push(`/bookings/${booking.id}`), 900);
-    } catch (reason) { setError(apiErrorMessage(reason)); setSubmitting(false); }
+    } catch (reason) { if(reason instanceof ApiError&&reason.status===403&&/polic/i.test(reason.message)){await refreshPolicies();setError("Eema's policies were updated. Please review the current versions before continuing.")}else setError(apiErrorMessage(reason)); setSubmitting(false); }
   }
 
   if (submitted) return <aside className="settle border border-rule bg-paper p-7 md:p-9" role="status"><div className="available-mark">Request sent</div><h3 className="mt-4 font-display text-3xl">Request sent to owner</h3><p className="mt-3 text-sm leading-relaxed text-ink/75">This request does not reserve the venue yet. Opening your booking details…</p>{submittedPrice !== null && <p className="mt-4 font-mono text-lg">Authoritative booking price: {formatEur(submittedPrice)}</p>}</aside>;
@@ -78,7 +82,7 @@ export default function InstantQuote({ match, brief, user }: Props) {
       {availabilityState === "loading" ? <p className="mt-5 text-sm italic text-taupe">Loading authoritative availability…</p> : availabilityState === "error" ? <div className="mt-5 border border-rule p-4"><p className="text-sm text-ochreDeep">{availabilityError}</p><button type="button" className="btn mt-4" onClick={() => void loadAvailability()}>Try again</button></div> : availability && <Calendar month={month} today={today} availability={availability} selected={shootDate || inquiryDate || ""} onSelect={selectDate} onUnavailable={selectUnavailableDate} onMonth={setMonth} />}
     </div>
 
-    {inquiryDate && availability && <AvailabilityInquiryForm venueId={venue.id} timezone={availability.timezone} initialDate={inquiryDate} onCancel={() => setInquiryDate(null)} />}
+    {inquiryDate && availability && (policyStatus&&!policyStatus.allRequiredAccepted?<PolicyReview/>:<AvailabilityInquiryForm venueId={venue.id} timezone={availability.timezone} initialDate={inquiryDate} onCancel={() => setInquiryDate(null)} />)}
 
     {!inquiryDate && selectedDay && <div className="mt-7 border-t border-rule pt-5"><div className="label label-ink">{formatDate(selectedDay.date)}</div><p className="mt-2 text-sm text-taupe">Available intervals</p><div className="mt-3 flex flex-wrap gap-2">{selectedDay.intervals.map((interval) => <button type="button" key={`${interval.startTime}-${interval.endTime}`} onClick={() => selectInterval(interval)} className={selectedInterval === interval ? "chip border-ink" : "chip"}>{shortTime(interval.startTime)}–{shortTime(interval.endTime)}</button>)}</div></div>}
 
@@ -87,11 +91,12 @@ export default function InstantQuote({ match, brief, user }: Props) {
     {!inquiryDate && pricePreview && <div className="mt-5 border border-rule bg-paperDeep/30 p-4"><div className="label label-ochre">Indicative price</div><div className="mt-3 space-y-1 text-sm text-ink/75"><p>Selected: {formatDuration(pricePreview.durationMinutes)}</p><p>Minimum booking: {formatDuration(venue.minimumBookingMinutes)}</p>{pricePreview.minimumApplies && <p className="font-medium text-ink">{formatDuration(venue.minimumBookingMinutes)} minimum applies</p>}{pricePreview.fullDayRateApplies && <><p>Hourly calculation: {formatEur(pricePreview.hourlyTotal)}</p><p>Full-day rate: {formatEur(venue.fullDayRateEur)}</p></>}<p className="pt-2 font-mono text-lg text-ink">Estimated booking price: {formatEur(pricePreview.estimatedPrice)}</p><p className="pt-1 text-xs text-taupe">Informational estimate. Eema calculates the authoritative price when the request is created.</p></div></div>}
 
     {!inquiryDate && <><div className="mt-7 grid gap-4 border-t border-rule pt-5"><label className="label label-ink">Contact name<input className="form-input" value={name} onChange={(e) => setName(e.target.value)} minLength={2} maxLength={100} /></label><label className="label label-ink">Contact email<input className="form-input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} /></label><label className="label label-ink">Phone · optional<input className="form-input" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} /></label></div>
-    {!user.emailVerified ? <div className="mt-7"><VerificationRequired /></div> : <button type="button" className="btn btn-ochre mt-7 w-full" disabled={!canSubmit || submitting} onClick={() => void submit()}>{submitting ? "Sending request…" : "Request to book"}</button>}
+    {!user.emailVerified ? <div className="mt-7"><VerificationRequired /></div> : policyStatus&&!policyStatus.allRequiredAccepted?<PolicyReview/>:<button type="button" className="btn btn-ochre mt-7 w-full" disabled={!canSubmit || submitting} onClick={() => void submit()}>{submitting ? "Sending request…" : "Request to book"}</button>}
     <button type="button" className="label label-ochre mt-5 w-full text-center hover:text-ochreDeep" onClick={() => setInquiryDate(today)}>Can&apos;t find your time? Ask the owner</button>
     <p className="mt-3 text-xs leading-relaxed text-taupe">The owner must approve this request before payment. Availability is checked again by Eema when you submit.</p>{error && <p className="mt-3 text-sm text-ochreDeep">{error}</p>}</>}
   </aside>;
 }
+function PolicyReview(){return <div className="mt-7 border border-ochre bg-amber-50 p-4"><p className="text-sm font-semibold">Updated Eema policies require your review before this marketplace action.</p><Link href="/policies" className="btn mt-4 inline-block">Review updated policies</Link></div>}
 
 function Calendar({ month, today, availability, selected, onSelect, onUnavailable, onMonth }: { month: Month; today: string; availability: VenueAvailabilityDto; selected: string; onSelect: (date: string) => void; onUnavailable: (date: string) => void; onMonth: (month: Month) => void }) {
   const firstWeekday = new Date(Date.UTC(month.year, month.month, 1)).getUTCDay();
