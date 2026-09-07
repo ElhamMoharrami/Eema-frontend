@@ -4,6 +4,30 @@ Next.js presentation layer for the Eema venue marketplace. Spring Boot is the
 authoritative API for authentication, venues, matching, bookings, pricing,
 checkout, Mollie payments, and booking state.
 
+## Dependency security
+
+Last audited: 2026-09-07.
+
+The frontend is pinned to Next.js 14.2.35, the final patched release in the
+14.2 line, with React 18.3.1. The audit has no critical findings. It currently
+reports two high production package findings: Next.js 14.2.35 and Next's pinned
+PostCSS 8.4.31. Eema does not use middleware, Server Actions, custom rewrites,
+WebSocket upgrades, CSP nonces, or Next image optimization, so most reported
+paths are not configured. App Router React Server Components are present,
+however, so the remaining Server Component denial-of-service advisories are
+treated as potentially reachable until a tested Next.js major upgrade is made.
+
+The full development audit also reports the `eslint-config-next` →
+`@next/eslint-plugin-next` → `glob@10.3.10` chain. That command-injection
+advisory concerns glob's optional CLI command execution and is not shipped in
+the production install or invoked by Eema's lint script. Next 14 pins this glob
+version; removing it requires a major lint/toolchain upgrade.
+
+Do not use `npm audit fix --force` to clear these findings. Before public or
+untrusted-network deployment, migrate Next.js and its matching ESLint config to
+a supported patched major in staging, then rerun the full and production-only
+audits plus typecheck, lint, and build.
+
 ## Phase A policies and incidents
 
 Spring supplies authoritative policy content and acceptance status. Policy versions follow `DRAFT → PUBLISHED → RETIRED`; published and retired versions are read-only. A new current required version must be reviewed before users start new transactional marketplace actions. Existing bookings, receipts, payouts, cancellation rights, and refund visibility remain accessible.
