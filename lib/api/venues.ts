@@ -7,8 +7,8 @@ export function getVenues(tag?: string): Promise<VenueList[]> {
   return apiRequest<VenueList[]>(`/venues${query}`);
 }
 
-export const getVenue = (id: string) =>
-  apiRequest<Venue>(`/venues/${encodeURIComponent(id)}`, { auth: "optional" });
+export const getVenue = (id: string, auth: "optional" | "required" = "optional") =>
+  apiRequest<Venue>(`/venues/${encodeURIComponent(id)}`, { auth });
 
 export const createVenue = (request: CreateVenueRequest) =>
   apiRequest<Venue>("/venues", { method: "POST", auth: "required", body: request });

@@ -26,7 +26,7 @@ function OwnerBookings() {
     setState("loading");
     const [bookingResult, venueResult] = await Promise.allSettled([getBookings(), getMyVenues()]);
     if (bookingResult.status === "rejected") {
-      setError(apiErrorMessage(bookingResult.reason));
+      setError(apiErrorMessage(bookingResult.reason, "OWNER"));
       setState("error");
       return;
     }

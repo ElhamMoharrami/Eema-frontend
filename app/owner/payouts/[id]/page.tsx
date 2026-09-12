@@ -54,6 +54,7 @@ function Detail({ id }: { id: string }) {
       </Link>
       <div className="mt-6">
         <AdminLoadState
+          role="OWNER"
           state={state}
           error={error}
           retry={() => void load()}

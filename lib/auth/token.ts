@@ -7,6 +7,7 @@ const listeners = new Set<SessionListener>();
 export type AuthSession = Pick<AuthResponse, "accessToken" | "refreshToken" | "expiresIn"> & {
   user: User;
   storedAt: number;
+  generation: string;
 };
 
 function storage(): Storage | null {
@@ -20,7 +21,8 @@ export function getAuthSession(): AuthSession | null {
   try {
     const session = JSON.parse(value) as Partial<AuthSession>;
     if (!session.accessToken || !session.refreshToken || !session.user) return null;
-    return session as AuthSession;
+    // Older cached sessions receive a non-secret identity until their next rotation.
+    return { ...session, generation: session.generation ?? `legacy:${session.storedAt}` } as AuthSession;
   } catch {
     return null;
   }
@@ -34,6 +36,7 @@ export function saveAuthSession(response: AuthResponse): AuthSession {
     expiresIn: response.expiresIn,
     user: response.user,
     storedAt: Date.now(),
+    generation: crypto.randomUUID(),
   };
   storage()?.setItem(SESSION_KEY, JSON.stringify(session));
   notify(session);
@@ -44,6 +47,24 @@ export function clearAuthSession(): void {
   storage()?.removeItem(SESSION_KEY);
   notify(null);
 }
+// A non-secret generation identifies each successful login/refresh.
+// Notify this tab too: storage events are delivered only to other documents.
+export function recoverRefreshFailure(failedGeneration: string): boolean {
+  const current = getAuthSession();
+  if (current && current.generation !== failedGeneration) {
+    notify(current);
+    return true;
+  }
+  clearAuthSession();
+  return false;
+}
+
+export function synchronizeAuthSession(): boolean {
+  const current = getAuthSession();
+  notify(current);
+  return current !== null;
+}
+
 export function updateAuthUser(user: User): void {
   const session = getAuthSession();
   if (!session) return;

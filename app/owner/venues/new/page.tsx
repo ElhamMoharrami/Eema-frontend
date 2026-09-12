@@ -50,7 +50,7 @@ function CreateVenueForm() {
       });
       router.push(`/owner/venues/${venue.id}?created=1`);
     } catch (reason) {
-      setError(apiErrorMessage(reason));
+      setError(apiErrorMessage(reason, "OWNER"));
       setBusy(false);
     }
   }

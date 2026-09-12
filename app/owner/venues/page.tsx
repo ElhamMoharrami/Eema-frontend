@@ -27,7 +27,7 @@ function OwnerVenues() {
   async function load() {
     setState("loading");
     try { setVenues(await getMyVenues()); setState("ready"); }
-    catch (reason) { setError(apiErrorMessage(reason)); setState("error"); }
+    catch (reason) { setError(apiErrorMessage(reason, "OWNER")); setState("error"); }
   }
   if (state === "loading") return <LoadingState label="Loading your venues…" />;
   if (state === "error") return <ErrorState message={error} onRetry={() => void load()} />;

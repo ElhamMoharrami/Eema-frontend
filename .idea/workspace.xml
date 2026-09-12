@@ -5,7 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="EEMA-17 implement policy endpoints">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/owner/bookings/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/bookings/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/owner/inquiries/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/inquiries/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/owner/payout-destination/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/payout-destination/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/owner/payouts/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/payouts/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/owner/payouts/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/payouts/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/owner/venues/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/venues/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/owner/venues/new/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/venues/new/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/owner/venues/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/venues/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/owner/verification/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/verification/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/admin/AdminLoadState.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/admin/AdminLoadState.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/api/client.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/client.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/api/error-message.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/error-message.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/api/venues.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/venues.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/auth/token.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/auth/token.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,7 +177,7 @@
       <workItem from="1787148850906" duration="9261000" />
       <workItem from="1787238488362" duration="4764000" />
       <workItem from="1788797440841" duration="3951000" />
-      <workItem from="1788970863516" duration="3201000" />
+      <workItem from="1788970863516" duration="9262000" />
     </task>
     <task id="LOCAL-00001" summary="EEMA-8 Updated the frontend for the additive hardened BookingDto fields">
       <option name="closed" value="true" />
@@ -262,7 +275,15 @@
       <option name="project" value="LOCAL" />
       <updated>1788804594380</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="EEMA-17 implement policy endpoints">
+      <option name="closed" value="true" />
+      <created>1788974712175</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1788974712176</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -1,6 +1,6 @@
 import { ApiError } from "./client";
 
-export function apiErrorMessage(error: unknown): string {
+export function apiErrorMessage(error: unknown, context?: "OWNER" | "ADMIN"): string {
   if (!(error instanceof ApiError)) {
     return "We could not reach Eema. Please try again.";
   }
@@ -10,7 +10,10 @@ export function apiErrorMessage(error: unknown): string {
   if (error.status === 403 && isUnverifiedError(error)) return "Verify your email before continuing.";
   if (error.status === 403 && /owner verification/i.test(error.message)) return "Owner verification is required before submitting this listing.";
   if (error.status === 403 && /polic/i.test(error.message)) return "Eema's policies were updated. Please review the current versions before continuing.";
-  if (error.status === 403) return "ADMIN access is required for this operation.";
+  if (error.status === 403) return context === "ADMIN"
+    ? "ADMIN access is required for this operation."
+    : context === "OWNER" ? "You do not have access to this owner resource."
+    : "You do not have access to this resource.";
   if (error.status === 404) return "The requested record was not found.";
   if (error.status === 409) return "The operation or record state changed. Refresh and review the latest status.";
   if (error.status === 400 || error.status === 422) {

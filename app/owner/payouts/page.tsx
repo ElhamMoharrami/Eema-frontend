@@ -44,7 +44,7 @@ function List() {
       ([p, v]) => {
         if (!active) return;
         if (p.status === "rejected") {
-          setError(apiErrorMessage(p.reason));
+          setError(apiErrorMessage(p.reason, "OWNER"));
           setState("error");
           return;
         }
