@@ -53,7 +53,9 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     headers.set("Authorization", `Bearer ${session.accessToken}`);
   }
   const method = (requestInit.method ?? "GET").toUpperCase();
-  if (auth === "required" && session?.user.emailVerified === false && method !== "GET" && !path.startsWith("/admin/")) {
+  // Matching uses POST for a bounded search body, but is read-only discovery.
+  const isMatchingRead = method === "POST" && path === "/match";
+  if (auth === "required" && session?.user.emailVerified === false && method !== "GET" && !isMatchingRead && !path.startsWith("/admin/")) {
     throw new ApiError(403, "Verify your email before continuing.", { reason: "EMAIL_UNVERIFIED" });
   }
 

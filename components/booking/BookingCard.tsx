@@ -15,9 +15,9 @@ export default function BookingCard({ booking, venueName, financialView = "scout
       <Detail label="Created" value={formatTimestamp(booking.createdAt)} />
       {booking.status === "REQUESTED" && booking.ownerResponseExpiresAt && <Detail label={financialView === "owner" ? "Respond by" : "Owner response expected by"} value={formatTimestamp(booking.ownerResponseExpiresAt)} />}
       <Detail label="Venue price" value={formatEur(booking.venuePriceEur)} mono />
-      <Detail label="Hourly rate at request" value={`${formatEur(booking.hourlyRateEurSnapshot)}/hour`} mono />
-      <Detail label="Minimum booking at request" value={formatDuration(booking.minimumBookingMinutesSnapshot)} />
-      {booking.fullDayRateEurSnapshot !== null && <Detail label="Full-day rate at request" value={formatEur(booking.fullDayRateEurSnapshot)} mono />}
+      <Detail label="Saved hourly rate" value={`${formatEur(booking.hourlyRateEurSnapshot)}/hour`} mono />
+      <Detail label="Saved minimum booking" value={formatDuration(booking.minimumBookingMinutesSnapshot)} />
+      {booking.fullDayRateEurSnapshot !== null && <Detail label="Saved full-day rate" value={formatEur(booking.fullDayRateEurSnapshot)} mono />}
       <Detail label="Selected duration" value={formatDuration(booking.durationMinutes)} />
       <Detail label="Billable duration" value={formatDuration(booking.billableMinutes)} />
       <Detail label="Total paid" value={formatEur(booking.totalPaidEur)} mono />

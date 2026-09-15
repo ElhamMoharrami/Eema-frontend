@@ -22,7 +22,7 @@ export default function BookingActions({ booking, onChanged }: { booking: Bookin
   const canReview = role === "OWNER" && booking.status === "REQUESTED";
   const canPay = role === "SCOUT" && booking.status === "AWAITING_PAYMENT";
 
-  if (!canReview && !canPay) return null;
+  if (!canReview && !canPay) return error ? <p role="alert" className="mt-3 text-sm text-ochreDeep">{error}</p> : null;
   if (user && !user.emailVerified) return <div className="mt-6 border-t border-rule pt-5"><VerificationRequired /></div>;
 
   async function run(action: Action) {
@@ -40,10 +40,9 @@ export default function BookingActions({ booking, onChanged }: { booking: Bookin
       await onChanged();
     } catch (reason) {
       if (reason instanceof ApiError && reason.status === 403 && /polic/i.test(reason.message)) { await refresh(); setError("Eema's policies were updated. Please review the current versions before continuing."); setBusy(null); return; }
-      if (action === "accept" && reason instanceof ApiError && reason.status === 409) {
-        setError("This time is no longer available. Another booking may have reserved it.");
-        setBusy(null);
-        await onChanged();
+      if (action !== "pay" && reason instanceof ApiError && reason.status === 409) {
+        setError("This action could not be completed. Review the current booking status and availability before trying again.");
+        try { await onChanged(); } catch { setError("This action could not be completed, and the latest booking could not be loaded. Reload before trying again."); } finally { setBusy(null); }
         return;
       }
       setError(apiErrorMessage(reason)); setBusy(null);

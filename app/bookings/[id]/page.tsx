@@ -37,9 +37,9 @@ export default function BookingDetailPage({ params }: { params: { id: string } }
   const [state, setState] = useState<LoadState>("idle");
   const [error, setError] = useState("");
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (refresh = false) => {
     if (!auth.user || !validId) return;
-    setState("loading");
+    if (!refresh) setState("loading");
     setError("");
     try {
       const loaded = await getBooking(bookingId);
@@ -96,7 +96,7 @@ export default function BookingDetailPage({ params }: { params: { id: string } }
     {auth.isAuthReady && auth.user && state === "not-found" && <ErrorState title="Booking not found" message="This booking does not exist, or it is no longer available." />}
     {auth.isAuthReady && auth.user && state === "expired" && <ErrorState title="Session expired" message="Your session has expired. Please sign in again." />}
     {auth.isAuthReady && auth.user && state === "error" && <ErrorState title="Could not load booking" message={error} onRetry={() => void load()} />}
-    {auth.isAuthReady && auth.user && state === "ready" && booking && <BookingDetail booking={booking} venueName={venueName} venueTimezone={venueTimezone} role={auth.role} onChanged={load} />}
+    {auth.isAuthReady && auth.user && state === "ready" && booking && <BookingDetail booking={booking} venueName={venueName} venueTimezone={venueTimezone} role={auth.role} onChanged={() => load(true)} />}
   </main>;
 }
 
@@ -118,9 +118,9 @@ function BookingDetail({ booking, venueName, venueTimezone, role, onChanged }: {
       <Detail label="Shoot date" value={formatDate(booking.shootDate)} />
       <Detail label="Time" value={formatTimeRange(booking.startTime, booking.endTime)} />
       <Detail label="Venue price" value={formatEur(booking.venuePriceEur)} mono />
-      <Detail label="Hourly rate at request" value={`${formatEur(booking.hourlyRateEurSnapshot)}/hour`} mono />
-      <Detail label="Minimum booking at request" value={formatDuration(booking.minimumBookingMinutesSnapshot)} />
-      {booking.fullDayRateEurSnapshot !== null && <Detail label="Full-day rate at request" value={formatEur(booking.fullDayRateEurSnapshot)} mono />}
+      <Detail label="Saved hourly rate" value={`${formatEur(booking.hourlyRateEurSnapshot)}/hour`} mono />
+      <Detail label="Saved minimum booking" value={formatDuration(booking.minimumBookingMinutesSnapshot)} />
+      {booking.fullDayRateEurSnapshot !== null && <Detail label="Saved full-day rate" value={formatEur(booking.fullDayRateEurSnapshot)} mono />}
       <Detail label="Selected duration" value={formatDuration(booking.durationMinutes)} />
       <Detail label="Billable duration" value={formatDuration(booking.billableMinutes)} />
       <Detail label="Total paid" value={formatEur(booking.totalPaidEur)} mono />

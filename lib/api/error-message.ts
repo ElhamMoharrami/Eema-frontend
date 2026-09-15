@@ -14,6 +14,7 @@ export function apiErrorMessage(error: unknown, context?: "OWNER" | "ADMIN"): st
     ? "ADMIN access is required for this operation."
     : context === "OWNER" ? "You do not have access to this owner resource."
     : "You do not have access to this resource.";
+  if (error.status === 413) return "This file is too large. Choose a smaller image within the upload size limit.";
   if (error.status === 404) return "The requested record was not found.";
   if (error.status === 409) return "The operation or record state changed. Refresh and review the latest status.";
   if (error.status === 400 || error.status === 422) {

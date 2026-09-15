@@ -22,8 +22,8 @@ function OwnerBookings() {
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
   const [error, setError] = useState("");
   useEffect(() => { void load(); }, []);
-  async function load() {
-    setState("loading");
+  async function load(refresh = false) {
+    if (!refresh) setState("loading");
     const [bookingResult, venueResult] = await Promise.allSettled([getBookings(), getMyVenues()]);
     if (bookingResult.status === "rejected") {
       setError(apiErrorMessage(bookingResult.reason, "OWNER"));
@@ -37,7 +37,7 @@ function OwnerBookings() {
   if (state === "loading") return <LoadingState label="Loading venue bookings…" />;
   if (state === "error") return <ErrorState message={error} onRetry={() => void load()} />;
   if (bookings.length === 0) return <EmptyState title="No venue bookings" message="Bookings for your venues will appear here." />;
-  return <div className="grid gap-6">{bookings.map((booking) => <BookingCard key={booking.id} booking={booking} venueName={venueNames[booking.venueId] ?? `Venue ${booking.venueId}`} financialView="owner" onChanged={load} />)}</div>;
+  return <div className="grid gap-6">{bookings.map((booking) => <BookingCard key={booking.id} booking={booking} venueName={venueNames[booking.venueId] ?? `Venue ${booking.venueId}`} financialView="owner" onChanged={() => load(true)} />)}</div>;
 }
 
 function prioritizeRequestedBookings(bookings: Booking[]): Booking[] {

@@ -20,7 +20,7 @@ export default function BookingWorkflowNotice({ booking }: { booking: Booking })
     else if (booking.status === "CANCELLED") { heading = "Booking cancelled"; message = "This booking has been cancelled."; }
     else if (booking.status === "REFUNDED") { heading = "Booking refunded"; message = "This booking has been refunded. See the refund details for its authoritative state."; }
     else if (booking.status === "EXPIRED" && isPaymentWindowExpiry(booking)) { heading = "Payment window expired"; message = "This accepted request can no longer be paid because the payment deadline passed."; }
-    else if (booking.status === "EXPIRED") { heading = "Response window expired"; message = "This request expired because the owner did not respond before the response window ended."; }
+    else if (booking.status === "EXPIRED") { heading = "Booking request expired"; message = "This request expired before it was accepted. The response deadline or minimum booking lead time was reached. Choose another available time."; }
   } else if (role === "OWNER") {
     if (booking.status === "REQUESTED") { heading = "New request"; message = booking.ownerResponseExpiresAt ? `Respond by ${formatTimestamp(booking.ownerResponseExpiresAt)}. Review the shoot details and accept or decline this request.` : "Review the shoot details and accept or decline this request."; }
     else if (booking.status === "AWAITING_PAYMENT") { heading = "Accepted — waiting for scout payment"; message = booking.paymentExpiresAt ? `The venue is reserved until ${formatTimestamp(booking.paymentExpiresAt)} while the scout completes payment.` : "The venue is reserved while the scout completes payment."; }

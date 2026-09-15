@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getVenueAvailability } from "@/lib/api/availability";
 import { createBooking } from "@/lib/api/bookings";
@@ -17,15 +17,19 @@ import Link from "next/link";
 import { usePolicyStatus } from "@/components/policy/PolicyStatusProvider";
 import { ApiError } from "@/lib/api/client";
 
+import { todayInZone, isoDate, monthStart, monthEnd, offsetMonth, type CalendarMonth } from "@/lib/availability-calendar";
+
 type Props = { match: MatchedVenue; brief: string; user: User };
-type Month = { year: number; month: number };
+type Month = CalendarMonth;
 
 export default function InstantQuote({ match, brief, user }: Props) {
   const router = useRouter();
   const { status:policyStatus,refresh:refreshPolicies } = usePolicyStatus();
-  const today = useMemo(todayIso, []);
-  const [month, setMonth] = useState<Month>(() => { const [year, value] = today.split("-").map(Number); return { year, month: value - 1 }; });
   const [availability, setAvailability] = useState<VenueAvailabilityDto | null>(null);
+  const today = todayInZone(availability?.timezone ?? "UTC");
+  const initializedVenue = useRef<string | null>(null);
+  const requestVersion = useRef(0);
+  const [month, setMonth] = useState<Month>(() => { const [year, value] = today.split("-").map(Number); return { year, month: value - 1 }; });
   const [availabilityState, setAvailabilityState] = useState<"loading" | "ready" | "error">("loading");
   const [availabilityError, setAvailabilityError] = useState("");
   const [shootDate, setShootDate] = useState("");
@@ -46,10 +50,25 @@ export default function InstantQuote({ match, brief, user }: Props) {
   useEffect(() => { void loadAvailability(); }, [month.year, month.month, venue.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function loadAvailability() {
+    const version = ++requestVersion.current;
     setAvailabilityState("loading"); setAvailabilityError(""); setShootDate(""); setInquiryDate(null); clearTime();
     const from = monthStart(month); const to = monthEnd(month);
-    try { setAvailability(await getVenueAvailability(venue.id, from, to)); setAvailabilityState("ready"); }
-    catch (reason) { setAvailabilityError(apiErrorMessage(reason)); setAvailabilityState("error"); }
+    try {
+      const result = await getVenueAvailability(venue.id, from, to);
+      if (version !== requestVersion.current) return;
+      if (initializedVenue.current !== venue.id) {
+        initializedVenue.current = venue.id;
+        const [year, value] = todayInZone(result.timezone).split("-").map(Number);
+        if (month.year !== year || month.month !== value - 1) {
+          setMonth({ year, month: value - 1 });
+          return; // Reload the venue-local month before displaying selectable dates.
+        }
+      }
+      setAvailability(result); setAvailabilityState("ready");
+    } catch (reason) {
+      if (version !== requestVersion.current) return;
+      setAvailabilityError(apiErrorMessage(reason)); setAvailabilityState("error");
+    }
   }
 
   const selectedDay = availability?.dates.find((day) => day.date === shootDate);
@@ -67,7 +86,7 @@ export default function InstantQuote({ match, brief, user }: Props) {
       const booking = await createBooking({ venueId: venue.id, shootDate, startTime, endTime, rawBrief: brief, scoutContact: { name: name.trim(), email: email.trim(), ...(phone.trim() ? { phone: phone.trim() } : {}) } });
       saveBookingNavigation(booking.id); setSubmittedPrice(booking.venuePriceEur); setSubmitted(true);
       window.setTimeout(() => router.push(`/bookings/${booking.id}`), 900);
-    } catch (reason) { if(reason instanceof ApiError&&reason.status===403&&/polic/i.test(reason.message)){await refreshPolicies();setError("Eema's policies were updated. Please review the current versions before continuing.")}else setError(apiErrorMessage(reason)); setSubmitting(false); }
+    } catch (reason) { if(reason instanceof ApiError&&reason.status===403&&/polic/i.test(reason.message)){await refreshPolicies();setError("Eema's policies were updated. Please review the current versions before continuing.")}else { if (reason instanceof ApiError && reason.status === 409) await loadAvailability(); setError(apiErrorMessage(reason)); } setSubmitting(false); }
   }
 
   if (submitted) return <aside className="settle border border-rule bg-paper p-7 md:p-9" role="status"><div className="available-mark">Request sent</div><h3 className="mt-4 font-display text-3xl">Request sent to owner</h3><p className="mt-3 text-sm leading-relaxed text-ink/75">This request does not reserve the venue yet. Opening your booking details…</p>{submittedPrice !== null && <p className="mt-4 font-mono text-lg">Authoritative booking price: {formatEur(submittedPrice)}</p>}</aside>;
@@ -106,9 +125,4 @@ function Calendar({ month, today, availability, selected, onSelect, onUnavailabl
   return <div className="mt-4"><div className="flex items-center justify-between"><button type="button" className="label hover:text-ink disabled:opacity-30" disabled={current} onClick={() => onMonth(offsetMonth(month, -1))}>← Previous</button><span className="font-display text-lg">{new Intl.DateTimeFormat("en-GB", { month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(Date.UTC(month.year, month.month, 1)))}</span><button type="button" className="label hover:text-ink" onClick={() => onMonth(offsetMonth(month, 1))}>Next →</button></div><div className="mt-4 grid grid-cols-7 gap-1 text-center">{["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => <span key={day} className="label py-2 text-[0.58rem]">{day}</span>)}{Array.from({ length: firstWeekday }, (_, i) => <span key={`blank-${i}`} />)}{Array.from({ length: days }, (_, index) => { const date = isoDate(month.year, month.month, index + 1); const future = date >= today; const enabled = future && available.has(date); return <button type="button" key={date} disabled={!future} aria-label={`${formatDate(date)}${enabled ? " available" : " unavailable — ask owner"}`} onClick={() => enabled ? onSelect(date) : onUnavailable(date)} className={`aspect-square border text-sm ${selected === date ? "border-ochre bg-ochre text-paper" : enabled ? "border-rule hover:border-ink" : future ? "border-transparent text-taupe/50 line-through hover:border-ochre" : "border-transparent text-taupe/25 line-through"}`}>{index + 1}</button>; })}</div><div className="mt-3 text-xs text-taupe">Dates crossed out have no backend-provided availability. Select a future date to ask the owner.</div></div>;
 }
 
-function todayIso() { const now = new Date(); return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`; }
-function isoDate(year: number, month: number, day: number) { return `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`; }
-function monthStart(month: Month) { return isoDate(month.year, month.month, 1); }
-function monthEnd(month: Month) { return isoDate(month.year, month.month, new Date(Date.UTC(month.year, month.month + 1, 0)).getUTCDate()); }
-function offsetMonth(month: Month, offset: number): Month { const value = new Date(Date.UTC(month.year, month.month + offset, 1)); return { year: value.getUTCFullYear(), month: value.getUTCMonth() }; }
 function shortTime(value: string) { return value.slice(0, 5); }

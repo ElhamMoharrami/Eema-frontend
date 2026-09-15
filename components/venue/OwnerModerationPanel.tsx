@@ -8,6 +8,7 @@ import { getVenueModeration, submitVenueForReview } from "@/lib/api/venues";
 import { formatTimestamp } from "@/lib/format";
 import type { Venue } from "@/types/venue";
 import type { OwnerVerificationDto, VenueModerationDto } from "@/types/trust";
+import { readinessIssueLabel } from "@/lib/venue-readiness";
 import PolicyGate from "@/components/policy/PolicyGate";
 export default function OwnerModerationPanel({
   venue,
@@ -51,8 +52,8 @@ export default function OwnerModerationPanel({
       setModeration(await submitVenueForReview(venue.id));
       await onSubmitted();
     } catch (e) {
-      setError(apiErrorMessage(e));
       if (e instanceof ApiError && e.status === 409) await load();
+      setError(apiErrorMessage(e));
     } finally {
       setBusy(false);
     }
@@ -100,7 +101,7 @@ export default function OwnerModerationPanel({
           <div className="label">Listing items to complete</div>
           <ul className="mt-3 list-disc space-y-1 pl-5 text-sm">
             {moderation.readinessIssues.map((i) => (
-              <li key={i}>{issueLabel(i)}</li>
+              <li key={i}>{readinessIssueLabel(i)}</li>
             ))}
           </ul>
         </div>
@@ -154,21 +155,6 @@ const copy = (s: Venue["status"]) =>
     SUSPENDED:
       "This venue is not currently visible for new bookings. Existing bookings are not automatically cancelled.",
   })[s];
-const issueLabel = (i: string) =>
-  ({
-    maxCrewSize: "Crew capacity",
-    permittedActivities: "Permitted production activities",
-    productionRules: "Production rules",
-    naturalLight: "Natural-light information",
-    loadingAccess: "Loading-access information",
-    bathroomsAvailable: "Bathroom information",
-    soundRecordingSuitable: "Sound-recording suitability",
-    hourlyRateEur: "Pricing",
-    minimumBookingMinutes: "Minimum booking duration",
-    minimumLeadTimeMinutes: "Minimum lead time",
-    timezone: "Timezone",
-    photoPaths: "Listing photos",
-  })[i] ?? i;
 function Time({ label, value }: { label: string; value: string }) {
   return (
     <div>
