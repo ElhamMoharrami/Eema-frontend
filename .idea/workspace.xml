@@ -4,21 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="EEMA-17 implement policy endpoints">
-      <change beforePath="$PROJECT_DIR$/app/owner/bookings/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/bookings/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/owner/inquiries/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/inquiries/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/owner/payout-destination/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/payout-destination/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/owner/payouts/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/payouts/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/owner/payouts/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/payouts/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/owner/venues/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/venues/[id]/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/owner/venues/new/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/venues/new/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/owner/venues/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/venues/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/owner/verification/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/owner/verification/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/admin/AdminLoadState.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/admin/AdminLoadState.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/api/client.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/client.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/api/error-message.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/error-message.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/api/venues.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/venues.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/auth/token.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/auth/token.ts" afterDir="false" />
+    <list default="true" id="ca190ddd-e12b-4cab-9b83-47d0efc2f50b" name="Changes" comment="EEMA-17 fix auth">
+      <change beforePath="$PROJECT_DIR$/app/booked/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/booked/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/booking/BookingActions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/booking/BookingActions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/booking/BookingCancellation.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/booking/BookingCancellation.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/api/bookings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api/bookings.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/booking.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/booking.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="160" />
+    <option name="cachedIndexableFilesCount" value="163" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -37,23 +28,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.0" />
-      <entry key="MS500" value="1.0" />
-      <entry key="S2" value="1.0" />
-      <entry key="S5" value="1.0" />
-      <entry key="S10" value="1.0" />
-      <entry key="S30" value="1.0" />
-      <entry key="S60" value="1.0" />
-      <entry key="M2" value="1.0000000000003666" />
-      <entry key="M5" value="1.0000516856736572" />
-      <entry key="M10" value="1.026900578863812" />
-      <entry key="M15" value="1.2164989681492016" />
-      <entry key="M30" value="2.7602525383832326" />
-      <entry key="H1" value="6.514364315463277" />
-      <entry key="H2" value="14.688644500068891" />
-      <entry key="H4" value="30.74672468539634" />
-      <entry key="D1" value="86.01924263798718" />
-      <entry key="W1" value="140.27520622913613" />
+      <entry key="MS100" value="1.097552409940502" />
+      <entry key="MS500" value="1.972799802491076" />
+      <entry key="S2" value="2.657915432304871" />
+      <entry key="S5" value="2.8543064306999395" />
+      <entry key="S10" value="2.925582496724413" />
+      <entry key="S30" value="2.9748358918350126" />
+      <entry key="S60" value="2.987372571912031" />
+      <entry key="M2" value="2.993674897715584" />
+      <entry key="M5" value="2.9975188159894026" />
+      <entry key="M10" value="3.025610341345847" />
+      <entry key="M15" value="3.2155287834467416" />
+      <entry key="M30" value="4.759319814097189" />
+      <entry key="H1" value="8.51335367811606" />
+      <entry key="H2" value="16.687546618211186" />
+      <entry key="H4" value="32.745593706925085" />
+      <entry key="D1" value="88.01872024012481" />
+      <entry key="W1" value="142.27508477803187" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -64,34 +55,34 @@
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
       <entry key="M2" value="0.0" />
-      <entry key="M5" value="9.96898474134558E-203" />
-      <entry key="M10" value="1.412017936077134E-101" />
-      <entry key="M15" value="7.360433927918959E-68" />
-      <entry key="M30" value="3.836778071752693E-34" />
-      <entry key="H1" value="2.770118390609445E-17" />
-      <entry key="H2" value="7.443276655414874E-9" />
-      <entry key="H4" value="1.2201046381791035E-4" />
-      <entry key="D1" value="0.39681782832593476" />
-      <entry key="W1" value="1.5873825172186498" />
+      <entry key="M5" value="9.951655786266757E-203" />
+      <entry key="M10" value="1.4107901561818753E-101" />
+      <entry key="M15" value="7.356166605851857E-68" />
+      <entry key="M30" value="3.835665695657061E-34" />
+      <entry key="H1" value="2.769716798857345E-17" />
+      <entry key="H2" value="7.442737099620426E-9" />
+      <entry key="H4" value="1.2200604152858527E-4" />
+      <entry key="D1" value="0.39681543116849183" />
+      <entry key="W1" value="1.5873811473148818" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="0.9592641193252643" />
-      <entry key="MS500" value="0.9917167307382933" />
-      <entry key="S2" value="0.9979227189990506" />
-      <entry key="S5" value="0.999168569213607" />
-      <entry key="S10" value="0.9995841981612189" />
-      <entry key="S30" value="0.9998613801725043" />
-      <entry key="S60" value="0.9999306876841536" />
-      <entry key="M2" value="0.9999653432418979" />
-      <entry key="M5" value="1.0000378215829613" />
-      <entry key="M10" value="1.0268933236047773" />
-      <entry key="M15" value="1.2164926083674004" />
-      <entry key="M30" value="2.7602430323794236" />
-      <entry key="H1" value="6.514348355379813" />
-      <entry key="H2" value="14.688610887124634" />
-      <entry key="H4" value="30.746798589719376" />
-      <entry key="D1" value="86.4160340409201" />
-      <entry key="W1" value="141.86258233379692" />
+      <entry key="MS100" value="0.46436034047970315" />
+      <entry key="MS500" value="1.5550734042361145" />
+      <entry key="S2" value="2.500268980397938" />
+      <entry key="S5" value="2.7853228945807116" />
+      <entry key="S10" value="2.89002406644408" />
+      <entry key="S30" value="2.9627382315091952" />
+      <entry key="S60" value="2.981292634580942" />
+      <entry key="M2" value="2.9906271142127223" />
+      <entry key="M5" value="2.996297820896235" />
+      <entry key="M10" value="3.024999207073227" />
+      <entry key="M15" value="3.21511976871426" />
+      <entry key="M30" value="4.759108947311565" />
+      <entry key="H1" value="8.513237030021342" />
+      <entry key="H2" value="16.68746266040178" />
+      <entry key="H4" value="32.74564243438376" />
+      <entry key="D1" value="88.41550505028802" />
+      <entry key="W1" value="143.86245891339664" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -118,7 +109,7 @@
     &quot;js.debugger.nextJs.config.created.server&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/elham/workspace/Eema-backend&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/elham/workspace/Eema-frontend&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -147,16 +138,6 @@
     <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
       <method v="2" />
     </configuration>
-    <configuration name="Next.js: server-side" type="js.build_tools.npm">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="dev" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -178,6 +159,7 @@
       <workItem from="1787238488362" duration="4764000" />
       <workItem from="1788797440841" duration="3951000" />
       <workItem from="1788970863516" duration="9262000" />
+      <workItem from="1789233046978" duration="2151000" />
     </task>
     <task id="LOCAL-00001" summary="EEMA-8 Updated the frontend for the additive hardened BookingDto fields">
       <option name="closed" value="true" />
@@ -283,7 +265,23 @@
       <option name="project" value="LOCAL" />
       <updated>1788974712176</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="EEMA-17 fix auth">
+      <option name="closed" value="true" />
+      <created>1789233103649</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1789233103650</updated>
+    </task>
+    <task id="LOCAL-00015" summary="EEMA-17 fix auth">
+      <option name="closed" value="true" />
+      <created>1789478417428</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1789478417428</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -301,6 +299,7 @@
     <MESSAGE value="EEMA-16 Implemented the frontend trust and moderation workflow" />
     <MESSAGE value="EEMA-16 Implemented the verified owner payout-destination frontend" />
     <MESSAGE value="EEMA-17 implement policy endpoints" />
-    <option name="LAST_COMMIT_MESSAGE" value="EEMA-17 implement policy endpoints" />
+    <MESSAGE value="EEMA-17 fix auth" />
+    <option name="LAST_COMMIT_MESSAGE" value="EEMA-17 fix auth" />
   </component>
 </project>

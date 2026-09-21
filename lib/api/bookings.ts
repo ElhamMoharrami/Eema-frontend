@@ -1,15 +1,16 @@
+import * as shape from "./response-shape";
 import { apiBinaryRequest, apiRequest } from "./client";
 import { saveBinaryDownload } from "@/lib/download";
 import type { Booking, CancellationPreview, CreateBookingRequest } from "@/types/booking";
 
 export const createBooking = (request: CreateBookingRequest) =>
-  apiRequest<Booking>("/bookings", { method: "POST", auth: "required", body: request });
+  apiRequest<Booking>("/bookings", { validate: shape.booking, method: "POST", auth: "required", body: request });
 
 export const getBookings = () =>
-  apiRequest<Booking[]>("/bookings", { auth: "required" });
+  apiRequest<Booking[]>("/bookings", { validate: shape.array(shape.booking), auth: "required" });
 
 export const getBooking = (id: string) =>
-  apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}`, { auth: "required" });
+  apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}`, { validate: shape.booking, auth: "required" });
 
 export async function downloadBookingReceipt(id: string): Promise<void> {
   const response = await apiBinaryRequest(`/bookings/${encodeURIComponent(id)}/receipt`);
@@ -17,15 +18,15 @@ export async function downloadBookingReceipt(id: string): Promise<void> {
 }
 
 export const acceptBookingRequest = (id: string) =>
-  apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}/accept`, { method: "POST", auth: "required" });
+  apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}/accept`, { validate: shape.booking, method: "POST", auth: "required" });
 
 export const declineBookingRequest = (id: string) =>
-  apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}/decline`, { method: "POST", auth: "required" });
+  apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}/decline`, { validate: shape.booking, method: "POST", auth: "required" });
 
 export const getCancellationPreview = (id: string) =>
-  apiRequest<CancellationPreview>(`/bookings/${encodeURIComponent(id)}/cancellation-preview`, { auth: "required" });
+  apiRequest<CancellationPreview>(`/bookings/${encodeURIComponent(id)}/cancellation-preview`, { validate: shape.cancellationPreview, auth: "required" });
 
-export const cancelBooking = (id: string, reason?: string) =>
-  apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}/cancel`, {
-    method: "POST", auth: "required", ...(reason === undefined ? {} : { body: { reason } }),
+export const cancelBooking = (id: string, reason?: string, previewToken?: string) =>
+  apiRequest<Booking>(`/bookings/${encodeURIComponent(id)}/cancel`, { validate: shape.booking,
+    method: "POST", auth: "required", retryOnUnauthorized: false, body: { reason, previewToken },
   });

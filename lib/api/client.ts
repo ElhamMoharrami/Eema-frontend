@@ -9,6 +9,7 @@ type ApiRequestOptions = Omit<RequestInit, "body"> & {
   body?: unknown;
   retryOnUnauthorized?: boolean;
   responseMode?: "json" | "empty" | "blob";
+  validate?: (value: unknown) => boolean;
 };
 
 export type BinaryResponse = { blob: Blob; contentDisposition: string | null };
@@ -37,6 +38,7 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     headers: suppliedHeaders,
     retryOnUnauthorized = true,
     responseMode = "json",
+    validate,
     ...requestInit
   } = options;
   const headers = new Headers(suppliedHeaders);
@@ -55,7 +57,9 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
   const method = (requestInit.method ?? "GET").toUpperCase();
   // Matching uses POST for a bounded search body, but is read-only discovery.
   const isMatchingRead = method === "POST" && path === "/match";
-  if (auth === "required" && session?.user.emailVerified === false && method !== "GET" && !isMatchingRead && !path.startsWith("/admin/")) {
+  // Support intake is available to booking participants without email verification.
+  const isIncidentReport = method === "POST" && /^\/bookings\/[^/]+\/incidents$/.test(path);
+  if (auth === "required" && session?.user.emailVerified === false && method !== "GET" && !isMatchingRead && !isIncidentReport && !path.startsWith("/admin/")) {
     throw new ApiError(403, "Verify your email before continuing.", { reason: "EMAIL_UNVERIFIED" });
   }
 
@@ -123,7 +127,9 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
     throw new ApiError(response.status, "Expected a response body", undefined, "MALFORMED_RESPONSE");
   }
   try {
-    return JSON.parse(text) as T;
+    const value: unknown = JSON.parse(text);
+    if (validate && !validate(value)) throw new Error("Unexpected response shape");
+    return value as T;
   } catch {
     throw new ApiError(response.status, "Could not read the server response", undefined, "MALFORMED_RESPONSE");
   }

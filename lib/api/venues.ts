@@ -1,47 +1,48 @@
+import * as shape from "./response-shape";
 import { apiRequest } from "./client";
 import type { CreateAvailabilityOverrideRequest, CreateVenueRequest, UpdateVenueRequest, Venue, VenueAvailabilitySettings, VenueList, WeeklyIntervalRequest } from "@/types/venue";
 import type { VenueModerationDto } from "@/types/trust";
 
 export function getVenues(tag?: string): Promise<VenueList[]> {
   const query = tag?.trim() ? `?tag=${encodeURIComponent(tag.trim())}` : "";
-  return apiRequest<VenueList[]>(`/venues${query}`);
+  return apiRequest<VenueList[]>(`/venues${query}`, { validate: shape.array(shape.venueList) });
 }
 
 export const getVenue = (id: string, auth: "optional" | "required" = "optional") =>
-  apiRequest<Venue>(`/venues/${encodeURIComponent(id)}`, { auth });
+  apiRequest<Venue>(`/venues/${encodeURIComponent(id)}`, { validate: shape.venue, auth });
 
 export const createVenue = (request: CreateVenueRequest) =>
-  apiRequest<Venue>("/venues", { method: "POST", auth: "required", body: request });
+  apiRequest<Venue>("/venues", { validate: shape.venue, method: "POST", auth: "required", body: request });
 
 export const getMyVenues = () =>
-  apiRequest<Venue[]>("/venues/my", { auth: "required" });
+  apiRequest<Venue[]>("/venues/my", { validate: shape.array(shape.venue), auth: "required" });
 
 export const updateVenue = (id: string, request: UpdateVenueRequest) =>
-  apiRequest<Venue>(`/venues/${encodeURIComponent(id)}`, { method: "PUT", auth: "required", body: request });
+  apiRequest<Venue>(`/venues/${encodeURIComponent(id)}`, { validate: shape.venue, method: "PUT", auth: "required", body: request });
 
 export function uploadAndAttachVenuePhoto(id: string, file: File): Promise<Venue> {
   const body = new FormData();
   body.append("file", file);
-  return apiRequest<Venue>(`/venues/${encodeURIComponent(id)}/photos`, { method: "POST", auth: "required", body });
+  return apiRequest<Venue>(`/venues/${encodeURIComponent(id)}/photos`, { validate: shape.venue, method: "POST", auth: "required", body });
 }
 
 export const getVenueAvailabilitySettings = (venueId: string) =>
-  apiRequest<VenueAvailabilitySettings>(`/venues/${encodeURIComponent(venueId)}/availability/settings`, { auth: "required" });
+  apiRequest<VenueAvailabilitySettings>(`/venues/${encodeURIComponent(venueId)}/availability/settings`, { validate: shape.availabilitySettings, auth: "required" });
 
 export const updateVenueTimezone = (venueId: string, timezone: string) =>
-  apiRequest<VenueAvailabilitySettings>(`/venues/${encodeURIComponent(venueId)}/availability/settings`, { method: "PUT", auth: "required", body: { timezone } });
+  apiRequest<VenueAvailabilitySettings>(`/venues/${encodeURIComponent(venueId)}/availability/settings`, { validate: shape.availabilitySettings, method: "PUT", auth: "required", body: { timezone } });
 
 export const replaceWeeklyAvailability = (venueId: string, intervals: WeeklyIntervalRequest[]) =>
-  apiRequest<VenueAvailabilitySettings>(`/venues/${encodeURIComponent(venueId)}/availability/weekly`, { method: "PUT", auth: "required", body: { intervals } });
+  apiRequest<VenueAvailabilitySettings>(`/venues/${encodeURIComponent(venueId)}/availability/weekly`, { validate: shape.availabilitySettings, method: "PUT", auth: "required", body: { intervals } });
 
 export const createAvailabilityOverride = (venueId: string, request: CreateAvailabilityOverrideRequest) =>
-  apiRequest<import("@/types/venue").AvailabilityOverride>(`/venues/${encodeURIComponent(venueId)}/availability/overrides`, { method: "POST", auth: "required", body: request });
+  apiRequest<import("@/types/venue").AvailabilityOverride>(`/venues/${encodeURIComponent(venueId)}/availability/overrides`, { validate: shape.override, method: "POST", auth: "required", body: request });
 
 export const deleteAvailabilityOverride = (venueId: string, overrideId: string) =>
   apiRequest<void>(`/venues/${encodeURIComponent(venueId)}/availability/overrides/${encodeURIComponent(overrideId)}`, { method: "DELETE", auth: "required", responseMode: "empty" });
 
 export const getVenueModeration = (venueId: string) =>
-  apiRequest<VenueModerationDto>(`/venues/${encodeURIComponent(venueId)}/moderation`, { auth:"required" });
+  apiRequest<VenueModerationDto>(`/venues/${encodeURIComponent(venueId)}/moderation`, { validate: shape.moderation, auth:"required" });
 
 export const submitVenueForReview = (venueId: string) =>
-  apiRequest<VenueModerationDto>(`/venues/${encodeURIComponent(venueId)}/submit-for-review`, { method:"POST", auth:"required" });
+  apiRequest<VenueModerationDto>(`/venues/${encodeURIComponent(venueId)}/submit-for-review`, { validate: shape.moderation, method:"POST", auth:"required" });

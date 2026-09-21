@@ -60,6 +60,11 @@ function View({ id }: { id: string }) {
         retry={() => void load()}
         notFound="Payout not found"
       />
+      {actionError && (
+        <p role="alert" className="mb-5 text-sm text-red-800">
+          {actionError}
+        </p>
+      )}
       {state === "ready" && p && (
         <article className="border border-rule bg-paper p-6">
           <div className="flex flex-wrap justify-between gap-4">
@@ -162,11 +167,6 @@ function View({ id }: { id: string }) {
                       disabled={busy}
                     />
                   </label>
-                  {actionError && (
-                    <p role="alert" className="mt-3 text-sm text-red-800">
-                      {actionError}
-                    </p>
-                  )}
                   <div className="mt-5 flex flex-wrap gap-3">
                     <button className="btn btn-ochre" disabled={busy}>
                       {busy ? "Recording…" : "Mark payout paid"}

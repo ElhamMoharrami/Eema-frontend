@@ -101,7 +101,7 @@ function Detail({ id }: { id: string }) {
                 value={formatEur(p.commissionEur)}
               />
               <Fact
-                label="Less: Payment processing cost"
+                label="Provider processing cost"
                 value={formatEur(p.providerCostEur)}
               />
               <Fact label="Owner payout" value={formatEur(p.payoutAmountEur)} />

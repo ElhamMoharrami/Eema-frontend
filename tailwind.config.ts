@@ -8,9 +8,9 @@ const config: Config = {
         paper: "#F6F2E9",
         paperDeep: "#EFE9DC",
         ink: "#1F1B16",
-        taupe: "#8A8170",
+        taupe: "#706756",
         rule: "#D9D1BE",
-        ochre: "#9A6A2F",
+        ochre: "#875A22",
         ochreDeep: "#7E5621",
       },
       fontFamily: {

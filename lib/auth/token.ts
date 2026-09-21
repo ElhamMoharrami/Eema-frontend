@@ -15,14 +15,17 @@ function storage(): Storage | null {
 }
 
 export function getAuthSession(): AuthSession | null {
-  const value = storage()?.getItem(SESSION_KEY);
-  if (!value) return null;
-
   try {
-    const session = JSON.parse(value) as Partial<AuthSession>;
-    if (!session.accessToken || !session.refreshToken || !session.user) return null;
-    // Older cached sessions receive a non-secret identity until their next rotation.
-    return { ...session, generation: session.generation ?? `legacy:${session.storedAt}` } as AuthSession;
+    const value = storage()?.getItem(SESSION_KEY);
+    if (!value) return null;
+    const parsed: unknown = JSON.parse(value);
+    if (!isAuthResponse(parsed)) return null;
+    const session = parsed as AuthResponse & Partial<Pick<AuthSession, "storedAt" | "generation">>;
+    if (session.storedAt !== undefined && (typeof session.storedAt !== "number" || !Number.isFinite(session.storedAt) || session.storedAt < 0)) return null;
+    if (session.generation !== undefined && (typeof session.generation !== "string" || !session.generation.trim())) return null;
+    // Legacy caches can lack metadata, but token and user fields must still be valid.
+    const storedAt = session.storedAt ?? 0;
+    return { ...session, storedAt, generation: session.generation ?? `legacy:${storedAt}` };
   } catch {
     return null;
   }
@@ -86,15 +89,17 @@ export function isAuthResponse(value: unknown): value is AuthResponse {
   if (!value || typeof value !== "object") return false;
   const response = value as Record<string, unknown>;
   const user = response.user;
-  return typeof response.accessToken === "string"
-    && typeof response.refreshToken === "string"
-    && typeof response.expiresIn === "number"
+  return typeof response.accessToken === "string" && !!response.accessToken.trim()
+    && typeof response.refreshToken === "string" && !!response.refreshToken.trim()
+    && typeof response.expiresIn === "number" && Number.isFinite(response.expiresIn) && response.expiresIn > 0
     && !!user
     && typeof user === "object"
     && typeof (user as Record<string, unknown>).id === "string"
     && typeof (user as Record<string, unknown>).email === "string"
     && ((user as Record<string, unknown>).role === "SCOUT" || (user as Record<string, unknown>).role === "OWNER" || (user as Record<string, unknown>).role === "ADMIN")
-    && typeof (user as Record<string, unknown>).fullName === "string";
+    && typeof (user as Record<string, unknown>).fullName === "string"
+    && typeof (user as Record<string, unknown>).active === "boolean"
+    && typeof (user as Record<string, unknown>).emailVerified === "boolean";
 }
 
 function notify(session: AuthSession | null): void {

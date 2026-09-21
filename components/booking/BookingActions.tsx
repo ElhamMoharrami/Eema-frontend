@@ -40,7 +40,7 @@ export default function BookingActions({ booking, onChanged }: { booking: Bookin
       await onChanged();
     } catch (reason) {
       if (reason instanceof ApiError && reason.status === 403 && /polic/i.test(reason.message)) { await refresh(); setError("Eema's policies were updated. Please review the current versions before continuing."); setBusy(null); return; }
-      if (action !== "pay" && reason instanceof ApiError && reason.status === 409) {
+      if (reason instanceof ApiError && reason.status === 409) {
         setError("This action could not be completed. Review the current booking status and availability before trying again.");
         try { await onChanged(); } catch { setError("This action could not be completed, and the latest booking could not be loaded. Reload before trying again."); } finally { setBusy(null); }
         return;

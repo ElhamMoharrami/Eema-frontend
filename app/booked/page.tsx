@@ -44,8 +44,8 @@ export default function BookedPage() {
     void loadBooking(navigation);
   }, [auth.isAuthReady, auth.user]);
 
-  const loadBooking = async (id: string) => {
-    setState("loading");
+  const loadBooking = async (id: string, refresh = false) => {
+    if (!refresh) setState("loading");
     try {
       const found = await getBooking(id);
       setBooking(found);
@@ -78,7 +78,7 @@ export default function BookedPage() {
     <section className="mt-10 border border-rule bg-paper p-8 settle-slow md:p-12">
       {(!auth.isAuthReady || state === "loading") && <StatusBody label="Status" heading="Checking your booking…" />}
       {state === "auth" && auth.isAuthReady && <AuthPanel onAuthenticated={() => bookingId && void loadBooking(bookingId)} />}
-      {state === "ready" && booking && auth.user && <BookingView booking={booking} venueName={venueName} onRecheck={() => void loadBooking(booking.id)} />}
+      {state === "ready" && booking && auth.user && <BookingView booking={booking} venueName={venueName} onRecheck={() => void loadBooking(booking.id, true)} />}
       {state === "missing" && <StatusBody label="No booking in progress" heading="Nothing to confirm here." message="Return to the marketplace to start a booking." />}
       {state === "not-found" && <StatusBody label="Booking unavailable" heading="We couldn't find this booking in your account." message="Make sure you are signed in with the account that created it." />}
       {state === "error" && <StatusBody label="Could not load booking" heading={error} action={bookingId ? <button onClick={() => void loadBooking(bookingId)} className="btn mt-6">Try again</button> : undefined} />}
@@ -89,7 +89,7 @@ export default function BookedPage() {
 function BookingView({ booking, venueName, onRecheck }: { booking: Booking; venueName: string | null; onRecheck: () => void }) {
   const content: Record<BookingStatus, { heading: string; message: string }> = {
     REQUESTED: { heading: "Waiting for owner response.", message: `This request does not reserve the venue yet.${booking.ownerResponseExpiresAt ? ` Owner response expected by ${formatTimestamp(booking.ownerResponseExpiresAt)}.` : ""}` },
-    AWAITING_PAYMENT: { heading: "Payment confirmation is still processing.", message: "Eema is checking the authoritative payment state. The booking has not been locally promoted." },
+    AWAITING_PAYMENT: { heading: "Payment confirmation is still processing.", message: "Your booking is not confirmed yet. Check again after completing payment." },
     DECLINED: { heading: "The request was declined.", message: "The venue owner declined this booking request." },
     EXPIRED: isPaymentWindowExpiry(booking)
       ? { heading: "The payment window expired.", message: "The accepted request can no longer be paid because its payment deadline passed." }

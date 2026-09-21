@@ -13,6 +13,7 @@ html,
 body {
   background: #f6f2e9;
   color: #1f1b16;
+  overflow-wrap: anywhere;
 }
 
 ::selection {
@@ -48,13 +49,13 @@ body {
     font-weight: 500;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: #8a8170;
+    color: #706756;
   }
   .label-ink {
     color: #1f1b16;
   }
   .label-ochre {
-    color: #9a6a2f;
+    color: #875a22;
   }
 
   /* Hairline rule */
@@ -83,11 +84,11 @@ body {
     color: #f6f2e9;
   }
   .btn-ochre {
-    border-color: #9a6a2f;
-    color: #9a6a2f;
+    border-color: #875a22;
+    color: #875a22;
   }
   .btn-ochre:hover {
-    background: #9a6a2f;
+    background: #875a22;
     color: #f6f2e9;
   }
   .btn[disabled] {
@@ -110,8 +111,8 @@ body {
     color: #1f1b16;
   }
   .form-input:focus {
-    border-color: #9a6a2f;
-    outline: 1px solid #9a6a2f;
+    border-color: #875a22;
+    outline: 1px solid #875a22;
   }
 
   /* Brief input — fountain-pen feel */
@@ -129,7 +130,7 @@ body {
     padding: 0.4rem 0;
   }
   .brief-input::placeholder {
-    color: #b6ad97;
+    color: #706756;
     font-style: italic;
   }
 
@@ -168,7 +169,7 @@ body {
     position: absolute;
     width: 14px;
     height: 14px;
-    border-color: #b6ad97;
+    border-color: #706756;
   }
   .mat .crop.tl { top: 8px; left: 8px; border-top: 1px solid; border-left: 1px solid; }
   .mat .crop.tr { top: 8px; right: 8px; border-top: 1px solid; border-right: 1px solid; }
@@ -179,7 +180,7 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    color: #9a6a2f;
+    color: #875a22;
     font-family: var(--font-sans);
     font-size: 0.7rem;
     letter-spacing: 0.22em;
@@ -189,7 +190,7 @@ body {
     content: "";
     width: 6px;
     height: 6px;
-    background: #9a6a2f;
+    background: #875a22;
     border-radius: 9999px;
     display: inline-block;
   }
@@ -217,3 +218,13 @@ body {
 .stagger > *:nth-child(6) { animation-delay: 600ms; }
 .stagger > *:nth-child(7) { animation-delay: 720ms; }
 .stagger > *:nth-child(8) { animation-delay: 840ms; }
+
+/* Keyboard focus must remain visible, including the borderless brief field. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid #7e5621;
+  outline-offset: 3px;
+}
+.brief-input:focus-visible {
+  outline: 2px solid #7e5621;
+  outline-offset: 3px;
+}

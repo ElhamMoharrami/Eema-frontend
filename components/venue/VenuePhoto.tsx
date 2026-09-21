@@ -38,7 +38,7 @@ export default function VenuePhoto({ src, alt, monogramSource, className }: Prop
           {letter}
         </span>
         <span className="label mt-5 max-w-[80%] truncate">{alt}</span>
-        <span className="label mt-1 text-taupe/70">Photograph pending</span>
+        <span className="label mt-1 text-taupe">Photograph pending</span>
       </div>
     );
   }

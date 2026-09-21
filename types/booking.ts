@@ -13,6 +13,7 @@ export type CancellationPreview = {
   retainedAmountEur: number;
   cancellationDeadline: string | null;
   canCancel: boolean;
+  previewToken: string | null;
 };
 
 export type BookingContactSnapshot = {
