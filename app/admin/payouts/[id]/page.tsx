@@ -1,4 +1,5 @@
 "use client";
+import { use } from "react";
 import Link from "next/link";
 import { FormEvent, useCallback, useState } from "react";
 import AdminShell from "@/components/admin/AdminShell";
@@ -9,13 +10,13 @@ import { getAdminPayout, markAdminPayoutPaid } from "@/lib/api/admin";
 import { apiErrorMessage } from "@/lib/api/error-message";
 import { formatEur, formatTimestamp } from "@/lib/format";
 import { PAYOUT_HOLD_LABELS, PAYOUT_STATUS_LABELS } from "@/lib/admin-status";
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page({ params }: { params: Promise<{ id: string }> }) { const resolvedParams = use(params);
   return (
     <AdminShell
       title="Payout detail"
       intro="Authoritative payout amounts, eligibility, hold, readiness, and transfer record."
     >
-      <View id={params.id} />
+      <View id={resolvedParams.id} />
     </AdminShell>
   );
 }

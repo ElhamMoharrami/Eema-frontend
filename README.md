@@ -6,27 +6,25 @@ checkout, Mollie payments, and booking state.
 
 ## Dependency security
 
-Last audited: 2026-09-07.
+Last audited: 2026-09-21.
 
-The frontend is pinned to Next.js 14.2.35, the final patched release in the
-14.2 line, with React 18.3.1. The audit has no critical findings. It currently
-reports two high production package findings: Next.js 14.2.35 and Next's pinned
-PostCSS 8.4.31. Eema does not use middleware, Server Actions, custom rewrites,
-WebSocket upgrades, CSP nonces, or Next image optimization, so most reported
-paths are not configured. App Router React Server Components are present,
-however, so the remaining Server Component denial-of-service advisories are
-treated as potentially reachable until a tested Next.js major upgrade is made.
+The frontend uses Next.js 16.3.5 and React 19.3.0. The resolved full and
+production dependency audits reported zero vulnerabilities after the security
+upgrade. Use Node.js 20.9 or newer; validation uses Node.js 22.22.1. Development
+and production builds explicitly use Webpack. Client detail pages unwrap Next's
+asynchronous route parameters using React.use.
 
-The full development audit also reports the `eslint-config-next` →
-`@next/eslint-plugin-next` → `glob@10.3.10` chain. That command-injection
-advisory concerns glob's optional CLI command execution and is not shipped in
-the production install or invoked by Eema's lint script. Next 14 pins this glob
-version; removing it requires a major lint/toolchain upgrade.
+ESLint uses flat configuration and its own CLI. Existing hooks and accessibility
+rules remain enforced. Two newly introduced React Compiler diagnostics remain
+warnings while the existing effect-based loaders are retained; React Compiler is
+not enabled. ESLint 9 is currently required by the React plugin's declared peer
+range and needs a compatible support update when available. Audit findings and
+support status must be rechecked before deployment. Local builds and Chromium
+checks do not verify the deployed proxy/CDN or every supported browser.
 
-Do not use `npm audit fix --force` to clear these findings. Before public or
-untrusted-network deployment, migrate Next.js and its matching ESLint config to
-a supported patched major in staging, then rerun the full and production-only
-audits plus typecheck, lint, and build.
+See the backend `docs/qa/DEPENDENCY_SECURITY_EXECUTION_REPORT.md` for historical
+findings and the validated upgrade evidence. Do not use `npm audit fix --force`
+to bypass compatibility checks.
 
 ## Phase A policies and incidents
 
@@ -52,7 +50,7 @@ This checklist is intentionally incomplete; the frontend does not provide or gen
 ### Prerequisites
 
 - Docker with Docker Compose
-- Node.js and npm
+- Node.js 20.9 or newer and npm
 - Mollie test credentials configured in the backend when testing checkout
 - A Gemini credential configured in the backend when testing matching
 
@@ -259,7 +257,7 @@ volumes. It is not a normal restart command.
 ```bash
 npm run dev       # local hot-reload server
 npm run typecheck # TypeScript
-npm run lint      # project-local Next.js ESLint
+npm run lint      # ESLint flat configuration
 npm run build     # production build
 npm run check     # typecheck + lint + build
 ```
@@ -289,8 +287,9 @@ ADMIN accounts have a focused console at `/admin`, with routes for
 `/admin/payouts/[id]`, `/admin/liabilities`, and `/admin/liabilities/[id]`.
 Spring authorization remains authoritative; frontend role checks provide UX only.
 
-The only admin mutations exposed are marking a READY payout paid and settling an
-OPEN owner liability. **“Mark paid” records an external transfer; it does not send
+The financial admin mutations exposed are marking a READY payout paid and settling an
+OPEN owner liability. Separate consoles support the existing owner/destination/venue
+review, policy publication, and incident-review workflows. **“Mark paid” records an external transfer; it does not send
 money.** Marking a liability settled records settlement state; it does not move
 money or replace the backend amount. The console deliberately has no generic
 booking-status, refund, fee, amount, event, waiver, or analytics controls.
@@ -331,7 +330,9 @@ payout, so later changes never redirect the record. Admin full-IBAN access requi
 explicit confirmation and an audited POST reveal. The revealed value exists only
 in ephemeral component state and is cleared when hidden, reviewed, or unmounted.
 
-## Backend TODOs
+## Venue editing and media
 
-- Expose venue update/delete endpoints before adding owner editing controls.
-- Correct the upload controller's duplicated `/api` path before upload integration.
+Owner editing uses the existing `PUT /api/venues/{id}` contract. Media upload and
+listing photo management are integrated with Spring; production object-storage
+durability and deployment configuration still require staging verification.
+There is no generic venue-delete workflow.

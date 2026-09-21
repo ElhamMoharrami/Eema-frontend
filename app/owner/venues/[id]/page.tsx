@@ -1,4 +1,5 @@
 "use client";
+import { use } from "react";
 
 import Link from "next/link";
 import { FormEvent, useCallback, useEffect, useState } from "react";
@@ -20,8 +21,8 @@ const DAYS: { key: DayOfWeek; label: string }[] = [
   { key: "THURSDAY", label: "Thursday" }, { key: "FRIDAY", label: "Friday" }, { key: "SATURDAY", label: "Saturday" }, { key: "SUNDAY", label: "Sunday" },
 ];
 
-export default function OwnerVenuePage({ params }: { params: { id: string } }) {
-  return <DashboardShell eyebrow="Owner listing" title="Listing settings" intro="Manage venue details, timezone, weekly hours and date-specific exceptions."><RoleGuard role="OWNER"><OwnerVenue venueId={params.id} /></RoleGuard></DashboardShell>;
+export default function OwnerVenuePage({ params }: { params: Promise<{ id: string }> }) { const resolvedParams = use(params);
+  return <DashboardShell eyebrow="Owner listing" title="Listing settings" intro="Manage venue details, timezone, weekly hours and date-specific exceptions."><RoleGuard role="OWNER"><OwnerVenue venueId={resolvedParams.id} /></RoleGuard></DashboardShell>;
 }
 
 function OwnerVenue({ venueId }: { venueId: string }) {

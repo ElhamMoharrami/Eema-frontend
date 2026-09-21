@@ -101,6 +101,9 @@ export async function apiRequest<T>(path: string, options: ApiRequestOptions = {
 
   if (response.status === 401 && auth === "required" && session && retryOnUnauthorized) {
     const refreshed = await refreshSession(session);
+    // A different login may have completed while refresh was in flight.
+    // Never replay the previous actor's operation with that account's credentials.
+    assertCurrentActor();
     if (refreshed) {
       return apiRequest<T>(path, { ...options, retryOnUnauthorized: false });
     }

@@ -1,4 +1,5 @@
 "use client";
+import { use } from "react";
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
@@ -27,9 +28,9 @@ type LoadState = "idle" | "loading" | "ready" | "forbidden" | "not-found" | "exp
 
 const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-export default function BookingDetailPage({ params }: { params: { id: string } }) {
+export default function BookingDetailPage({ params }: { params: Promise<{ id: string }> }) { const resolvedParams = use(params);
   const auth = useAuth();
-  const bookingId = params.id;
+  const bookingId = resolvedParams.id;
   const validId = UUID_PATTERN.test(bookingId);
   const [booking, setBooking] = useState<Booking | null>(null);
   const [venueName, setVenueName] = useState<string | null>(null);

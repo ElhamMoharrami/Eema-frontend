@@ -1,4 +1,5 @@
 "use client";
+import { use } from "react";
 import Link from "next/link";
 import { useCallback } from "react";
 import RoleGuard from "@/components/auth/RoleGuard";
@@ -14,7 +15,7 @@ import {
   OWNER_PAYOUT_STATUS_COPY,
   OWNER_PAYOUT_STATUS_LABELS,
 } from "@/lib/owner-payout-status";
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page({ params }: { params: Promise<{ id: string }> }) { const resolvedParams = use(params);
   return (
     <DashboardShell
       eyebrow="Owner dashboard"
@@ -22,7 +23,7 @@ export default function Page({ params }: { params: { id: string } }) {
       intro="Backend-provided ledger values for this booking payout."
     >
       <RoleGuard role="OWNER">
-        <Detail id={params.id} />
+        <Detail id={resolvedParams.id} />
       </RoleGuard>
     </DashboardShell>
   );
